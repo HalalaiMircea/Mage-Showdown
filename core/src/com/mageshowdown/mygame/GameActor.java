@@ -21,10 +21,10 @@ public class GameActor extends Actor {
     protected TextureRegion currFrame;
 
     public GameActor(Stage stage, Vector2 position, Vector2 size, float spriteScaling){
-        setScale(GameWorld.resolutionScale*spriteScaling);
-        setPosition(position.x*getScaleX()/spriteScaling,position.y*getScaleY()/spriteScaling);
-        setSize(size.x*getScaleX(),size.y*getScaleY());
-        setOrigin(getWidth()/2,getHeight()/2);
+        setScale(spriteScaling);
+        setPosition(position.x,position.y);
+        setSize(size.x,size.y);
+        setOrigin(getWidth()*getScaleX()/2f,getHeight()*getScaleY()/2f);
 
         stage.addActor(this);
 
@@ -35,11 +35,11 @@ public class GameActor extends Actor {
     }
 
     public GameActor(Stage stage,Vector2 position, Vector2 size, Texture texture, float spriteScaling){
-        this(stage,position, size,spriteScaling);
+        this(stage,position, size,spriteScaling+(size.x/texture.getWidth()-1));
 
         sprite=new Sprite(texture);
         sprite.setPosition(getX(),getY());
-        sprite.setScale(GameWorld.resolutionScale*spriteScaling);
+        sprite.setScale(spriteScaling);
         sprite.setSize(getWidth(),getHeight());
         sprite.setOrigin(getOriginX(),getOriginY());
     }
@@ -102,6 +102,7 @@ public class GameActor extends Actor {
         body=CreateBodies.createRectangleBody(new Vector2(getX(),getY()), bodySize,bodyType,density,friction,restitution);
         setTouchable(Touchable.enabled);
 
+        //we set the body's user data to the current object in order to retrieve it later for collision handling
         body.setUserData(this);
     }
 
