@@ -7,19 +7,19 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 
 public class DynamicGameActor extends GameActor {
 
-    enum VerticalState{
+    protected enum VerticalState{
         GROUNDED,
         FLYING
     }
-    enum HorizontalState{
+    protected enum HorizontalState{
         GOING_LEFT,
         GOING_RIGHT,
         STANDING
     }
 
-    Vector2 velocity;
-    VerticalState verticalState;
-    HorizontalState horizontalState;
+    protected Vector2 velocity;
+    protected VerticalState verticalState;
+    protected HorizontalState horizontalState;
 
     public DynamicGameActor(Stage stage, Vector2 position, Vector2 size, float spriteScaling){
         super(stage,position,size, spriteScaling);

@@ -26,6 +26,7 @@ www-test/
 /android/gen/
 *.iws
 /android/out/
+/core/assets/
 com_crashlytics_export_strings.xml
 
 ## Eclipse

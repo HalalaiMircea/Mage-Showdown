@@ -15,7 +15,6 @@ public class GameWorld {
     public static void setResolutionScale(float _resolutionScale){
         resolutionScale=_resolutionScale;
     }
-    public static Vector2 scalePosition(Vector2 position){return new Vector2(position.x*resolutionScale,position.y*resolutionScale);}
 
     public static float getMouseVectorAngle(Vector2 startPoint){
         double dy=startPoint.y-getMousePos().y;
@@ -31,17 +30,21 @@ public class GameWorld {
         return new Vector2((getMousePos().x-startPoint.x),(getMousePos().y-startPoint.y)).nor();
     }
 
+    /*
+    * because we use a stretchviewport we need to get the mouse coordinates in terms of game world, 1280x720, not whatever resolution we're running,
+    * so we get the mouse position within the world
+    */
     public static Vector2 getMousePos(){
-        return new Vector2(Gdx.input.getX()/resolutionScale, (Gdx.graphics.getHeight()-Gdx.input.getY())/resolutionScale);
+        return new Vector2(Gdx.input.getX()/resolutionScale, (720f-Gdx.input.getY()/resolutionScale));
     }
 
     //1m in box2d world == 100 pixels in game world
     public static Vector2 convertPixelsToWorld(Vector2 pixels){
-        return new Vector2(pixels.x/resolutionScale*0.01f,pixels.y/resolutionScale*0.01f);
+        return new Vector2(pixels.x*0.01f,pixels.y*0.01f);
     }
 
     public static Vector2 convertWorldToPixels(Vector2 worldCoord){
-        return new Vector2(worldCoord.x*resolutionScale*100f,worldCoord.y*resolutionScale*100f);
+        return new Vector2(worldCoord.x*100f,worldCoord.y*100f);
     }
 
 }

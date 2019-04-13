@@ -1,13 +1,14 @@
 package com.mageshowdown.mygame;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 public class Projectile extends DynamicGameActor {
 
-    boolean collided=false;
-    boolean outOfBounds=false;
+    protected boolean collided=false;
+    protected boolean outOfBounds=false;
 
     public Projectile(Stage stage, Vector2 position, float rotation){
         super(stage,position, new Vector2(46,31),AssetLoader.laserShotTexture,.75f);
@@ -24,6 +25,7 @@ public class Projectile extends DynamicGameActor {
         stage.addActor(this);
     }
 
+    //if two projectiles have the same position then we know its the same projectile
     @Override
     public boolean equals(Object obj) {
         if(obj instanceof Projectile){
@@ -37,8 +39,9 @@ public class Projectile extends DynamicGameActor {
     public void act(float delta) {
         super.act(delta);
 
+        //every frame we check if the projectile is out of bounds
         Vector2 convPosition=GameWorld.convertWorldToPixels(body.getPosition());
-        if(convPosition.x >1280 || convPosition.x<0 || convPosition.y>720 || convPosition.y<0)
+        if(convPosition.x > Gdx.graphics.getWidth() || convPosition.x<0 || convPosition.y>Gdx.graphics.getHeight() || convPosition.y<0)
             outOfBounds=true;
     }
 
@@ -58,4 +61,8 @@ public class Projectile extends DynamicGameActor {
         return outOfBounds;
     }
 
+    @Override
+    public String toString() {
+        return new Vector2(getX(),getY()).toString();
+    }
 }

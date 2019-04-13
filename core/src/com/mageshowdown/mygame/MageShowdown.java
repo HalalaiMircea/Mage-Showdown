@@ -13,42 +13,16 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class MageShowdown extends ApplicationAdapter {
-	GameStage gameStage;
+	private GameStage gameStage;
 
 	@Override
 	public void create () {
 		GameWorld.setResolutionScale(Gdx.graphics.getWidth()/1280f);
 		AssetLoader.load();
 
-		GameWorld.world.setContactListener(new ContactListener() {
-			@Override
-			public void beginContact(Contact contact) {
-				Object obj1=contact.getFixtureA().getUserData(),
-						obj2=contact.getFixtureB().getUserData();
+		GameWorld.world.setContactListener(new CollisionListener());
 
-				System.out.println("hit wall!!!");
-				if(obj1 instanceof Projectile)
-					((Projectile) obj1).setCollided(true);
-			}
-
-			@Override
-			public void endContact(Contact contact) {
-
-			}
-
-			@Override
-			public void preSolve(Contact contact, Manifold oldManifold) {
-
-			}
-
-			@Override
-			public void postSolve(Contact contact, ContactImpulse impulse) {
-
-			}
-		});
-		ScreenViewport viewport=new ScreenViewport();
-
-		gameStage=new GameStage(viewport);
+		gameStage=new GameStage();
 		gameStage.create();
 		Gdx.input.setInputProcessor(gameStage);
 	}

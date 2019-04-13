@@ -24,14 +24,14 @@ public class CreateBodies {
     }
 
 
-    static CircleShape createCircleShape(float radius){
+    private static CircleShape createCircleShape(float radius){
         CircleShape cs=new CircleShape();
         cs.setRadius(radius);
 
         return cs;
     }
 
-    static PolygonShape createPolygonShape(Vector2 size){
+    private static PolygonShape createPolygonShape(Vector2 size){
         PolygonShape ps=new PolygonShape();
         Vector2 convSize=GameWorld.convertPixelsToWorld(size);
         ps.setAsBox(convSize.x/2f,convSize.y/2f);
@@ -39,7 +39,7 @@ public class CreateBodies {
         return ps;
     }
 
-    static FixtureDef createFixtureDef(Shape shape, float density, float friction, float restitution){
+    private static FixtureDef createFixtureDef(Shape shape, float density, float friction, float restitution){
         FixtureDef fd=new FixtureDef();
         fd.shape=shape;
         fd.density=density;

@@ -10,33 +10,32 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 
 public class PlayerCharacter extends DynamicGameActor implements AnimatedActorInterface{
 
-    private Weapon myGun;
+    private Weapon myWeapon;
 
     public PlayerCharacter(Stage stage) {
-        super(stage,new Vector2(300, 300), new Vector2(22,32));
-        debug();
+        super(stage,new Vector2(30, 450), new Vector2(22,32));
         addAnimation(4,1,1.2f,"idle",AssetLoader.idlePlayerSpriteSheet);
         addAnimation(2,1,.8f,"jumping",AssetLoader.jumpingPlayerSpritesheet);
         addAnimation(8,1,1f,"running",AssetLoader.runningPlayerSpritesheet);
 
         createBody(BodyDef.BodyType.DynamicBody);
-        myGun=new Weapon(stage);
+        myWeapon=new Weapon(stage);
         addListener(new InputListener() {
 
             @Override
             public boolean keyDown(InputEvent event, int keycode) {
-                if (keycode == Input.Keys.RIGHT) {
+                if (keycode == Input.Keys.D) {
                     velocity.x=2.5f;
                 }
-                else if(keycode==Input.Keys.LEFT){
+                else if(keycode==Input.Keys.A){
                     velocity.x=-2.5f;
                 }
-                if(keycode==Input.Keys.UP && body.getLinearVelocity().y<0.01f && body.getLinearVelocity().y>-0.01f){
+                if(keycode==Input.Keys.W && body.getLinearVelocity().y<0.01f && body.getLinearVelocity().y>-0.01f){
                     //we dont want to deal separately with gravity so when jumping we just apply an impulse
                     body.applyLinearImpulse(new Vector2(body.getLinearVelocity().x,.22f),body.getPosition(),false);
                 }
                 if(keycode==Input.Keys.Q){
-                    myGun.shoot();
+                    myWeapon.shoot();
                 }
 
                 return true;
@@ -46,7 +45,7 @@ public class PlayerCharacter extends DynamicGameActor implements AnimatedActorIn
             @Override
             public boolean keyUp(InputEvent event, int keycode) {
                 //we stop moving in a direction only if we release the key which indicates said direction, not either one
-                if((keycode==Input.Keys.RIGHT && velocity.x>0 )|| (keycode==Input.Keys.LEFT && velocity.x<0)) {
+                if((keycode==Input.Keys.D && velocity.x>0 )|| (keycode==Input.Keys.A && velocity.x<0)) {
                     velocity.x=0;
                 }
                 return true;
@@ -91,7 +90,7 @@ public class PlayerCharacter extends DynamicGameActor implements AnimatedActorIn
                 break;
         }
 
-        myGun.updatePosition(new Vector2(getX(),getY()));
+        myWeapon.updatePosition(new Vector2(getX(),getY()));
         super.act(delta);
     }
 
@@ -107,7 +106,6 @@ public class PlayerCharacter extends DynamicGameActor implements AnimatedActorIn
          * if the character is grounded, we have to see if hes moving left or right or standing and change the animation accordingly
          * regardless of wether its flying or its grounded, the animation frame needs
          * to be flipped if youre going left, looking right being the "default" position
-         *
          */
         switch(verticalState){
             case GROUNDED:
