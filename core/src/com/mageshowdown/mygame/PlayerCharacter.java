@@ -13,12 +13,13 @@ public class PlayerCharacter extends DynamicGameActor implements AnimatedActorIn
     private Weapon myWeapon;
 
     public PlayerCharacter(Stage stage) {
-        super(stage,new Vector2(30, 450), new Vector2(22,32));
+        super(stage,new Vector2(30, 450), new Vector2(22,32),1.5f);
         addAnimation(4,1,1.2f,"idle",AssetLoader.idlePlayerSpriteSheet);
         addAnimation(2,1,.8f,"jumping",AssetLoader.jumpingPlayerSpritesheet);
         addAnimation(8,1,1f,"running",AssetLoader.runningPlayerSpritesheet);
 
         createBody(BodyDef.BodyType.DynamicBody);
+        body.setFixedRotation(true);
         myWeapon=new Weapon(stage);
         addListener(new InputListener() {
 
@@ -56,6 +57,7 @@ public class PlayerCharacter extends DynamicGameActor implements AnimatedActorIn
 
     @Override
     public void act(float delta) {
+
         if(body.getLinearVelocity().y>0.0001f || body.getLinearVelocity().y<-0.0001f) {
             //if we detect that we start flying, then we need to reset the passed time so the animation wont loop
             if(verticalState!=VerticalState.FLYING)
@@ -65,6 +67,7 @@ public class PlayerCharacter extends DynamicGameActor implements AnimatedActorIn
         }
         else verticalState=VerticalState.GROUNDED;
 
+
         if(body.getLinearVelocity().x>0.0001f){
             horizontalState=HorizontalState.GOING_RIGHT;
         }else if (body.getLinearVelocity().x<-0.0001f){
@@ -72,22 +75,23 @@ public class PlayerCharacter extends DynamicGameActor implements AnimatedActorIn
         }else {
             horizontalState = HorizontalState.STANDING;
         }
+
         if(body.getLinearVelocity().y!=0){
             velocity.y=body.getLinearVelocity().y;
         }
 
         pickFrame();
 
-        switch(horizontalState){
-            case GOING_LEFT:
-                //as there is no setFlip() for TextureRegion we have to check if the texture's already flipped, libgdx pls
-                if(!currFrame.isFlipX())
-                    currFrame.flip(true,false);
-                break;
-            case GOING_RIGHT:
-                if(currFrame.isFlipX())
-                    currFrame.flip(true,false);
-                break;
+        //as there is no setFlip() for TextureRegion we have to check if the texture's already flipped, libgdx pls
+        if(body.getLinearVelocity().x<0.0001f && body.getLinearVelocity().x>-0.0001f) {
+            if (GameWorld.getMousePos().x < getX()) {
+                if (!currFrame.isFlipX()) {
+                    currFrame.flip(true, false);
+                }
+            } else {
+                if (currFrame.isFlipX())
+                    currFrame.flip(true, false);
+            }
         }
 
         myWeapon.updatePosition(new Vector2(getX(),getY()));

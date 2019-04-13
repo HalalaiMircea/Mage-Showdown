@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import java.util.ArrayList;
+import java.util.ListIterator;
 
 public class Weapon extends GameActor implements AnimatedActorInterface{
     private ArrayList<Projectile> weaponShots;
@@ -28,13 +29,16 @@ public class Weapon extends GameActor implements AnimatedActorInterface{
         /*
         * if it has collided or out of the screen remove projectile from the arraylist and the stage so theres no reference to it left
         */
-        for(Projectile x:weaponShots){
-            if(x.hasCollided() || x.isOutOfBounds()){
+        ListIterator<Projectile> iter=weaponShots.listIterator();
+        while(iter.hasNext()){
+            Projectile x=iter.next();
+            if(x.isOutOfBounds() || x.hasCollided())
+            {
                 x.remove();
-                weaponShots.remove(x);
-                break;
+                iter.remove();
             }
         }
+
         pickFrame();
     }
 

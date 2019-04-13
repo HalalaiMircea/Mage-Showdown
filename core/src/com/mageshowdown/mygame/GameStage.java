@@ -14,7 +14,7 @@ public class GameStage extends Stage {
 
     public GameStage() {
         super();
-        camera=new OrthographicCamera(1280,720);
+        camera=new OrthographicCamera(1280f,720f);
         camera.position.x=640f;
         camera.position.y= 360f;
         setViewport(new StretchViewport(1280f,720f,camera));
@@ -24,7 +24,7 @@ public class GameStage extends Stage {
 
     public void create(){
         PlayerCharacter playerCharacter=new PlayerCharacter(this);
-        gameLevel.loadFrom("untitled.tmx",this);
+        gameLevel.loadFrom("Maps\\level1.tmx",this);
 
         setKeyboardFocus(playerCharacter);
     }

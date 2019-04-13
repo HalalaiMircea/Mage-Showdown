@@ -23,13 +23,13 @@ public class GameLevel {
     }
 
     public void loadFrom(String filePath, Stage stage){
-        map=new TmxMapLoader().load(filePath);
+        map=AssetLoader.map1;
         renderer=new OrthogonalTiledMapRenderer(map,1f);
         /*
-        * in the example map i know that the map objects are on the second layer
+        * in the example map i know that the map objects are on the first layer
         * to be changed later
         */
-        for(MapObject x:map.getLayers().get(1).getObjects()){
+        for(MapObject x:map.getLayers().get(0).getObjects()){
             RectangleMapObject currObj=(RectangleMapObject)x;
             Vector2 position= new Vector2(currObj.getRectangle().getX(),currObj.getRectangle().getY());
             Vector2 size=new Vector2(currObj.getRectangle().getWidth(),currObj.getRectangle().getHeight());

@@ -15,10 +15,10 @@ public class CollisionListener implements ContactListener {
 
 
         if(obj1 instanceof Projectile && obj2 instanceof MapObjectHitbox) {
-            ((Projectile) obj1).setCollided(true);
+            //((Projectile) obj1).setCollided(true);
         }
         else if (obj1 instanceof MapObjectHitbox && obj2 instanceof Projectile){
-            ((Projectile) obj2).setCollided(true);
+            //((Projectile) obj2).setCollided(true);
         }
     }
 
