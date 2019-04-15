@@ -1,10 +1,10 @@
-package com.mageshowdown.mygame;
+package com.mageshowdown.mygame.gameclient;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.esotericsoftware.kryonet.Client;
 
 public class GameStage extends Stage {
     private GameLevel gameLevel;
@@ -37,5 +37,7 @@ public class GameStage extends Stage {
         setKeyboardFocus(playerCharacter);
     }
 
-
+    public PlayerCharacter getPlayerCharacter() {
+        return playerCharacter;
+    }
 }

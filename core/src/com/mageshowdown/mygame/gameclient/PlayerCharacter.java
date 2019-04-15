@@ -1,5 +1,6 @@
-package com.mageshowdown.mygame;
+package com.mageshowdown.mygame.gameclient;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
@@ -7,10 +8,15 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.mageshowdown.mygame.packets.MoveKeyDown;
+import com.mageshowdown.mygame.packets.MoveKeyUp;
 
 public class PlayerCharacter extends DynamicGameActor implements AnimatedActorInterface{
 
     private Weapon myWeapon;
+    private boolean canMoveLeft=false;
+    private boolean canMoveRight=false;
+    private boolean canJump=false;
 
     public PlayerCharacter(Stage stage) {
         super(stage,new Vector2(30, 450), new Vector2(22,32),1.5f   );
@@ -25,15 +31,21 @@ public class PlayerCharacter extends DynamicGameActor implements AnimatedActorIn
 
             @Override
             public boolean keyDown(InputEvent event, int keycode) {
+                MoveKeyDown mvk=new MoveKeyDown();
+                mvk.keycode=keycode;
+
                 if (keycode == Input.Keys.D) {
-                    velocity.x=2.5f;
+                    GameWorld.myClient.sendUDP(mvk);
+                    //velocity.x=2.5f;
                 }
                 else if(keycode==Input.Keys.A){
-                    velocity.x=-2.5f;
+                    GameWorld.myClient.sendUDP(mvk);
+                    //velocity.x=-2.5f;
                 }
-                if(keycode==Input.Keys.W && body.getLinearVelocity().y<0.01f && body.getLinearVelocity().y>-0.01f){
+                if(keycode==Input.Keys.W){
                     //we dont want to deal separately with gravity so when jumping we just apply an impulse
-                    body.applyLinearImpulse(new Vector2(body.getLinearVelocity().x,.22f),body.getPosition(),false);
+                    GameWorld.myClient.sendUDP(mvk);
+                    //body.applyLinearImpulse(new Vector2(body.getLinearVelocity().x,.22f),body.getPosition(),false);
                 }
                 if(keycode==Input.Keys.Q){
                     myWeapon.shoot();
@@ -45,9 +57,15 @@ public class PlayerCharacter extends DynamicGameActor implements AnimatedActorIn
 
             @Override
             public boolean keyUp(InputEvent event, int keycode) {
+                MoveKeyUp mku=new MoveKeyUp();
+                mku.keycode=keycode;
+
                 //we stop moving in a direction only if we release the key which indicates said direction, not either one
-                if((keycode==Input.Keys.D && velocity.x>0 )|| (keycode==Input.Keys.A && velocity.x<0)) {
-                    velocity.x=0;
+                if(keycode==Input.Keys.A) {
+                    GameWorld.myClient.sendUDP(mku);
+                }
+                if(keycode==Input.Keys.D) {
+                    GameWorld.myClient.sendUDP(mku);
                 }
                 return true;
             }
@@ -57,6 +75,17 @@ public class PlayerCharacter extends DynamicGameActor implements AnimatedActorIn
 
     @Override
     public void act(float delta) {
+
+        if(canMoveLeft ){
+            velocity.x=-2.5f;
+        }else if(canMoveRight ){
+            velocity.x=2.5f;
+        }else if(!canMoveLeft && !canMoveRight){
+            velocity.x=0f;
+        }else if(canJump&& body.getLinearVelocity().y<0.01f && body.getLinearVelocity().y>-0.01f){
+            body.applyLinearImpulse(new Vector2(body.getLinearVelocity().x,.22f),body.getPosition(),false);
+        }
+
 
         if(body.getLinearVelocity().y>0.0001f || body.getLinearVelocity().y<-0.0001f) {
             //if we detect that we start flying, then we need to reset the passed time so the animation wont loop
@@ -127,5 +156,17 @@ public class PlayerCharacter extends DynamicGameActor implements AnimatedActorIn
                 currFrame=animations.get("jumping").getKeyFrame(passedTime,looping);
                 break;
         }
+    }
+
+    public void setCanMoveLeft(boolean canMoveLeft) {
+        this.canMoveLeft = canMoveLeft;
+    }
+
+    public void setCanJump(boolean canJump) {
+        this.canJump = canJump;
+    }
+
+    public void setCanMoveRight(boolean canMoveRight) {
+        this.canMoveRight = canMoveRight;
     }
 }

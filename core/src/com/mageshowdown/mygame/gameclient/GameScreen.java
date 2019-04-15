@@ -1,17 +1,10 @@
-package com.mageshowdown.mygame;
+package com.mageshowdown.mygame.gameclient;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.viewport.*;
-
-import java.io.InputStreamReader;
 
 public class GameScreen implements Screen {
 
@@ -64,7 +57,12 @@ public class GameScreen implements Screen {
 
     private void gameRunningInput(){
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE) && gameState==GameState.GAME_RUNNING)
+        {
             gameState=GameState.GAME_PAUSED;
+            BasicRequest br=new BasicRequest();
+            br.text="pressed ESCAPE";
+            GameWorld.myClient.sendUDP(br);
+        }
     }
 
     private void gamePausedInput(){
@@ -72,6 +70,10 @@ public class GameScreen implements Screen {
             gameState=GameState.GAME_RUNNING;
         else if(Gdx.input.isKeyPressed(Input.Keys.Q))
             Gdx.app.exit();
+    }
+
+    public GameStage getGameStage() {
+        return gameStage;
     }
 
     @Override
