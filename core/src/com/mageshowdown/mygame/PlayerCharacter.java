@@ -13,7 +13,7 @@ public class PlayerCharacter extends DynamicGameActor implements AnimatedActorIn
     private Weapon myWeapon;
 
     public PlayerCharacter(Stage stage) {
-        super(stage,new Vector2(30, 450), new Vector2(22,32),1.5f);
+        super(stage,new Vector2(30, 450), new Vector2(22,32),1.5f   );
         addAnimation(4,1,1.2f,"idle",AssetLoader.idlePlayerSpriteSheet);
         addAnimation(2,1,.8f,"jumping",AssetLoader.jumpingPlayerSpritesheet);
         addAnimation(8,1,1f,"running",AssetLoader.runningPlayerSpritesheet);

@@ -78,7 +78,7 @@ public class GameActor extends Actor {
 
        /*
        * split the spritesheet by number of columns and rows into a TextureRegion matrix,
-       * put those frames into an array and then create the animation from said array
+       * put those frames into an ArrayList and then create the animation from said ArrayList
        */
         TextureRegion[][] tmp=TextureRegion.split(spriteSheet,
                 spriteSheet.getWidth()/frameColumns,
