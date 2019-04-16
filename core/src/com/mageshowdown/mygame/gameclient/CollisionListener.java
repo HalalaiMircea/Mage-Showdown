@@ -1,4 +1,4 @@
-package com.mageshowdown.mygame;
+package com.mageshowdown.mygame.gameclient;
 
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;

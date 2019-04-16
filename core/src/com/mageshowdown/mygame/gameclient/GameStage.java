@@ -1,16 +1,15 @@
-package com.mageshowdown.mygame;
+package com.mageshowdown.mygame.gameclient;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.viewport.*;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.esotericsoftware.kryonet.Client;
 
 public class GameStage extends Stage {
-
     private GameLevel gameLevel;
     private OrthographicCamera camera;
+    private PlayerCharacter playerCharacter;
 
     public GameStage() {
         super();
@@ -18,20 +17,27 @@ public class GameStage extends Stage {
         camera.position.x=640f;
         camera.position.y= 360f;
         setViewport(new StretchViewport(1280f,720f,camera));
-
         gameLevel=new GameLevel(this);
-    }
 
-    public void create(){
-        PlayerCharacter playerCharacter=new PlayerCharacter(this);
-        gameLevel.loadFrom("Maps\\level1.tmx",this);
-
-        setKeyboardFocus(playerCharacter);
+        GameWorld.world.setContactListener(new CollisionListener());
     }
 
     @Override
     public void draw() {
         gameLevel.render();
         super.draw();
+    }
+
+    public void start(){
+        if(playerCharacter==null)
+            playerCharacter=new PlayerCharacter(this);
+
+        gameLevel.changeTo(AssetLoader.map1);
+        Gdx.input.setInputProcessor(this);
+        setKeyboardFocus(playerCharacter);
+    }
+
+    public PlayerCharacter getPlayerCharacter() {
+        return playerCharacter;
     }
 }

@@ -1,10 +1,9 @@
-package com.mageshowdown.mygame;
+package com.mageshowdown.mygame.gameclient;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -16,18 +15,19 @@ public class GameLevel {
     private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
     private OrthographicCamera cam;
+    private Stage stage;
 
     public GameLevel(Stage stage){
         platforms=new ArrayList<MapObjectHitbox>();
         cam=(OrthographicCamera)stage.getCamera();
+        this.stage=stage;
     }
 
-    public void loadFrom(String filePath, Stage stage){
-        map=AssetLoader.map1;
+    public void changeTo(TiledMap map){
+        this.map=map;
         renderer=new OrthogonalTiledMapRenderer(map,1f);
         /*
-        * in the example map i know that the map objects are on the first layer
-        * to be changed later
+        * we have to be careful when creating the maps for the object layer to be the first one
         */
         for(MapObject x:map.getLayers().get(0).getObjects()){
             RectangleMapObject currObj=(RectangleMapObject)x;
