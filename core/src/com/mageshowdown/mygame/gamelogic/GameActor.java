@@ -1,4 +1,4 @@
-package com.mageshowdown.mygame.gameclient;
+package com.mageshowdown.mygame.gamelogic;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.Vector2;
@@ -67,7 +67,8 @@ public class GameActor extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        batch.draw(sprite,getX(),getY(),sprite.getOriginX(),sprite.getOriginY(),getWidth(),getHeight(),1f,1f,sprite.getRotation());
+        if(sprite!=null)
+            batch.draw(sprite,getX(),getY(),sprite.getOriginX(),sprite.getOriginY(),getWidth(),getHeight(),1f,1f,sprite.getRotation());
     }
 
     protected void addAnimation(int frameColumns, int frameRows, float animationDuration,String animationName, Texture spriteSheet){
@@ -106,5 +107,7 @@ public class GameActor extends Actor {
         createBody(.6f,0f,0f,bodyType);
     }
 
-
+    public Body getBody() {
+        return body;
+    }
 }

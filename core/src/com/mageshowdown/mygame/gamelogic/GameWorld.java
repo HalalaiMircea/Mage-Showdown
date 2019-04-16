@@ -1,4 +1,4 @@
-package com.mageshowdown.mygame.gameclient;
+package com.mageshowdown.mygame.gamelogic;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;

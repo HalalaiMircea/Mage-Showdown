@@ -1,9 +1,10 @@
-package com.mageshowdown.mygame.gameclient;
+package com.mageshowdown.mygame.gamelogic;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.mageshowdown.mygame.gameclient.*;
 
 public class Projectile extends DynamicGameActor {
 
@@ -11,7 +12,7 @@ public class Projectile extends DynamicGameActor {
     protected boolean outOfBounds=false;
 
     public Projectile(Stage stage, Vector2 position, float rotation){
-        super(stage,position, new Vector2(46,31),AssetLoader.laserShotTexture,.75f);
+        super(stage,position, new Vector2(46,31),ClientAssetLoader.laserShotTexture,.75f);
         createBody(BodyDef.BodyType.DynamicBody);
         Vector2 direction=GameWorld.getNormalizedMouseVector(position);
 
