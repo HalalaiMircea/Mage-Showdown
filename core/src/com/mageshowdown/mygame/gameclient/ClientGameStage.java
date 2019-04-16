@@ -37,7 +37,6 @@ public class ClientGameStage extends Stage {
     public void start(){
         gameLevel.changeTo(ClientAssetLoader.map1);
         Gdx.input.setInputProcessor(this);
-        setKeyboardFocus(playerCharacter);
     }
 
     public ClientPlayerCharacter getPlayerCharacter() {
@@ -51,6 +50,7 @@ public class ClientGameStage extends Stage {
     public void spawnMyPlayerCharacter(Vector2 position){
         System.out.println("spawned at "+position);
         playerCharacter=new ClientPlayerCharacter(this,position);
+        setKeyboardFocus(playerCharacter);
     }
 
     public void spawnOtherPlayer(int id, Vector2 position){

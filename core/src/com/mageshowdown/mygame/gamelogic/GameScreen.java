@@ -36,7 +36,6 @@ public class GameScreen implements Screen {
 //                gameReadyInput();
 //                break;
             case GAME_RUNNING:
-                System.out.println("GAME IS RUNNING");
                 gameStage.act();
                 gameRunningInput();
                 gameStage.draw();
