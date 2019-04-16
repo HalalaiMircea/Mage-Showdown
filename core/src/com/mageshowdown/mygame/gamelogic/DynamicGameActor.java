@@ -103,4 +103,8 @@ public class DynamicGameActor extends GameActor {
     public VerticalState getVerticalState() {
         return verticalState;
     }
+
+    public void setVelocity(Vector2 velocity) {
+        this.velocity = velocity;
+    }
 }

@@ -25,8 +25,8 @@ public class ClientPlayerCharacter extends DynamicGameActor implements AnimatedA
         addAnimation(8,1,1f,"running",ClientAssetLoader.runningPlayerSpritesheet);
 
         myWeapon=new Weapon(stage);
-        //createBody(BodyDef.BodyType.DynamicBody);
-        // body.setFixedRotation(true);
+        createBody(BodyDef.BodyType.DynamicBody);
+        body.setFixedRotation(true);
         addListener(new InputListener() {
 
             @Override

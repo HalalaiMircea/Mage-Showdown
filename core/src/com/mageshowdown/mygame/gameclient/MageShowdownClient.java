@@ -80,13 +80,21 @@ public class MageShowdownClient extends Game {
                     for (OneCharacterLocation x : ((CharacterLocations) object).playersPos) {
                         if (x.id == connection.getID()) {
                             ClientPlayerCharacter pc = gameScreen.getGameStage().getPlayerCharacter();
-                            pc.setPosition(x.pos);
+                           // pc.getBody().setTransform(x.pos,pc.getBody().getAngle());
+                          //  if(pc.getBody().getLinearVelocity().y!=0)
+                                pc.setVelocity(x.linVel);
+                            //else pc.getBody().setLinearVelocity(x.linVel.x,pc.getBody().getLinearVelocity().y);
+
                             pc.setHorizontalState(DynamicGameActor.HorizontalState.valueOf(x.horizontalState));
                             pc.setVerticalState(DynamicGameActor.VerticalState.valueOf(x.verticalState));
                         } else {
                             ClientPlayerCharacter currPlayer = gameScreen.getGameStage().getOtherPlayers().get(x.id);
                             if (currPlayer != null) {
-                                currPlayer.setPosition(x.pos);
+                                //currPlayer.setPosition(x.pos);
+                                //if(currPlayer.getBody().getLinearVelocity().y!=0)
+                                    currPlayer.setVelocity(x.linVel);
+                               // else currPlayer.getBody().setLinearVelocity(x.linVel.x,currPlayer.getBody().getLinearVelocity().y);
+
                                 currPlayer.setHorizontalState(DynamicGameActor.HorizontalState.valueOf(x.horizontalState));
                                 currPlayer.setVerticalState(DynamicGameActor.VerticalState.valueOf(x.verticalState));
                             } else {
