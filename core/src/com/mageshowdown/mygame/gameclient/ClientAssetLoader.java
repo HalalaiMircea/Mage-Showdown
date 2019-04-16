@@ -14,7 +14,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
-public class AssetLoader {
+public class ClientAssetLoader {
     public static Texture boxTexture;
     public static Texture groundTexture;
     public static Texture borderTexture;

@@ -1,10 +1,11 @@
-package com.mageshowdown.mygame.gameclient;
+package com.mageshowdown.mygame.gamelogic;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.mageshowdown.mygame.gameclient.*;
 
 public class GameScreen implements Screen {
 
@@ -15,13 +16,13 @@ public class GameScreen implements Screen {
     }
 
     private Game game;
-    private GameStage gameStage;
+    private ClientGameStage gameStage;
     private GameState gameState;
 
     public GameScreen(Game game) {
         super();
         this.game=game;
-        gameStage=new GameStage();
+        gameStage=new ClientGameStage();
         gameState=GameState.GAME_READY;
     }
 
@@ -44,6 +45,9 @@ public class GameScreen implements Screen {
                 gameStage.draw();
                 break;
         }
+
+        //GameWorld.world.step(Gdx.graphics.getDeltaTime(),6,2);
+
     }
 
     public void start(){
@@ -59,9 +63,6 @@ public class GameScreen implements Screen {
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE) && gameState==GameState.GAME_RUNNING)
         {
             gameState=GameState.GAME_PAUSED;
-            BasicRequest br=new BasicRequest();
-            br.text="pressed ESCAPE";
-            GameWorld.myClient.sendUDP(br);
         }
     }
 
@@ -72,7 +73,7 @@ public class GameScreen implements Screen {
             Gdx.app.exit();
     }
 
-    public GameStage getGameStage() {
+    public ClientGameStage getGameStage() {
         return gameStage;
     }
 

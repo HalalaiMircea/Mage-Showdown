@@ -1,8 +1,10 @@
-package com.mageshowdown.mygame.gameclient;
+package com.mageshowdown.mygame.gamelogic;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.mageshowdown.mygame.gameclient.*;
+
 
 import java.util.ArrayList;
 import java.util.ListIterator;
@@ -14,7 +16,7 @@ public class Weapon extends GameActor implements AnimatedActorInterface{
         super(stage,new Vector2(0,0),new Vector2(32,33));
         weaponShots=new ArrayList<Projectile>();
 
-        addAnimation(3,1,.5f,"idle",AssetLoader.waterSphereSpriteSheet);
+        addAnimation(3,1,.5f,"idle",ClientAssetLoader.waterSphereSpriteSheet);
 
     }
 
@@ -51,7 +53,8 @@ public class Weapon extends GameActor implements AnimatedActorInterface{
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        batch.draw(currFrame,getX(),getY(),getWidth()*getScaleX(),getHeight()*getScaleY());
+        if(currFrame!=null)
+            batch.draw(currFrame,getX(),getY(),getWidth()*getScaleX(),getHeight()*getScaleY());
     }
 
     @Override

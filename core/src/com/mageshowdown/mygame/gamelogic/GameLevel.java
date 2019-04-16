@@ -1,4 +1,4 @@
-package com.mageshowdown.mygame.gameclient;
+package com.mageshowdown.mygame.gamelogic;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.MapObject;
