@@ -9,21 +9,21 @@ import com.mageshowdown.mygame.gameclient.*;
 
 public class GameScreen implements Screen {
 
-    enum GameState{
+    enum GameState {
         GAME_READY,
         GAME_RUNNING,
         GAME_PAUSED
     }
 
-    private Game game;
+    private final MageShowdownClient game;
     private ClientGameStage gameStage;
     private GameState gameState;
 
-    public GameScreen(Game game) {
+    public GameScreen(final MageShowdownClient game) {
         super();
-        this.game=game;
-        gameStage=new ClientGameStage();
-        gameState=GameState.GAME_READY;
+        this.game = game;
+        gameStage = new ClientGameStage();
+        gameState = GameState.GAME_READY;
     }
 
     @Override
@@ -31,11 +31,12 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(255, 255, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        switch(gameState){
-            case GAME_READY:
-                gameReadyInput();
-                break;
+        switch (gameState) {
+//            case GAME_READY:
+//                gameReadyInput();
+//                break;
             case GAME_RUNNING:
+                System.out.println("GAME IS RUNNING");
                 gameStage.act();
                 gameRunningInput();
                 gameStage.draw();
@@ -50,31 +51,35 @@ public class GameScreen implements Screen {
 
     }
 
-    public void start(){
+    public void start() {
         gameStage.start();
     }
 
-    private void gameReadyInput(){
-        if(Gdx.input.isKeyPressed(Input.Keys.ENTER))
-            gameState=GameState.GAME_RUNNING;
-    }
+//    private void gameReadyInput() {
+//        if (Gdx.input.isKeyPressed(Input.Keys.ENTER))
+//            gameState = GameState.GAME_RUNNING;
+//    }
 
-    private void gameRunningInput(){
-        if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE) && gameState==GameState.GAME_RUNNING)
-        {
-            gameState=GameState.GAME_PAUSED;
+    private void gameRunningInput() {
+        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE) && gameState == GameState.GAME_RUNNING) {
+            gameState = GameState.GAME_PAUSED;
         }
     }
 
-    private void gamePausedInput(){
-        if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE) && gameState==GameState.GAME_PAUSED)
-            gameState=GameState.GAME_RUNNING;
-        else if(Gdx.input.isKeyPressed(Input.Keys.Q))
+    private void gamePausedInput() {
+        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE) && gameState == GameState.GAME_PAUSED)
+            gameState = GameState.GAME_RUNNING;
+        else if (Gdx.input.isKeyPressed(Input.Keys.Q))
             Gdx.app.exit();
     }
 
     public ClientGameStage getGameStage() {
         return gameStage;
+    }
+
+    //setter to access gameState member variable from MainMenuScreen class
+    public void setGameState(GameState gameState) {
+        this.gameState = gameState;
     }
 
     @Override

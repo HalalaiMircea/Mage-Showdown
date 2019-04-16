@@ -33,6 +33,7 @@ public class ClientPlayerCharacter extends DynamicGameActor implements AnimatedA
             public boolean keyDown(InputEvent event, int keycode) {
                 if (keycode == Input.Keys.D) {
                     moveRight=true;
+                    System.out.println("AM APASAT");
                     //velocity.x=2.5f;
                 }
                 else if(keycode==Input.Keys.A){

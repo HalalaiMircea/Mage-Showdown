@@ -12,9 +12,13 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
+
 public class ClientAssetLoader {
+    public static Skin interfaceSkin;
+    public static Texture menuBackground;
     public static Texture boxTexture;
     public static Texture groundTexture;
     public static Texture borderTexture;
@@ -26,21 +30,25 @@ public class ClientAssetLoader {
     public static Texture laserShotTexture;
     public static TiledMap map1;
 
-    public static void load(){
-        boxTexture=new Texture("Untitled.png");
-        groundTexture=new Texture("ground.png");
-        borderTexture=new Texture("border.png");
-        idlePlayerSpriteSheet=new Texture("idleAnimationSpritesheet.png");
-        jumpingPlayerSpritesheet=new Texture("jumpingAnimationSpritesheet.png");
-        runningPlayerSpritesheet=new Texture("runningAnimationSpritesheet.png");
-        gunTexture=new Texture("gun.png");
-        waterSphereSpriteSheet=new Texture("water sphere 6.png");
-        laserShotTexture=new Texture("laser shot3.png");
-        map1=new TmxMapLoader().load("Maps\\level1.tmx");
+    public static void load() {
+        //boxTexture=new Texture("Untitled.png");
+        interfaceSkin = new Skin(Gdx.files.internal("UIAssets/uiskin.json"));
+        menuBackground = new Texture(Gdx.files.internal("UIAssets/placeholder.jpg"));
+        groundTexture = new Texture("ground.png");
+        borderTexture = new Texture("border.png");
+        idlePlayerSpriteSheet = new Texture("idleAnimationSpritesheet.png");
+        jumpingPlayerSpritesheet = new Texture("jumpingAnimationSpritesheet.png");
+        runningPlayerSpritesheet = new Texture("runningAnimationSpritesheet.png");
+        gunTexture = new Texture("gun.png");
+        waterSphereSpriteSheet = new Texture("water sphere 6.png");
+        laserShotTexture = new Texture("laser shot3.png");
+        map1 = new TmxMapLoader().load("Maps\\level1.tmx");
     }
 
-    public static void dispose(){
-        boxTexture.dispose();
+    public static void dispose() {
+        //boxTexture.dispose();
+        interfaceSkin.dispose();
+        menuBackground.dispose();
         groundTexture.dispose();
         borderTexture.dispose();
         idlePlayerSpriteSheet.dispose();

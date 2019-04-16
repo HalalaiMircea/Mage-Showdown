@@ -5,6 +5,9 @@
 *.ear
 hs_err_pid*
 
+##WORKSPACE
+.idea/workspace.xml
+
 ## Robovm
 /ios/robovm-build/
 

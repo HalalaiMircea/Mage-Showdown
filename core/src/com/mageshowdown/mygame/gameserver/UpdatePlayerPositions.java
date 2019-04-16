@@ -36,6 +36,6 @@ public class UpdatePlayerPositions extends Thread{
 
             loc.playersPos.add(oneLoc);
         }
-        server.sendToAllTCP(loc);
+        server.sendToAllUDP(loc);
     }
 }
