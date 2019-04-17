@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 public class MageShowdownClient extends Game {
     private GameScreen gameScreen;
-    private MainMenuScreen mainMenuScreen;
+    private MenuScreen menuScreen;
 
 
     @Override
@@ -26,8 +26,8 @@ public class MageShowdownClient extends Game {
         ClientAssetLoader.load();
 
         gameScreen = new GameScreen(this);
-        mainMenuScreen = new MainMenuScreen(this, gameScreen);
-        this.setScreen(mainMenuScreen);
+        menuScreen = new MenuScreen(this, gameScreen);
+        this.setScreen(menuScreen);
 
 
     }
@@ -43,7 +43,7 @@ public class MageShowdownClient extends Game {
     public void dispose() {
         ClientAssetLoader.dispose();
         gameScreen.dispose();
-        mainMenuScreen.dispose();
+        menuScreen.dispose();
     }
 
 
