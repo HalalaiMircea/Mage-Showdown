@@ -2,7 +2,6 @@ package com.mageshowdown.mygame.gameclient;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
@@ -30,17 +29,14 @@ public class MageShowdownClient extends Game {
         mainMenuScreen = new MainMenuScreen(this, gameScreen);
         this.setScreen(mainMenuScreen);
 
-        //clientStart();
+
     }
 
     @Override
     public void render() {
         super.render();
 
-        Gdx.graphics.setTitle(GameWorld.getMousePos() + " ");
-
-        //GameWorld.world.step(Gdx.graphics.getDeltaTime(),6,2);
-
+        Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() + " ");
     }
 
     @Override
@@ -61,7 +57,8 @@ public class MageShowdownClient extends Game {
         kryo.register(Vector2.class);
         kryo.register(UpdatePositions.class);
         kryo.register(ArrayList.class);
-        kryo.register(KeyPress.class);
+        kryo.register(KeyDown.class);
+        kryo.register(KeyUp.class);
 
         try {
             GameWorld.myClient.connect(5000, ipAddress, Network.TCP_PORT, Network.UDP_PORT);
@@ -77,26 +74,21 @@ public class MageShowdownClient extends Game {
             @Override
             public void received(Connection connection, Object object) {
                 if (object instanceof CharacterLocations) {
+                    /*
+                    * In order to make sure the box2d world doesnt get locked when we synchronize the
+                    * velocity and position of a body, we have to queue these assignments
+                    * and do them after the world has stepped;
+                     */
                     for (OneCharacterLocation x : ((CharacterLocations) object).playersPos) {
                         if (x.id == connection.getID()) {
                             ClientPlayerCharacter pc = gameScreen.getGameStage().getPlayerCharacter();
-                           // pc.getBody().setTransform(x.pos,pc.getBody().getAngle());
-                          //  if(pc.getBody().getLinearVelocity().y!=0)
-                                pc.setVelocity(x.linVel);
-                            //else pc.getBody().setLinearVelocity(x.linVel.x,pc.getBody().getLinearVelocity().y);
-
-                            pc.setHorizontalState(DynamicGameActor.HorizontalState.valueOf(x.horizontalState));
-                            pc.setVerticalState(DynamicGameActor.VerticalState.valueOf(x.verticalState));
+                            pc.setQueuedPos(x.pos);
+                            pc.setQueuedVel(x.linVel);
                         } else {
                             ClientPlayerCharacter currPlayer = gameScreen.getGameStage().getOtherPlayers().get(x.id);
                             if (currPlayer != null) {
-                                //currPlayer.setPosition(x.pos);
-                                //if(currPlayer.getBody().getLinearVelocity().y!=0)
-                                    currPlayer.setVelocity(x.linVel);
-                               // else currPlayer.getBody().setLinearVelocity(x.linVel.x,currPlayer.getBody().getLinearVelocity().y);
-
-                                currPlayer.setHorizontalState(DynamicGameActor.HorizontalState.valueOf(x.horizontalState));
-                                currPlayer.setVerticalState(DynamicGameActor.VerticalState.valueOf(x.verticalState));
+                                currPlayer.setQueuedPos(x.pos);
+                                currPlayer.setQueuedVel(x.linVel);
                             } else {
                                 gameScreen.getGameStage().spawnOtherPlayer(x.id, x.pos);
                             }
@@ -105,7 +97,7 @@ public class MageShowdownClient extends Game {
                 }
                 if (object instanceof PlayerConnected) {
                     gameScreen.getGameStage().spawnMyPlayerCharacter(((PlayerConnected) object).spawnLocation);
-                    //gameScreen.getGameStage().getPlayerCharacter().setMyPlayer(true);
+                    gameScreen.getGameStage().getPlayerCharacter().setMyPlayer(true);
                 }
                 if (object instanceof OneCharacterLocation) {
                     if (connection.getID() == ((OneCharacterLocation) object).id)

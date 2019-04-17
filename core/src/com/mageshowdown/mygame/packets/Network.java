@@ -10,8 +10,6 @@ public class Network {
     public final static int UDP_PORT=1333;
 
     public static class OneCharacterLocation{
-        public int horizontalState;
-        public int verticalState;
         public Vector2 pos;
         public Vector2 linVel;
         public int id;
@@ -30,7 +28,11 @@ public class Network {
         public boolean ok=true;
     }
 
-    public static class KeyPress{
+    public static class KeyDown {
+        public int keycode;
+    }
+
+    public static class KeyUp{
         public int keycode;
     }
 }

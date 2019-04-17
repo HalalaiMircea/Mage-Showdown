@@ -17,6 +17,8 @@ import java.util.ArrayList;
 public class MageShowdownServer extends Game {
     private Server server;
     private ServerGameStage gameStage;
+    private int packetsSent=0;
+    private boolean updatePositions=false;
 
     @Override
     public void create () {
@@ -29,7 +31,12 @@ public class MageShowdownServer extends Game {
     @Override
     public void render () {
         Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond()+" ");
-        new UpdatePlayerPositions(server,gameStage);
+        if(updatePositions)
+        {
+            new UpdatePlayerPositions(server,gameStage);
+            updatePositions=false;
+        }
+
         gameStage.act();
         GameWorld.world.step(Gdx.graphics.getDeltaTime(),6,2);
     }
@@ -49,7 +56,8 @@ public class MageShowdownServer extends Game {
         kryo.register(Vector2.class);
         kryo.register(UpdatePositions.class);
         kryo.register(ArrayList.class);
-        kryo.register(KeyPress.class);
+        kryo.register(KeyDown.class);
+        kryo.register(KeyUp.class);
 
 
         try {
@@ -63,18 +71,15 @@ public class MageShowdownServer extends Game {
             public void connected(Connection connection) {
                 /*
                 * when a new player connects, we send that player its spawn location
+                * and update everyone's positions
                 */
                 PlayerConnected x=new PlayerConnected();
                 x.id=connection.getID();
                 x.spawnLocation=new Vector2(500f+(float)Math.random()*(900f-500f),200f+(float)Math.random()*(600f-200f));
                 gameStage.addPlayerCharacter(connection.getID(),x.spawnLocation);
                 server.sendToTCP(connection.getID(),x);
-                /*
-                for(Connection con:server.getConnections()){
-                    if(con.getID()!=connection.getID()){
-                        server.sendToTCP(con.getID(),x);
-                    }
-               }*/
+
+                updatePositions=true;
             }
 
             @Override
@@ -84,8 +89,15 @@ public class MageShowdownServer extends Game {
 
             @Override
             public void received(Connection connection, Object object) {
-                if(object instanceof KeyPress){
-                    gameStage.getPlayerById(connection.getID()).setMoveDirection(((KeyPress) object).keycode);
+                /*
+                * we will only send updates about player positions whenever we receive a packet
+                * that signifies an input
+                 */
+                if(object instanceof KeyDown){
+                    gameStage.getPlayerById(connection.getID()).setMoveDirection(((KeyDown) object).keycode);
+                    updatePositions=true;
+                }else if(object instanceof KeyUp){
+                    updatePositions=true;
                 }
 
             }

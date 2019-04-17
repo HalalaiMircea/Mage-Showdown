@@ -29,13 +29,12 @@ public class UpdatePlayerPositions extends Thread{
             ServerPlayerCharacter pc=gameStage.getPlayerById(x.getID());
 
             oneLoc.linVel=pc.getBody().getLinearVelocity();
-            oneLoc.pos=new Vector2(pc.getX(),pc.getY());
+            oneLoc.pos=pc.getBody().getPosition();
             oneLoc.id=x.getID();
-            oneLoc.horizontalState=pc.getHorizontalState().getNumValue();
-            oneLoc.verticalState=pc.getVerticalState().getNumValue();
 
             loc.playersPos.add(oneLoc);
         }
-        server.sendToAllUDP(loc);
+        server.sendToAllTCP(loc);
+        System.out.println(server.getConnections().length);
     }
 }

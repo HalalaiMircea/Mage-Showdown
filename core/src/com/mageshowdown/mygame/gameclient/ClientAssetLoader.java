@@ -19,7 +19,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 public class ClientAssetLoader {
     public static Skin interfaceSkin;
     public static Texture menuBackground;
-    public static Texture boxTexture;
     public static Texture groundTexture;
     public static Texture borderTexture;
     public static Texture idlePlayerSpriteSheet;
@@ -31,14 +30,13 @@ public class ClientAssetLoader {
     public static TiledMap map1;
 
     public static void load() {
-        //boxTexture=new Texture("Untitled.png");
+        idlePlayerSpriteSheet = new Texture("idleAnimationSpritesheet.png");
+        jumpingPlayerSpritesheet = new Texture("jumpingAnimationSpritesheet.png");
+        runningPlayerSpritesheet = new Texture("runningAnimationSpritesheet.png");
         interfaceSkin = new Skin(Gdx.files.internal("UIAssets/uiskin.json"));
         menuBackground = new Texture(Gdx.files.internal("UIAssets/placeholder.jpg"));
         groundTexture = new Texture("ground.png");
         borderTexture = new Texture("border.png");
-        idlePlayerSpriteSheet = new Texture("idleAnimationSpritesheet.png");
-        jumpingPlayerSpritesheet = new Texture("jumpingAnimationSpritesheet.png");
-        runningPlayerSpritesheet = new Texture("runningAnimationSpritesheet.png");
         gunTexture = new Texture("gun.png");
         waterSphereSpriteSheet = new Texture("water sphere 6.png");
         laserShotTexture = new Texture("laser shot3.png");
@@ -46,7 +44,6 @@ public class ClientAssetLoader {
     }
 
     public static void dispose() {
-        //boxTexture.dispose();
         interfaceSkin.dispose();
         menuBackground.dispose();
         groundTexture.dispose();

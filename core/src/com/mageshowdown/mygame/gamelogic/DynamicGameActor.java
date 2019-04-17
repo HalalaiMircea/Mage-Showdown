@@ -85,7 +85,7 @@ public class DynamicGameActor extends GameActor {
     public void act(float delta) {
         if(body!=null)
             body.setLinearVelocity(new Vector2(velocity.x,velocity.y));
-        super.act(delta);
+        updateGameActor(delta);
     }
 
     public void setHorizontalState(HorizontalState horizontalState) {
@@ -106,5 +106,9 @@ public class DynamicGameActor extends GameActor {
 
     public void setVelocity(Vector2 velocity) {
         this.velocity = velocity;
+    }
+
+    public void updateGameActor(float delta){
+        super.act(delta);
     }
 }

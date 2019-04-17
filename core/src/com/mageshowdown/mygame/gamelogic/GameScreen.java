@@ -46,8 +46,6 @@ public class GameScreen implements Screen {
                 break;
         }
 
-        GameWorld.world.step(Gdx.graphics.getDeltaTime(),6,2);
-
     }
 
     public void start() {

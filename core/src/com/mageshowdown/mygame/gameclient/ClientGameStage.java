@@ -29,6 +29,17 @@ public class ClientGameStage extends Stage {
     }
 
     @Override
+    public void act() {
+        super.act();
+        GameWorld.world.step(Gdx.graphics.getDeltaTime(),6,2);
+        if(playerCharacter!=null)
+            playerCharacter.clearQueue();
+        for(ClientPlayerCharacter pc:otherPlayers.values()){
+            pc.clearQueue();
+        }
+    }
+
+    @Override
     public void draw() {
         gameLevel.render();
         super.draw();
@@ -48,14 +59,11 @@ public class ClientGameStage extends Stage {
     }
 
     public void spawnMyPlayerCharacter(Vector2 position){
-        System.out.println("spawned at "+position);
         playerCharacter=new ClientPlayerCharacter(this,position);
         setKeyboardFocus(playerCharacter);
     }
 
     public void spawnOtherPlayer(int id, Vector2 position){
         otherPlayers.put(id,new ClientPlayerCharacter(this,position));
-
-        System.out.println(id+" attempting to spawn!");
     }
 }
