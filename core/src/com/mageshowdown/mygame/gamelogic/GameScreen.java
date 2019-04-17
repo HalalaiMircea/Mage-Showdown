@@ -76,7 +76,7 @@ public class GameScreen implements Screen {
         return gameStage;
     }
 
-    //setter to access gameState member variable from MainMenuScreen class
+    //setter to access gameState member variable from MenuScreen class
     public void setGameState(GameState gameState) {
         this.gameState = gameState;
     }

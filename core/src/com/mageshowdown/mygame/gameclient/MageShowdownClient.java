@@ -2,7 +2,6 @@ package com.mageshowdown.mygame.gameclient;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
@@ -18,7 +17,7 @@ import java.util.ArrayList;
 
 public class MageShowdownClient extends Game {
     private GameScreen gameScreen;
-    private MainMenuScreen mainMenuScreen;
+    private MenuScreen menuScreen;
 
 
     @Override
@@ -27,8 +26,8 @@ public class MageShowdownClient extends Game {
         ClientAssetLoader.load();
 
         gameScreen = new GameScreen(this);
-        mainMenuScreen = new MainMenuScreen(this, gameScreen);
-        this.setScreen(mainMenuScreen);
+        menuScreen = new MenuScreen(this, gameScreen);
+        this.setScreen(menuScreen);
 
         //clientStart();
     }
@@ -47,7 +46,7 @@ public class MageShowdownClient extends Game {
     public void dispose() {
         ClientAssetLoader.dispose();
         gameScreen.dispose();
-        mainMenuScreen.dispose();
+        menuScreen.dispose();
     }
 
 
@@ -80,9 +79,9 @@ public class MageShowdownClient extends Game {
                     for (OneCharacterLocation x : ((CharacterLocations) object).playersPos) {
                         if (x.id == connection.getID()) {
                             ClientPlayerCharacter pc = gameScreen.getGameStage().getPlayerCharacter();
-                           // pc.getBody().setTransform(x.pos,pc.getBody().getAngle());
-                          //  if(pc.getBody().getLinearVelocity().y!=0)
-                                pc.setVelocity(x.linVel);
+                            // pc.getBody().setTransform(x.pos,pc.getBody().getAngle());
+                            //  if(pc.getBody().getLinearVelocity().y!=0)
+                            pc.setVelocity(x.linVel);
                             //else pc.getBody().setLinearVelocity(x.linVel.x,pc.getBody().getLinearVelocity().y);
 
                             pc.setHorizontalState(DynamicGameActor.HorizontalState.valueOf(x.horizontalState));
@@ -92,8 +91,8 @@ public class MageShowdownClient extends Game {
                             if (currPlayer != null) {
                                 //currPlayer.setPosition(x.pos);
                                 //if(currPlayer.getBody().getLinearVelocity().y!=0)
-                                    currPlayer.setVelocity(x.linVel);
-                               // else currPlayer.getBody().setLinearVelocity(x.linVel.x,currPlayer.getBody().getLinearVelocity().y);
+                                currPlayer.setVelocity(x.linVel);
+                                // else currPlayer.getBody().setLinearVelocity(x.linVel.x,currPlayer.getBody().getLinearVelocity().y);
 
                                 currPlayer.setHorizontalState(DynamicGameActor.HorizontalState.valueOf(x.horizontalState));
                                 currPlayer.setVerticalState(DynamicGameActor.VerticalState.valueOf(x.verticalState));
