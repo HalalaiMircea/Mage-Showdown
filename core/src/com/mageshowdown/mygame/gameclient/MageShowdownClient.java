@@ -57,8 +57,11 @@ public class MageShowdownClient extends Game {
         kryo.register(Vector2.class);
         kryo.register(UpdatePositions.class);
         kryo.register(ArrayList.class);
-        kryo.register(KeyDown.class);
+        kryo.register(MoveKeyDown.class);
         kryo.register(KeyUp.class);
+        kryo.register(ShootProjectile.class);
+        kryo.register(ProjectileCollided.class);
+
 
         try {
             GameWorld.myClient.connect(5000, ipAddress, Network.TCP_PORT, Network.UDP_PORT);
@@ -104,6 +107,22 @@ public class MageShowdownClient extends Game {
                         gameScreen.getGameStage().getPlayerCharacter().setPosition(((OneCharacterLocation) object).pos);
                     else
                         gameScreen.getGameStage().getOtherPlayers().get(((OneCharacterLocation) object).id).setPosition(((OneCharacterLocation) object).pos);
+                }
+
+                if(object instanceof ShootProjectile){
+                            gameScreen.getGameStage().getOtherPlayers().get(((ShootProjectile) object).id).getMyWeapon().shoot(((ShootProjectile) object).dir,((ShootProjectile) object).rot,((ShootProjectile) object).id);
+                }
+
+                if(object instanceof ProjectileCollided){
+                    //if the bullet is the client's player's
+                    if(((ProjectileCollided) object).ownerId==connection.getID()){
+                        gameScreen.getGameStage().getPlayerCharacter().getMyWeapon().projectileHasCollided(connection.getID());
+                    }
+                    //if the bullet is some other client's player's
+                    else{
+                        gameScreen.getGameStage().getOtherPlayers().get(((ProjectileCollided) object).ownerId).getMyWeapon().projectileHasCollided(((ProjectileCollided) object).projId);
+                    }
+                    gameScreen.getGameStage().getOtherPlayers().get(((ProjectileCollided) object).playerHitId).damageBy(3);
                 }
             }
         });

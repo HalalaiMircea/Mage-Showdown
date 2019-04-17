@@ -33,13 +33,13 @@ public class ClientAssetLoader {
         idlePlayerSpriteSheet = new Texture("idleAnimationSpritesheet.png");
         jumpingPlayerSpritesheet = new Texture("jumpingAnimationSpritesheet.png");
         runningPlayerSpritesheet = new Texture("runningAnimationSpritesheet.png");
+        laserShotTexture = new Texture("laser shot3.png");
         interfaceSkin = new Skin(Gdx.files.internal("UIAssets/uiskin.json"));
         menuBackground = new Texture(Gdx.files.internal("UIAssets/placeholder.jpg"));
         groundTexture = new Texture("ground.png");
         borderTexture = new Texture("border.png");
         gunTexture = new Texture("gun.png");
         waterSphereSpriteSheet = new Texture("water sphere 6.png");
-        laserShotTexture = new Texture("laser shot3.png");
         map1 = new TmxMapLoader().load("Maps\\level1.tmx");
     }
 

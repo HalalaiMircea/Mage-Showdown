@@ -35,7 +35,7 @@ public class ServerGameStage extends Stage {
     }
 
     public void addPlayerCharacter(int connectionId, Vector2 pos){
-        playerCharacters.put(connectionId,new ServerPlayerCharacter(this,pos));
+        playerCharacters.put(connectionId,new ServerPlayerCharacter(this,pos,connectionId));
     }
 
     public ServerPlayerCharacter getPlayerById(int connectionId){

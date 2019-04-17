@@ -10,11 +10,17 @@ public class Projectile extends DynamicGameActor {
 
     protected boolean collided=false;
     protected boolean outOfBounds=false;
+    protected int id;
+    protected int ownerId;
 
-    public Projectile(Stage stage, Vector2 position, float rotation){
+    public Projectile(Stage stage, Vector2 position, float rotation, Vector2 direction, int id, int ownerId){
         super(stage,position, new Vector2(46,31),ClientAssetLoader.laserShotTexture,.75f);
         createBody(BodyDef.BodyType.DynamicBody);
-        Vector2 direction=GameWorld.getNormalizedMouseVector(position);
+
+        //the id is used to identify the projectile when it needs to be destroyed
+        this.id=id;
+        //the owner id is the id of the player that shot the bullet
+        this.ownerId=ownerId;
 
         //we dont want the projectile to react to any collisions or be affected by gravity so we make it a sensor
         body.getFixtureList().get(0).setSensor(true);
@@ -25,6 +31,7 @@ public class Projectile extends DynamicGameActor {
         velocity.y=5f*direction.y;
         stage.addActor(this);
     }
+
 
     //if two projectiles have the same position then we know its the same projectile
     @Override
@@ -60,6 +67,14 @@ public class Projectile extends DynamicGameActor {
 
     public boolean isOutOfBounds() {
         return outOfBounds;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getOwnerId() {
+        return ownerId;
     }
 
     @Override

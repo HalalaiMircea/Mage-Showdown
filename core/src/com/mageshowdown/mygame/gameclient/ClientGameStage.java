@@ -25,8 +25,7 @@ public class ClientGameStage extends Stage {
         gameLevel=new GameLevel(this);
         otherPlayers=new HashMap<Integer, ClientPlayerCharacter>();
 
-        GameWorld.world.setContactListener(new CollisionListener());
-    }
+        }
 
     @Override
     public void act() {

@@ -11,14 +11,17 @@ import java.util.ListIterator;
 
 public class Weapon extends GameActor implements AnimatedActorInterface{
     private ArrayList<Projectile> weaponShots;
+    private boolean loadAnimation;
 
-    public Weapon(Stage stage){
+    public Weapon(Stage stage, boolean loadAnimation){
         super(stage,new Vector2(0,0),new Vector2(32,33));
         weaponShots=new ArrayList<Projectile>();
+        this.loadAnimation=loadAnimation;
 
-        addAnimation(3,1,.5f,"idle",ClientAssetLoader.waterSphereSpriteSheet);
-
+        if(loadAnimation)
+            addAnimation(3,1,.5f,"idle",ClientAssetLoader.waterSphereSpriteSheet);
     }
+
 
     public void updatePosition(Vector2 position){
         Vector2 offset=new Vector2(-5f,35f);
@@ -29,9 +32,16 @@ public class Weapon extends GameActor implements AnimatedActorInterface{
     public void act(float delta) {
         super.act(delta);
 
+        destroyEliminatedProjectiles();
+
+        if(loadAnimation)
+            pickFrame();
+    }
+
+    private void destroyEliminatedProjectiles(){
         /*
-        * if it has collided or out of the screen remove projectile from the arraylist and the stage so theres no reference to it left
-        */
+         * if it has collided or out of the screen remove projectile from the arraylist and the stage so theres no reference to it left
+         */
         ListIterator<Projectile> iter=weaponShots.listIterator();
         while(iter.hasNext()){
             Projectile x=iter.next();
@@ -41,14 +51,21 @@ public class Weapon extends GameActor implements AnimatedActorInterface{
                 iter.remove();
             }
         }
-
-        pickFrame();
     }
 
-    public void shoot(){
+    public void projectileHasCollided(int projId){
+        for(Projectile x:weaponShots){
+            if(x.getId()==projId){
+                x.hasCollided();
+                break;
+            }
+        }
+    }
+
+
+    public void shoot(Vector2 direction, float rotation, int ownerId){
         Vector2 shootingOrigin=new Vector2((getX()),(getY()+getHeight()/2));
-        float rotation=GameWorld.getMouseVectorAngle(shootingOrigin);
-        weaponShots.add(new Projectile(getStage(),shootingOrigin,rotation));
+        weaponShots.add(new Projectile(getStage(),shootingOrigin,rotation,direction,weaponShots.size(),ownerId));
     }
 
     @Override
@@ -60,5 +77,32 @@ public class Weapon extends GameActor implements AnimatedActorInterface{
     @Override
     public void pickFrame() {
         currFrame=animations.get("idle").getKeyFrame(passedTime,true);
+    }
+
+    public ArrayList<Vector2> getProjectileLocations(){
+        ArrayList<Vector2> locations=new ArrayList<Vector2>();
+        for(Projectile x:weaponShots){
+            locations.add(x.getBody().getPosition());
+        }
+        return locations;
+    }
+
+    public ArrayList<Vector2> getProjectileVelocities(){
+        ArrayList<Vector2> locations=new ArrayList<Vector2>();
+        for(Projectile x:weaponShots){
+            locations.add(x.getBody().getLinearVelocity());
+        }
+        return locations;
+    }
+
+    public void setProjectileLocVel(ArrayList<Vector2> locations, ArrayList<Vector2> velocities){
+        int index=0;
+        System.out.println(weaponShots.size()+" "+locations.size());
+        for(Projectile x:weaponShots){
+            if(locations.size()!=weaponShots.size())
+                return;
+            x.getBody().setTransform(locations.get(index),x.getBody().getAngle());
+            x.getBody().setLinearVelocity(velocities.get(index++));
+        }
     }
 }

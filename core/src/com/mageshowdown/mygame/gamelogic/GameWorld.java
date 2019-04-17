@@ -4,11 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.esotericsoftware.kryonet.Client;
+import com.esotericsoftware.kryonet.Server;
 
 public class GameWorld {
     public static World world;
     public static float resolutionScale;
     public static Client myClient;
+    public static Server myServer;
 
     static{
         world=new World(new Vector2(0,-9.8f),true);

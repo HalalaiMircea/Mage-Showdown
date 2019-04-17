@@ -1,6 +1,5 @@
 package com.mageshowdown.mygame.gameclient;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
@@ -11,13 +10,22 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mageshowdown.mygame.packets.Network.*;
 import com.mageshowdown.mygame.gamelogic.*;
 
+import java.util.ArrayList;
+
 public class ClientPlayerCharacter extends DynamicGameActor implements AnimatedActorInterface{
 
     private Weapon myWeapon;
+
     private boolean moveLeft=false;
     private boolean moveRight=false;
     private boolean jump=false;
     private boolean isMyPlayer=false;
+    private int health=15;
+
+    /*
+    * declaring the variables where im holding the positions and velocities of player and projectiles
+    * after the world steps, we update their bodies with these values
+     */
     private Vector2 queuedPos;
     private Vector2 queuedVel;
     private boolean canClear=false;
@@ -28,7 +36,9 @@ public class ClientPlayerCharacter extends DynamicGameActor implements AnimatedA
         addAnimation(2,1,.8f,"jumping",ClientAssetLoader.jumpingPlayerSpritesheet);
         addAnimation(8,1,1f,"running",ClientAssetLoader.runningPlayerSpritesheet);
 
-        myWeapon=new Weapon(stage);
+
+        myWeapon=new Weapon(stage,true);
+
         createBody(BodyDef.BodyType.DynamicBody);
         body.setFixedRotation(true);
         addListener(new InputListener() {
@@ -45,7 +55,16 @@ public class ClientPlayerCharacter extends DynamicGameActor implements AnimatedA
                     jump=true;
                 }
                 if(keycode==Input.Keys.Q){
-                    myWeapon.shoot();
+                    ShootProjectile sp=new ShootProjectile();
+                    Vector2 shootingOrigin=new Vector2((myWeapon.getX()),(myWeapon.getY()+myWeapon.getHeight()/2));
+                    float rotation=GameWorld.getMouseVectorAngle(shootingOrigin);
+                    Vector2 direction=GameWorld.getNormalizedMouseVector(shootingOrigin);
+
+                    sp.id=GameWorld.myClient.getID();
+                    sp.rot=rotation;
+                    sp.dir=direction;
+                    GameWorld.myClient.sendTCP(sp);
+                    myWeapon.shoot(direction,rotation,GameWorld.myClient.getID());
                 }
 
                 return true;
@@ -82,7 +101,7 @@ public class ClientPlayerCharacter extends DynamicGameActor implements AnimatedA
 
     @Override
     public void act(float delta) {
-        KeyDown keyPress=new KeyDown();
+        MoveKeyDown keyPress=new MoveKeyDown();
 
         if(moveLeft){
             keyPress.keycode=Input.Keys.A;
@@ -152,7 +171,8 @@ public class ClientPlayerCharacter extends DynamicGameActor implements AnimatedA
 
         if(myWeapon!=null)
             myWeapon.updatePosition(new Vector2(getX(),getY()));
-        //super.act(delta);
+        if(isMyPlayer)
+            System.out.println(health);
         super.updateGameActor(delta);
     }
 
@@ -192,6 +212,10 @@ public class ClientPlayerCharacter extends DynamicGameActor implements AnimatedA
         }
     }
 
+    public Weapon getMyWeapon() {
+        return myWeapon;
+    }
+
     public void setMyPlayer(boolean myPlayer) {
         isMyPlayer = myPlayer;
     }
@@ -205,11 +229,16 @@ public class ClientPlayerCharacter extends DynamicGameActor implements AnimatedA
         this.queuedVel = queuedVel;
     }
 
+
     public void clearQueue(){
         if(canClear){
             body.setTransform(queuedPos,body.getAngle());
             body.setLinearVelocity(queuedVel);
             canClear=false;
         }
+    }
+
+    public void damageBy(int damageValue){
+        health-=damageValue;
     }
 }

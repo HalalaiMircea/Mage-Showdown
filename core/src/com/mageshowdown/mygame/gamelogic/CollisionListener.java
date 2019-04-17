@@ -1,9 +1,13 @@
 package com.mageshowdown.mygame.gamelogic;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
+import com.esotericsoftware.kryonet.Server;
+import com.mageshowdown.mygame.gameserver.ServerPlayerCharacter;
+import com.mageshowdown.mygame.packets.Network;
 
 public class CollisionListener implements ContactListener {
 
@@ -14,11 +18,27 @@ public class CollisionListener implements ContactListener {
 
 
 
-        if(obj1 instanceof Projectile && obj2 instanceof MapObjectHitbox) {
-            //((Projectile) obj1).setCollided(true);
+        if(obj1 instanceof Projectile && obj2 instanceof ServerPlayerCharacter) {
+            handlePlayerProjectileCollision((Projectile)obj1,(ServerPlayerCharacter)obj2);
         }
-        else if (obj1 instanceof MapObjectHitbox && obj2 instanceof Projectile){
-            //((Projectile) obj2).setCollided(true);
+        else if (obj1 instanceof ServerPlayerCharacter && obj2 instanceof Projectile){
+            handlePlayerProjectileCollision((Projectile)obj2,(ServerPlayerCharacter)obj1);
+        }
+    }
+
+    private void handlePlayerProjectileCollision(Projectile projectile, ServerPlayerCharacter player){
+      //a player cant damage himself so we check if the projectile's owner id is the same as the player's it hit
+        if(player.getId()!=projectile.getOwnerId()){
+            Network.ProjectileCollided pc=new Network.ProjectileCollided();
+            player.damageBy(3);
+            projectile.setCollided(true);
+
+            pc.projId=projectile.getId();
+            pc.ownerId=projectile.getOwnerId();
+            pc.playerHitId=player.getId();
+
+            System.out.println("yo");
+            GameWorld.myServer.sendToAllTCP(pc);
         }
     }
 

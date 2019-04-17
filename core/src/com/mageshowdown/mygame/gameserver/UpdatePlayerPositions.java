@@ -35,6 +35,6 @@ public class UpdatePlayerPositions extends Thread{
             loc.playersPos.add(oneLoc);
         }
         server.sendToAllTCP(loc);
-        System.out.println(server.getConnections().length);
+        //System.out.println(server.getConnections().length);
     }
 }

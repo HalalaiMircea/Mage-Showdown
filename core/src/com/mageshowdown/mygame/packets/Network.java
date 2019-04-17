@@ -28,11 +28,23 @@ public class Network {
         public boolean ok=true;
     }
 
-    public static class KeyDown {
+    public static class MoveKeyDown {
         public int keycode;
     }
 
     public static class KeyUp{
         public int keycode;
+    }
+
+    public static class ShootProjectile{
+        public int id;
+        public float rot;
+        public Vector2 dir;
+    }
+
+    public static class ProjectileCollided{
+        public int projId;
+        public int ownerId;
+        public int playerHitId;
     }
 }
