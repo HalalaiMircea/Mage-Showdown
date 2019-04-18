@@ -2,18 +2,29 @@ package com.mageshowdown.mygame.gamelogic;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Server;
+import com.mageshowdown.mygame.gameclient.GameClient;
+import com.mageshowdown.mygame.gameserver.GameServer;
+
+import java.util.LinkedList;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 public class GameWorld {
-    public static World world;
+    public static final World world;
     public static float resolutionScale;
-    public static Client myClient;
-    public static Server myServer;
+    public static final GameClient myClient;
+    public static final GameServer myServer;
+    public static LinkedList<Body> bodiesToBeRemoved;
 
     static{
         world=new World(new Vector2(0,-9.8f),true);
+        myClient=new GameClient();
+        myServer=new GameServer();
+        bodiesToBeRemoved=new LinkedList<Body>();
     }
 
     public static void setResolutionScale(float _resolutionScale){
@@ -49,6 +60,12 @@ public class GameWorld {
 
     public static Vector2 convertWorldToPixels(Vector2 worldCoord){
         return new Vector2(worldCoord.x*100f,worldCoord.y*100f);
+    }
+
+    public static void clearBodyRemovalQueue(){
+        while(bodiesToBeRemoved.size()>0){
+            world.destroyBody(bodiesToBeRemoved.remove());
+        }
     }
 
 }

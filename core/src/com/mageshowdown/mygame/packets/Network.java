@@ -20,7 +20,6 @@ public class Network {
     }
 
     public static class PlayerConnected {
-        public int id;
         public Vector2 spawnLocation;
     }
 
@@ -47,4 +46,19 @@ public class Network {
         public int ownerId;
         public int playerHitId;
     }
+
+    public static class LoginRequest{
+        public String user;
+    }
+
+    public static class NewPlayerSpawned{
+        public int id;
+        public String userName;
+        public Vector2 pos;
+    }
+
+    public static class PlayerDisconnected{
+        public int id;
+    }
+
 }

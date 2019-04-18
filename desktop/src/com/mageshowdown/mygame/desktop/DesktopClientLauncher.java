@@ -11,7 +11,7 @@ public class DesktopClientLauncher {
 		config.width=1280;
 		config.height=720;
 		//config.fullscreen=true;
-		config.foregroundFPS=59;
+		//config.foregroundFPS=59;
 
 		new LwjglApplication(new MageShowdownClient(), config);
 	}

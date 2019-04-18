@@ -47,6 +47,7 @@ public class Weapon extends GameActor implements AnimatedActorInterface{
             Projectile x=iter.next();
             if(x.isOutOfBounds() || x.hasCollided())
             {
+                GameWorld.bodiesToBeRemoved.add(x.getBody());
                 x.remove();
                 iter.remove();
             }
@@ -87,22 +88,11 @@ public class Weapon extends GameActor implements AnimatedActorInterface{
         return locations;
     }
 
-    public ArrayList<Vector2> getProjectileVelocities(){
-        ArrayList<Vector2> locations=new ArrayList<Vector2>();
-        for(Projectile x:weaponShots){
+    public ArrayList<Vector2> getProjectileVelocities() {
+        ArrayList<Vector2> locations = new ArrayList<Vector2>();
+        for (Projectile x : weaponShots) {
             locations.add(x.getBody().getLinearVelocity());
         }
         return locations;
-    }
-
-    public void setProjectileLocVel(ArrayList<Vector2> locations, ArrayList<Vector2> velocities){
-        int index=0;
-        System.out.println(weaponShots.size()+" "+locations.size());
-        for(Projectile x:weaponShots){
-            if(locations.size()!=weaponShots.size())
-                return;
-            x.getBody().setTransform(locations.get(index),x.getBody().getAngle());
-            x.getBody().setLinearVelocity(velocities.get(index++));
-        }
     }
 }

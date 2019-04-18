@@ -1,5 +1,6 @@
 package com.mageshowdown.mygame.gameserver;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
@@ -12,19 +13,17 @@ import java.util.ArrayList;
 public class UpdatePlayerPositions extends Thread{
 
     private CharacterLocations loc;
-    private Server server;
     private ServerGameStage gameStage;
 
-    UpdatePlayerPositions(Server server, ServerGameStage gameStage){
+    UpdatePlayerPositions(ServerGameStage gameStage){
         loc=new CharacterLocations();
         loc.playersPos=new ArrayList<OneCharacterLocation>();
-        this.server=server;
         this.gameStage=gameStage;
         start();
     }
 
     public void run(){
-        for(Connection x:server.getConnections()){
+        for(Connection x:GameWorld.myServer.getConnections()){
             OneCharacterLocation oneLoc=new OneCharacterLocation();
             ServerPlayerCharacter pc=gameStage.getPlayerById(x.getID());
 
@@ -34,7 +33,6 @@ public class UpdatePlayerPositions extends Thread{
 
             loc.playersPos.add(oneLoc);
         }
-        server.sendToAllTCP(loc);
-        //System.out.println(server.getConnections().length);
+        GameWorld.myServer.sendToAllTCP(loc);
     }
 }

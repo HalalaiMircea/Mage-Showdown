@@ -21,6 +21,7 @@ public class ClientPlayerCharacter extends DynamicGameActor implements AnimatedA
     private boolean jump=false;
     private boolean isMyPlayer=false;
     private int health=15;
+    private String userName;
 
     /*
     * declaring the variables where im holding the positions and velocities of player and projectiles
@@ -30,12 +31,12 @@ public class ClientPlayerCharacter extends DynamicGameActor implements AnimatedA
     private Vector2 queuedVel;
     private boolean canClear=false;
 
-    public ClientPlayerCharacter(Stage stage, Vector2 position) {
+    public ClientPlayerCharacter(Stage stage, Vector2 position, String userName) {
         super(stage,position, new Vector2(22,32),1.5f   );
         addAnimation(4,1,1.2f,"idle",ClientAssetLoader.idlePlayerSpriteSheet);
         addAnimation(2,1,.8f,"jumping",ClientAssetLoader.jumpingPlayerSpritesheet);
         addAnimation(8,1,1f,"running",ClientAssetLoader.runningPlayerSpritesheet);
-
+        this.userName=userName;
 
         myWeapon=new Weapon(stage,true);
 
@@ -171,8 +172,7 @@ public class ClientPlayerCharacter extends DynamicGameActor implements AnimatedA
 
         if(myWeapon!=null)
             myWeapon.updatePosition(new Vector2(getX(),getY()));
-        if(isMyPlayer)
-            System.out.println(health);
+
         super.updateGameActor(delta);
     }
 

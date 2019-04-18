@@ -75,7 +75,8 @@ public class ServerPlayerCharacter extends DynamicGameActor{
                 velocity.y=body.getLinearVelocity().y;
             }
         }
-        myWeapon.updatePosition(new Vector2(getX(),getY()));
+        if(myWeapon!=null)
+            myWeapon.updatePosition(new Vector2(getX(),getY()));
         super.act(delta);
         moveDirection=-1;
     }

@@ -43,6 +43,7 @@ public class ServerGameStage extends Stage {
     }
 
     public void removePlayerCharacter(int connectionId){
+        GameWorld.bodiesToBeRemoved.add(playerCharacters.get(connectionId).getBody());
         playerCharacters.get(connectionId).remove();
         playerCharacters.remove(connectionId);
     }

@@ -31,6 +31,14 @@ public class ClientGameStage extends Stage {
     public void act() {
         super.act();
         GameWorld.world.step(Gdx.graphics.getDeltaTime(),6,2);
+
+        /*
+        * anything that affects the bodies inside a world has to be done after a world has stepped
+        * otherwise it can cause it to lock; here the positions and velocities of players' bodies are synchronized
+        * and the bodies that have to be removed are removed
+        */
+        GameWorld.clearBodyRemovalQueue();
+
         if(playerCharacter!=null)
             playerCharacter.clearQueue();
         for(ClientPlayerCharacter pc:otherPlayers.values()){
@@ -57,12 +65,18 @@ public class ClientGameStage extends Stage {
         return otherPlayers;
     }
 
-    public void spawnMyPlayerCharacter(Vector2 position){
-        playerCharacter=new ClientPlayerCharacter(this,position);
+    public void removePlayerCharacter(int connectionId){
+        GameWorld.bodiesToBeRemoved.add(otherPlayers.get(connectionId).getBody());
+        otherPlayers.get(connectionId).remove();
+        otherPlayers.remove(connectionId);
+    }
+
+    public void spawnMyPlayerCharacter(Vector2 position, String userName){
+        playerCharacter=new ClientPlayerCharacter(this,position,userName);
         setKeyboardFocus(playerCharacter);
     }
 
-    public void spawnOtherPlayer(int id, Vector2 position){
-        otherPlayers.put(id,new ClientPlayerCharacter(this,position));
+    public void spawnOtherPlayer(int id, Vector2 position, String userName){
+        otherPlayers.put(id,new ClientPlayerCharacter(this,position,userName));
     }
 }
