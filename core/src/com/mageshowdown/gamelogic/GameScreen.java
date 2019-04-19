@@ -25,13 +25,13 @@ public class GameScreen implements Screen {
         GAME_PAUSED
     }
 
-    private final MageShowdownClient game;
-    private ClientGameStage gameStage;      //gameplay, or character control stage
-    private Stage escMenuStage;          //menu overlay after pressing escape during gameplay
-    private GameState gameState;
+    private static MageShowdownClient game;
+    private static ClientGameStage gameStage;      //gameplay, or character control stage
+    private static Stage escMenuStage;          //menu overlay after pressing escape during gameplay
+    private static GameState gameState;
 
     public GameScreen(final MageShowdownClient game) {
-        this.game = game;
+        GameScreen.game = game;
         gameStage = new ClientGameStage();
         prepareEscMenu();
 
@@ -59,17 +59,17 @@ public class GameScreen implements Screen {
 
     }
 
-    public void start() {
+    public static void start() {
         gameStage.start();
     }
 
-    public ClientGameStage getGameStage() {
+    public static ClientGameStage getGameStage() {
         return gameStage;
     }
 
     //setter to access gameState member variable from MenuScreen class
-    public void setGameState(GameState gameState) {
-        this.gameState = gameState;
+    public static void setGameState(GameState gameState) {
+        GameScreen.gameState = gameState;
     }
 
     @Override
@@ -103,14 +103,14 @@ public class GameScreen implements Screen {
         escMenuStage.dispose();
     }
 
-    private void gameRunningInput() {
+    private static void gameRunningInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) && gameState == GameState.GAME_RUNNING) {
             gameState = GameState.GAME_PAUSED;
             Gdx.input.setInputProcessor(escMenuStage);
         }
     }
 
-    private void gamePausedInput() {
+    private static void gamePausedInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) && gameState == GameState.GAME_PAUSED) {
             gameState = GameState.GAME_RUNNING;
             Gdx.input.setInputProcessor(gameStage);
@@ -119,7 +119,7 @@ public class GameScreen implements Screen {
 //            Gdx.app.exit();
     }
 
-    private void prepareEscMenu() {
+    private static void prepareEscMenu() {
         escMenuStage = new Stage(gameStage.getViewport(), gameStage.getBatch());
 
         Table menuTable = new Table();
@@ -141,7 +141,7 @@ public class GameScreen implements Screen {
         menuTable.add(quitButton);
         background.add(semiTL);
 
-        resumeButton.addListener(new ClickListener(){
+        resumeButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 gameState = GameState.GAME_RUNNING;
@@ -149,7 +149,7 @@ public class GameScreen implements Screen {
             }
         });
 
-        quitButton.addListener(new ClickListener(){
+        quitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.exit();

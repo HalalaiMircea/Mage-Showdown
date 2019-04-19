@@ -1,5 +1,6 @@
 package com.mageshowdown.gamelogic;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -18,15 +19,13 @@ public class MenuScreen implements Screen {
         OPTIONS_STAGE
     }
 
-    private StagePhase stagePhase;
-    private Stage mainMenuStage;
-    private Stage optionsStage;
-    private GameScreen gameScreen;
-    private final MageShowdownClient game;
+    private static StagePhase stagePhase;
+    private static Stage mainMenuStage;
+    private static Stage optionsStage;
+    private static MageShowdownClient game;
 
-    public MenuScreen(final MageShowdownClient game, final GameScreen gameScreen) {
-        this.game = game;
-        this.gameScreen = gameScreen;
+    public MenuScreen(final MageShowdownClient game) {
+        MenuScreen.game = game;
 
         prepareMainMenuStage();
         prepareOptionsStage();
@@ -83,7 +82,7 @@ public class MenuScreen implements Screen {
         optionsStage.dispose();
     }
 
-    public void prepareMainMenuStage() {
+    private static void prepareMainMenuStage() {
         mainMenuStage = new Stage();
 
         Table background = new Table();
@@ -120,9 +119,9 @@ public class MenuScreen implements Screen {
         connectButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent even, float x, float y) {
-                game.setScreen(gameScreen);
-                gameScreen.start();
-                gameScreen.setGameState(GameScreen.GameState.GAME_RUNNING);
+                game.setScreen(new GameScreen(game));
+                GameScreen.start();
+                GameScreen.setGameState(GameScreen.GameState.GAME_RUNNING);
                 String ipAddress = addressField.getText();
                 game.clientStart(ipAddress);
             }
@@ -139,7 +138,7 @@ public class MenuScreen implements Screen {
         mainMenuStage.addActor(foreground);
     }
 
-    private void prepareOptionsStage() {
+    private static void prepareOptionsStage() {
         optionsStage = new Stage();
 
         Table background = new Table();

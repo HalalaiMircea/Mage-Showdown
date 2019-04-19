@@ -18,14 +18,13 @@ public class MageShowdownClient extends Game {
         ClientAssetLoader.load();
 
         gameScreen = new GameScreen(this);
-        menuScreen = new MenuScreen(this, gameScreen);
+        menuScreen = new MenuScreen(this);
         this.setScreen(menuScreen);
     }
 
     @Override
     public void render() {
         super.render();
-
         Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() + " ");
     }
 
