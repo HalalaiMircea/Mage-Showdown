@@ -3,27 +3,38 @@ package com.mageshowdown.gamelogic;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.mageshowdown.gameclient.ClientAssetLoader;
 import com.mageshowdown.gameclient.ClientGameStage;
 import com.mageshowdown.gameclient.MageShowdownClient;
 
 public class GameScreen implements Screen {
 
     enum GameState {
-        GAME_READY,
         GAME_RUNNING,
         GAME_PAUSED
     }
 
     private final MageShowdownClient game;
-    private ClientGameStage gameStage;
+    private ClientGameStage gameStage;      //gameplay, or character control stage
+    private Stage escMenuStage;          //menu overlay after pressing escape during gameplay
     private GameState gameState;
 
     public GameScreen(final MageShowdownClient game) {
-        super();
         this.game = game;
         gameStage = new ClientGameStage();
-        gameState = GameState.GAME_READY;
+        prepareEscMenu();
+
     }
 
     @Override
@@ -32,17 +43,17 @@ public class GameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         switch (gameState) {
-//            case GAME_READY:
-//                gameReadyInput();
-//                break;
             case GAME_RUNNING:
                 gameStage.act();
-                gameRunningInput();
                 gameStage.draw();
+                gameRunningInput();
                 break;
             case GAME_PAUSED:
-                gamePausedInput();
+                gameStage.act();
+                escMenuStage.act();
                 gameStage.draw();
+                escMenuStage.draw();
+                gamePausedInput();
                 break;
         }
 
@@ -50,24 +61,6 @@ public class GameScreen implements Screen {
 
     public void start() {
         gameStage.start();
-    }
-
-//    private void gameReadyInput() {
-//        if (Gdx.input.isKeyPressed(Input.Keys.ENTER))
-//            gameState = GameState.GAME_RUNNING;
-//    }
-
-    private void gameRunningInput() {
-        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE) && gameState == GameState.GAME_RUNNING) {
-            gameState = GameState.GAME_PAUSED;
-        }
-    }
-
-    private void gamePausedInput() {
-        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE) && gameState == GameState.GAME_PAUSED)
-            gameState = GameState.GAME_RUNNING;
-        else if (Gdx.input.isKeyPressed(Input.Keys.Q))
-            Gdx.app.exit();
     }
 
     public ClientGameStage getGameStage() {
@@ -107,5 +100,63 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         gameStage.dispose();
+        escMenuStage.dispose();
+    }
+
+    private void gameRunningInput() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) && gameState == GameState.GAME_RUNNING) {
+            gameState = GameState.GAME_PAUSED;
+            Gdx.input.setInputProcessor(escMenuStage);
+        }
+    }
+
+    private void gamePausedInput() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) && gameState == GameState.GAME_PAUSED) {
+            gameState = GameState.GAME_RUNNING;
+            Gdx.input.setInputProcessor(gameStage);
+        }
+//        } else if (Gdx.input.isKeyPressed(Input.Keys.Q))
+//            Gdx.app.exit();
+    }
+
+    private void prepareEscMenu() {
+        escMenuStage = new Stage(gameStage.getViewport(), gameStage.getBatch());
+
+        Table menuTable = new Table();
+        menuTable.setFillParent(true);
+        menuTable.debug();
+        Table background = new Table();
+        background.setFillParent(true);
+
+        TextButton resumeButton = new TextButton("Resume Game", ClientAssetLoader.interfaceSkin);
+        TextButton optionsButton = new TextButton("Options", ClientAssetLoader.interfaceSkin);
+        TextButton quitButton = new TextButton("Quit to Desktop", ClientAssetLoader.interfaceSkin);
+        Image semiTL = new Image(ClientAssetLoader.solidBlack);
+        semiTL.setColor(0, 0, 0, 0.8f);
+
+        menuTable.add(resumeButton).padBottom(20);
+        menuTable.row();
+        menuTable.add(optionsButton).padBottom(20);
+        menuTable.row();
+        menuTable.add(quitButton);
+        background.add(semiTL);
+
+        resumeButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                gameState = GameState.GAME_RUNNING;
+                Gdx.input.setInputProcessor(gameStage);
+            }
+        });
+
+        quitButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.exit();
+            }
+        });
+
+        escMenuStage.addActor(background);
+        escMenuStage.addActor(menuTable);
     }
 }

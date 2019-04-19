@@ -20,8 +20,6 @@ public class MageShowdownClient extends Game {
         gameScreen = new GameScreen(this);
         menuScreen = new MenuScreen(this, gameScreen);
         this.setScreen(menuScreen);
-
-
     }
 
     @Override

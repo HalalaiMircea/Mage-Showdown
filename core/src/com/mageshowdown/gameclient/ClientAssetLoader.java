@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 
 public class ClientAssetLoader {
+    public static Texture solidBlack;
     public static Skin interfaceSkin;
     public static Texture menuBackground;
     public static Texture groundTexture;
@@ -36,6 +37,7 @@ public class ClientAssetLoader {
         laserShotTexture = new Texture("laser shot3.png");
         interfaceSkin = new Skin(Gdx.files.internal("UIAssets/uiskin.json"));
         menuBackground = new Texture(Gdx.files.internal("UIAssets/placeholder.jpg"));
+        solidBlack = new Texture(Gdx.files.internal("UIAssets/Black_1080p.png"));
         groundTexture = new Texture("ground.png");
         borderTexture = new Texture("border.png");
         gunTexture = new Texture("gun.png");
@@ -46,6 +48,7 @@ public class ClientAssetLoader {
     public static void dispose() {
         interfaceSkin.dispose();
         menuBackground.dispose();
+        solidBlack.dispose();
         groundTexture.dispose();
         borderTexture.dispose();
         idlePlayerSpriteSheet.dispose();

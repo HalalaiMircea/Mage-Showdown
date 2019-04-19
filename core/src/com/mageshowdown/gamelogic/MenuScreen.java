@@ -83,7 +83,7 @@ public class MenuScreen implements Screen {
         optionsStage.dispose();
     }
 
-    private void prepareMainMenuStage() {
+    public void prepareMainMenuStage() {
         mainMenuStage = new Stage();
 
         Table background = new Table();
