@@ -19,7 +19,7 @@ public class DesktopClientLauncher {
         //config.useGL30=true;
         //config.fullscreen=true;
         //testStuff();
-        new LwjglApplication(new MageShowdownClient(), config);
+        new LwjglApplication(MageShowdownClient.getInstance(), config);
     }
 
     private static void testStuff() {

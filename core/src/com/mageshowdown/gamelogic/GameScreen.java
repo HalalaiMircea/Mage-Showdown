@@ -25,13 +25,14 @@ public class GameScreen implements Screen {
         GAME_PAUSED
     }
 
-    private static MageShowdownClient game;
+    //Singleton omegalul
+    private static final GameScreen INSTANCE = new GameScreen();
+
     private static ClientGameStage gameStage;      //gameplay, or character control stage
     private static Stage escMenuStage;          //menu overlay after pressing escape during gameplay
     private static GameState gameState;
 
-    public GameScreen(final MageShowdownClient game) {
-        GameScreen.game = game;
+    private GameScreen() {
         gameStage = new ClientGameStage();
         prepareEscMenu();
 
@@ -59,8 +60,8 @@ public class GameScreen implements Screen {
 
     }
 
-    public static void start() {
-        gameStage.start();
+    public static GameScreen getInstance() {
+        return INSTANCE;
     }
 
     public static ClientGameStage getGameStage() {
@@ -70,6 +71,10 @@ public class GameScreen implements Screen {
     //setter to access gameState member variable from MenuScreen class
     public static void setGameState(GameState gameState) {
         GameScreen.gameState = gameState;
+    }
+
+    public static void start() {
+        gameStage.start();
     }
 
     @Override
@@ -99,6 +104,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
+        INSTANCE.dispose();
         gameStage.dispose();
         escMenuStage.dispose();
     }

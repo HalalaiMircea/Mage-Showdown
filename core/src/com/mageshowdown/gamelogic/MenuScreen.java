@@ -19,14 +19,14 @@ public class MenuScreen implements Screen {
         OPTIONS_STAGE
     }
 
+    //Singleton instantiation
+    private static final MenuScreen INSTANCE = new MenuScreen();
+
     private static StagePhase stagePhase;
     private static Stage mainMenuStage;
     private static Stage optionsStage;
-    private static MageShowdownClient game;
 
-    public MenuScreen(final MageShowdownClient game) {
-        MenuScreen.game = game;
-
+    private MenuScreen() {
         prepareMainMenuStage();
         prepareOptionsStage();
 
@@ -80,6 +80,11 @@ public class MenuScreen implements Screen {
     public void dispose() {
         mainMenuStage.dispose();
         optionsStage.dispose();
+        INSTANCE.dispose();
+    }
+
+    public static MenuScreen getInstance() {
+        return INSTANCE;
     }
 
     private static void prepareMainMenuStage() {
@@ -119,11 +124,11 @@ public class MenuScreen implements Screen {
         connectButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent even, float x, float y) {
-                game.setScreen(new GameScreen(game));
+                MageShowdownClient.getInstance().setScreen(GameScreen.getInstance());
                 GameScreen.start();
                 GameScreen.setGameState(GameScreen.GameState.GAME_RUNNING);
                 String ipAddress = addressField.getText();
-                game.clientStart(ipAddress);
+                MageShowdownClient.clientStart(ipAddress);
             }
         });
 

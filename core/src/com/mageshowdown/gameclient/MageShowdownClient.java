@@ -8,18 +8,22 @@ import com.mageshowdown.gamelogic.MenuScreen;
 import com.mageshowdown.packets.Network;
 
 public class MageShowdownClient extends Game {
-    private GameScreen gameScreen;
-    private MenuScreen menuScreen;
 
+    private static final MageShowdownClient INSTANCE = new MageShowdownClient();
+
+    //public static GameScreen gameScreen;
+    //public static MenuScreen menuScreen;
+
+    private MageShowdownClient() {
+
+    }
 
     @Override
     public void create() {
         GameWorld.setResolutionScale(Gdx.graphics.getWidth() / 1280f);
         ClientAssetLoader.load();
 
-        gameScreen = new GameScreen(this);
-        menuScreen = new MenuScreen(this);
-        this.setScreen(menuScreen);
+        this.setScreen(MenuScreen.getInstance());
     }
 
     @Override
@@ -31,18 +35,18 @@ public class MageShowdownClient extends Game {
     @Override
     public void dispose() {
         ClientAssetLoader.dispose();
-        gameScreen.dispose();
-        menuScreen.dispose();
     }
 
 
-    public void clientStart(String ipAddress) {
+    public static void clientStart(String ipAddress) {
         GameWorld.myClient.start();
 
         GameWorld.myClient.connect(5000, ipAddress, Network.TCP_PORT, Network.UDP_PORT);
 
-        GameWorld.myClient.addListener(new ClientListener(gameScreen));
+        GameWorld.myClient.addListener(new ClientListener(GameScreen.getInstance()));
     }
 
-
+    public static MageShowdownClient getInstance() {
+        return INSTANCE;
+    }
 }
