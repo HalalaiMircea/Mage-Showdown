@@ -11,9 +11,6 @@ public class MageShowdownClient extends Game {
 
     private static final MageShowdownClient INSTANCE = new MageShowdownClient();
 
-    //public static GameScreen gameScreen;
-    //public static MenuScreen menuScreen;
-
     private MageShowdownClient() {
 
     }
@@ -36,7 +33,6 @@ public class MageShowdownClient extends Game {
     public void dispose() {
         ClientAssetLoader.dispose();
     }
-
 
     public static void clientStart(String ipAddress) {
         GameWorld.myClient.start();

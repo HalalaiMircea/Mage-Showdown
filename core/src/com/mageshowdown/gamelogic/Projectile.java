@@ -37,8 +37,7 @@ public class Projectile extends DynamicGameActor {
     @Override
     public boolean equals(Object obj) {
         if(obj instanceof Projectile){
-            if(((Projectile) obj).getX() == getX() && ((Projectile) obj).getY() == getY())
-                return true;
+            return ((Projectile) obj).getX() == getX() && ((Projectile) obj).getY() == getY();
         }
         return false;
     }
