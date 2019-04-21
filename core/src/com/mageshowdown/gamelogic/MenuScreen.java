@@ -1,6 +1,5 @@
 package com.mageshowdown.gamelogic;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -11,10 +10,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mageshowdown.gameclient.ClientAssetLoader;
 import com.mageshowdown.gameclient.MageShowdownClient;
 
-
 public class MenuScreen implements Screen {
 
-    private enum StagePhase {
+    public enum StagePhase {
         MAIN_MENU_STAGE,
         OPTIONS_STAGE
     }
@@ -22,13 +20,15 @@ public class MenuScreen implements Screen {
     //Singleton instantiation
     private static final MenuScreen INSTANCE = new MenuScreen();
 
+    private static OptionsStage menuOptionsStage;
     private static StagePhase stagePhase;
     private static Stage mainMenuStage;
-    private static Stage optionsStage;
 
     private MenuScreen() {
+        mainMenuStage = new Stage();
+        menuOptionsStage = new OptionsStage(mainMenuStage.getViewport(), mainMenuStage.getBatch(),
+                ClientAssetLoader.menuBackground);
         prepareMainMenuStage();
-        prepareOptionsStage();
 
         stagePhase = StagePhase.MAIN_MENU_STAGE;
         Gdx.input.setInputProcessor(mainMenuStage);
@@ -46,12 +46,12 @@ public class MenuScreen implements Screen {
 
         switch (stagePhase) {
             case MAIN_MENU_STAGE:
-                mainMenuStage.act(delta);
+                mainMenuStage.act();
                 mainMenuStage.draw();
                 break;
             case OPTIONS_STAGE:
-                optionsStage.act(delta);
-                optionsStage.draw();
+                menuOptionsStage.act();
+                menuOptionsStage.draw();
                 break;
         }
     }
@@ -79,7 +79,7 @@ public class MenuScreen implements Screen {
     @Override
     public void dispose() {
         mainMenuStage.dispose();
-        optionsStage.dispose();
+        menuOptionsStage.dispose();
         INSTANCE.dispose();
     }
 
@@ -87,9 +87,15 @@ public class MenuScreen implements Screen {
         return INSTANCE;
     }
 
-    private static void prepareMainMenuStage() {
-        mainMenuStage = new Stage();
+    public static Stage getMainMenuStage() {
+        return mainMenuStage;
+    }
 
+    public static void setStagePhase(StagePhase stagePhase) {
+        MenuScreen.stagePhase = stagePhase;
+    }
+
+    private static void prepareMainMenuStage() {
         Table background = new Table();
         background.add(new Image(ClientAssetLoader.menuBackground));
         background.setFillParent(true);
@@ -136,36 +142,10 @@ public class MenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 stagePhase = StagePhase.OPTIONS_STAGE;
-                Gdx.input.setInputProcessor(optionsStage);
+                Gdx.input.setInputProcessor(menuOptionsStage);
             }
         });
         mainMenuStage.addActor(background);
         mainMenuStage.addActor(foreground);
-    }
-
-    private static void prepareOptionsStage() {
-        optionsStage = new Stage();
-
-        Table background = new Table();
-        background.add(new Image(ClientAssetLoader.menuBackground));
-        background.setFillParent(true);
-
-        Table foreground = new Table();
-        foreground.setFillParent(true);
-        foreground.debug();
-
-        TextButton backButton = new TextButton("Back", ClientAssetLoader.interfaceSkin);
-
-        foreground.add(backButton);
-
-        backButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                stagePhase = StagePhase.MAIN_MENU_STAGE;
-                Gdx.input.setInputProcessor(mainMenuStage);
-            }
-        });
-        optionsStage.addActor(background);
-        optionsStage.addActor(foreground);
     }
 }

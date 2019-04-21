@@ -3,39 +3,39 @@ package com.mageshowdown.gamelogic;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.mageshowdown.gameclient.ClientAssetLoader;
 import com.mageshowdown.gameclient.ClientGameStage;
-import com.mageshowdown.gameclient.MageShowdownClient;
 
 public class GameScreen implements Screen {
 
     enum GameState {
         GAME_RUNNING,
-        GAME_PAUSED
+        GAME_PAUSED,
+        GAME_OPTIONS
     }
 
     //Singleton omegalul
     private static final GameScreen INSTANCE = new GameScreen();
 
     private static ClientGameStage gameStage;      //gameplay, or character control stage
+    private static OptionsStage gameOptionsStage;
     private static Stage escMenuStage;          //menu overlay after pressing escape during gameplay
     private static GameState gameState;
 
     private GameScreen() {
         gameStage = new ClientGameStage();
-        prepareEscMenu();
+        escMenuStage = new Stage(gameStage.getViewport(), gameStage.getBatch());
+        gameOptionsStage = new OptionsStage(gameStage.getViewport(), gameStage.getBatch(),
+                ClientAssetLoader.solidBlack);
 
+        prepareEscMenu();
     }
 
     @Override
@@ -56,6 +56,12 @@ public class GameScreen implements Screen {
                 escMenuStage.draw();
                 gamePausedInput();
                 break;
+            case GAME_OPTIONS:
+                gameStage.act();
+                gameOptionsStage.act();
+                gameStage.draw();
+                gameOptionsStage.draw();
+                break;
         }
 
     }
@@ -66,6 +72,10 @@ public class GameScreen implements Screen {
 
     public static ClientGameStage getGameStage() {
         return gameStage;
+    }
+
+    public static Stage getEscMenuStage() {
+        return escMenuStage;
     }
 
     //setter to access gameState member variable from MenuScreen class
@@ -104,9 +114,10 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
-        INSTANCE.dispose();
         gameStage.dispose();
         escMenuStage.dispose();
+        gameOptionsStage.dispose();
+        INSTANCE.dispose();
     }
 
     private static void gameRunningInput() {
@@ -121,13 +132,9 @@ public class GameScreen implements Screen {
             gameState = GameState.GAME_RUNNING;
             Gdx.input.setInputProcessor(gameStage);
         }
-//        } else if (Gdx.input.isKeyPressed(Input.Keys.Q))
-//            Gdx.app.exit();
     }
 
     private static void prepareEscMenu() {
-        escMenuStage = new Stage(gameStage.getViewport(), gameStage.getBatch());
-
         Table menuTable = new Table();
         menuTable.setFillParent(true);
         menuTable.debug();
@@ -152,6 +159,14 @@ public class GameScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 gameState = GameState.GAME_RUNNING;
                 Gdx.input.setInputProcessor(gameStage);
+            }
+        });
+
+        optionsButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                gameState = GameState.GAME_OPTIONS;
+                Gdx.input.setInputProcessor(gameOptionsStage);
             }
         });
 
