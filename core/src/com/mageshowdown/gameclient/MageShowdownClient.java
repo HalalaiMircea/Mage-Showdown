@@ -11,6 +11,8 @@ public class MageShowdownClient extends Game {
 
     private static final MageShowdownClient INSTANCE = new MageShowdownClient();
 
+    private GameClient myClient=GameClient.getInstance();
+
     private MageShowdownClient() {
 
     }
@@ -34,12 +36,12 @@ public class MageShowdownClient extends Game {
         ClientAssetLoader.dispose();
     }
 
-    public static void clientStart(String ipAddress) {
-        GameWorld.myClient.start();
+    public void clientStart(String ipAddress) {
+        myClient.start();
 
-        GameWorld.myClient.connect(5000, ipAddress, Network.TCP_PORT, Network.UDP_PORT);
+        myClient.connect(5000, ipAddress, Network.TCP_PORT, Network.UDP_PORT);
 
-        GameWorld.myClient.addListener(new ClientListener(GameScreen.getInstance()));
+        myClient.addListener(new ClientListener(GameScreen.getInstance()));
     }
 
     public static MageShowdownClient getInstance() {

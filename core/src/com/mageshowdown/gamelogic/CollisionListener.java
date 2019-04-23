@@ -4,6 +4,7 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
+import com.mageshowdown.gameserver.GameServer;
 import com.mageshowdown.gameserver.ServerPlayerCharacter;
 import com.mageshowdown.packets.Network;
 
@@ -36,7 +37,7 @@ public class CollisionListener implements ContactListener {
             pc.playerHitId=player.getId();
 
             System.out.println("yo");
-            GameWorld.myServer.sendToAllTCP(pc);
+            GameServer.getInstance().sendToAllTCP(pc);
         }
     }
 

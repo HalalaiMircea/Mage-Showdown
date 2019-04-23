@@ -7,6 +7,9 @@ import com.mageshowdown.gamelogic.GameWorld;
 import com.mageshowdown.packets.Network;
 
 public class MageShowdownServer extends Game {
+
+    private GameServer myServer=GameServer.getInstance();
+
     private ServerGameStage gameStage;
     private boolean updatePositions=false;
     private float timePassed=0f;
@@ -26,10 +29,10 @@ public class MageShowdownServer extends Game {
         Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond()+" ");
         gameStage.act();
 
-        if(GameWorld.myServer.getUpdatePositions()){
+        if(myServer.getUpdatePositions()){
             new UpdatePlayerPositions(gameStage);
             timePassed=0f;
-            GameWorld.myServer.setUpdatePositions(false);
+            myServer.setUpdatePositions(false);
         }else{
             if(timePassed>=0.01f){
                 new UpdatePlayerPositions(gameStage);
@@ -50,10 +53,10 @@ public class MageShowdownServer extends Game {
     }
 
     public void serverStart(){
-        GameWorld.myServer.start();
-        GameWorld.myServer.bind(Network.TCP_PORT, Network.UDP_PORT);
+        myServer.start();
+        myServer.bind(Network.TCP_PORT, Network.UDP_PORT);
 
-        GameWorld.myServer.addListener(new ServerListener(gameStage));
+        myServer.addListener(new ServerListener(gameStage));
     }
 
 }

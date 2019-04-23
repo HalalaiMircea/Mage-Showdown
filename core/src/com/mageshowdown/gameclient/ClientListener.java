@@ -10,6 +10,8 @@ import java.util.Scanner;
 
 public class ClientListener extends Listener {
 
+    private GameClient myClient=GameClient.getInstance();
+
     private GameScreen gameScreen;
 
     public ClientListener(GameScreen gameScreen) {
@@ -36,8 +38,8 @@ public class ClientListener extends Listener {
 
             Scanner reader=new Scanner(System.in);
             packet.user=reader.nextLine();
-            GameWorld.myClient.setUserName(packet.user);
-            GameWorld.myClient.sendTCP(packet);
+            myClient.setUserName(packet.user);
+            myClient.sendTCP(packet);
         }
     }
 
@@ -101,6 +103,7 @@ public class ClientListener extends Listener {
 
     private void handlePlayerDisconnected(Connection connection, Object object){
         if(object instanceof Network.PlayerDisconnected){
+            System.out.println("dadsadsa");
             Network.PlayerDisconnected packet=(Network.PlayerDisconnected)object;
 
             gameScreen.getGameStage().removePlayerCharacter(packet.id);

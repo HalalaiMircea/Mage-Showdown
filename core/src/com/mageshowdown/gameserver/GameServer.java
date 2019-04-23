@@ -11,12 +11,14 @@ import java.util.HashMap;
 
 public class GameServer extends Server {
 
+    private static GameServer instance=new GameServer();
+
     //a hashmap where the values are the usernames and the keys the id's of the player
     private HashMap<Integer,String> users;
     private boolean updatePositions=false;
     private float timeSinceLastUpdate=0;
 
-    public GameServer(){
+    private GameServer(){
         super();
         registerClasses();
         users=new HashMap<Integer, String>();
@@ -46,6 +48,11 @@ public class GameServer extends Server {
         kryo.register(Network.ProjectileCollided.class);
         kryo.register(Network.LoginRequest.class);
         kryo.register(Network.NewPlayerSpawned.class);
+        kryo.register(Network.PlayerDisconnected.class);
+    }
+
+    public HashMap<Integer, String> getUsers() {
+        return users;
     }
 
     public void addUser(int id, String userName){
@@ -66,5 +73,9 @@ public class GameServer extends Server {
 
     public boolean getUpdatePositions(){
         return updatePositions;
+    }
+
+    public static GameServer getInstance() {
+        return instance;
     }
 }

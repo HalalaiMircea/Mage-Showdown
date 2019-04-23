@@ -15,6 +15,8 @@ import com.mageshowdown.packets.Network.*;
 
 public class ClientPlayerCharacter extends DynamicGameActor implements AnimatedActorInterface {
 
+    private GameClient myClient=GameClient.getInstance();
+
     private Weapon myWeapon;
 
     private boolean moveLeft=false;
@@ -62,11 +64,11 @@ public class ClientPlayerCharacter extends DynamicGameActor implements AnimatedA
                     float rotation= GameWorld.getMouseVectorAngle(shootingOrigin);
                     Vector2 direction=GameWorld.getNormalizedMouseVector(shootingOrigin);
 
-                    sp.id=GameWorld.myClient.getID();
+                    sp.id=myClient.getID();
                     sp.rot=rotation;
                     sp.dir=direction;
-                    GameWorld.myClient.sendTCP(sp);
-                    myWeapon.shoot(direction,rotation,GameWorld.myClient.getID());
+                    myClient.sendTCP(sp);
+                    myWeapon.shoot(direction,rotation,myClient.getID());
                 }
 
                 return true;
@@ -80,15 +82,15 @@ public class ClientPlayerCharacter extends DynamicGameActor implements AnimatedA
                 ku.keycode=keycode;
                 if(keycode==Input.Keys.A) {
                     moveLeft=false;
-                    GameWorld.myClient.sendTCP(ku);
+                    myClient.sendTCP(ku);
                 }
                 else if(keycode==Input.Keys.D) {
                     moveRight=false;
-                    GameWorld.myClient.sendTCP(ku);
+                    myClient.sendTCP(ku);
                 }
                 else if(keycode==Input.Keys.W){
                     jump=false;
-                    GameWorld.myClient.sendTCP(ku);
+                    myClient.sendTCP(ku);
                 }
                 return true;
             }
@@ -107,13 +109,13 @@ public class ClientPlayerCharacter extends DynamicGameActor implements AnimatedA
 
         if(moveLeft){
             keyPress.keycode=Input.Keys.A;
-            GameWorld.myClient.sendTCP(keyPress);
+            myClient.sendTCP(keyPress);
         }else if (moveRight){
             keyPress.keycode=Input.Keys.D;
-            GameWorld.myClient.sendTCP(keyPress);
+            myClient.sendTCP(keyPress);
         }else if (jump){
             keyPress.keycode=Input.Keys.W;
-            GameWorld.myClient.sendTCP(keyPress);
+            myClient.sendTCP(keyPress);
         }
 
         pickFrame();

@@ -12,14 +12,10 @@ import java.util.LinkedList;
 public class GameWorld {
     public static final World world;
     public static float resolutionScale;
-    public static final GameClient myClient;
-    public static final GameServer myServer;
     public static LinkedList<Body> bodiesToBeRemoved;
 
     static{
         world=new World(new Vector2(0,-9.8f),true);
-        myClient=new GameClient();
-        myServer=new GameServer();
         bodiesToBeRemoved=new LinkedList<Body>();
     }
 

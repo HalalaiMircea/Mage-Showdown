@@ -10,10 +10,12 @@ import java.util.ArrayList;
 
 public class GameClient extends Client{
 
+    private static GameClient instance =new GameClient();
+
     private String userName;
     private int score;
 
-    public GameClient() {
+    private GameClient() {
         super();
         registerClasses();
     }
@@ -46,6 +48,7 @@ public class GameClient extends Client{
         kryo.register(Network.ProjectileCollided.class);
         kryo.register(Network.LoginRequest.class);
         kryo.register(Network.NewPlayerSpawned.class);
+        kryo.register(Network.PlayerDisconnected.class);
     }
 
 
@@ -55,5 +58,9 @@ public class GameClient extends Client{
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public static GameClient getInstance() {
+        return instance;
     }
 }

@@ -134,7 +134,7 @@ public class MenuScreen implements Screen {
                 GameScreen.start();
                 GameScreen.setGameState(GameScreen.GameState.GAME_RUNNING);
                 String ipAddress = addressField.getText();
-                MageShowdownClient.clientStart(ipAddress);
+                MageShowdownClient.getInstance().clientStart(ipAddress);
             }
         });
 

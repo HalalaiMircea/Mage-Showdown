@@ -9,13 +9,21 @@ import com.mageshowdown.gamelogic.GameLevel;
 import com.mageshowdown.gamelogic.GameWorld;
 
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 public class ClientGameStage extends Stage {
     private GameLevel gameLevel;
     private OrthographicCamera camera;
     private ClientPlayerCharacter playerCharacter;
     private HashMap<Integer,ClientPlayerCharacter> otherPlayers;
+
+    private LinkedList<ClientPlayerCharacter> characterRemovalQueue;
+
 
     public ClientGameStage() {
         super();
@@ -26,7 +34,8 @@ public class ClientGameStage extends Stage {
         gameLevel=new GameLevel(this);
         otherPlayers=new HashMap<Integer, ClientPlayerCharacter>();
 
-        }
+        characterRemovalQueue=new LinkedList<ClientPlayerCharacter>();
+    }
 
     @Override
     public void act() {
@@ -68,8 +77,13 @@ public class ClientGameStage extends Stage {
 
     public void removePlayerCharacter(int connectionId){
         GameWorld.bodiesToBeRemoved.add(otherPlayers.get(connectionId).getBody());
+        otherPlayers.get(connectionId).getMyWeapon().remove();
         otherPlayers.get(connectionId).remove();
         otherPlayers.remove(connectionId);
+    }
+
+    public void addToRemovalQueue(int connectionId){
+
     }
 
     public void spawnMyPlayerCharacter(Vector2 position, String userName){
