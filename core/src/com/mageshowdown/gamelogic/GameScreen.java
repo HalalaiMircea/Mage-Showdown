@@ -22,7 +22,6 @@ public class GameScreen implements Screen {
         GAME_OPTIONS
     }
 
-    //Singleton omegalul
     private static final GameScreen INSTANCE = new GameScreen();
 
     private static ClientGameStage gameStage;      //gameplay, or character control stage

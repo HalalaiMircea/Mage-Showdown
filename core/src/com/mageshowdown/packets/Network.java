@@ -55,6 +55,7 @@ public class Network {
         public int id;
         public String userName;
         public Vector2 pos;
+        public float roundTimePassed;
     }
 
     public static class PlayerDisconnected{

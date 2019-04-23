@@ -59,7 +59,7 @@ public class ClientListener extends Listener {
                     pc=gameScreen.getGameStage().getOtherPlayers().get(x.id);
                 }
 
-                //pc.setQueuedPos(x.pos);
+                pc.setQueuedPos(x.pos);
                 pc.setQueuedVel(x.linVel);
             }
         }
@@ -69,6 +69,7 @@ public class ClientListener extends Listener {
         if(object instanceof Network.NewPlayerSpawned){
             Network.NewPlayerSpawned packet=(Network.NewPlayerSpawned)object;
 
+            gameScreen.getGameStage().getRound().setTimePassed(packet.roundTimePassed);
             if(connection.getID()==packet.id)
                 gameScreen.getGameStage().spawnMyPlayerCharacter(packet.pos,packet.userName);
             else gameScreen.getGameStage().spawnOtherPlayer(packet.id,packet.pos,packet.userName);

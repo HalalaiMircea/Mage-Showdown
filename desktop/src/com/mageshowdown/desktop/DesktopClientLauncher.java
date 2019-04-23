@@ -17,7 +17,7 @@ public class DesktopClientLauncher {
         //config.backgroundFPS = 0;
         config.vSyncEnabled = true;
         //config.useGL30=true;
-        config.fullscreen=true;
+        //config.fullscreen=true;
         //testStuff();
         new LwjglApplication(MageShowdownClient.getInstance(), config);
     }

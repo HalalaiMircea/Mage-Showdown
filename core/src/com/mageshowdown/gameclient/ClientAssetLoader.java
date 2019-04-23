@@ -1,7 +1,9 @@
 package com.mageshowdown.gameclient;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -20,6 +22,7 @@ public class ClientAssetLoader {
     public static Texture waterSphereSpriteSheet;
     public static Texture laserShotTexture;
     public static TiledMap map1;
+    public static BitmapFont font1;
 
     public static void load() {
         idlePlayerSpriteSheet = new Texture("idleAnimationSpritesheet.png");
@@ -34,7 +37,9 @@ public class ClientAssetLoader {
         gunTexture = new Texture("gun.png");
         waterSphereSpriteSheet = new Texture("water sphere 6.png");
         map1 = new TmxMapLoader().load("Maps\\level1.tmx");
+        font1=new BitmapFont(Gdx.files.internal("UIAssets/default.fnt"));
     }
+
 
     public static void dispose() {
         interfaceSkin.dispose();

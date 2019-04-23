@@ -2,11 +2,13 @@ package com.mageshowdown.gameserver;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.mageshowdown.gamelogic.CollisionListener;
 import com.mageshowdown.gamelogic.GameLevel;
 import com.mageshowdown.gamelogic.GameWorld;
+import com.mageshowdown.gamelogic.Round;
 
 import java.util.HashMap;
 
@@ -14,6 +16,8 @@ public class ServerGameStage extends Stage {
     private GameLevel gameLevel;
     private OrthographicCamera camera;
     private HashMap<Integer,ServerPlayerCharacter> playerCharacters;
+
+    private Round myRound;
 
     public ServerGameStage() {
         super();
@@ -24,7 +28,10 @@ public class ServerGameStage extends Stage {
         gameLevel=new GameLevel(this);
         playerCharacters=new HashMap<Integer, ServerPlayerCharacter>();
 
+        myRound=new Round(60f,false);
+
         GameWorld.world.setContactListener(new CollisionListener());
+        addActor(myRound);
     }
 
     @Override
@@ -52,5 +59,13 @@ public class ServerGameStage extends Stage {
 
     public void start(){
         gameLevel.changeTo(ServerAssetLoader.map1);
+    }
+
+    public Round getRound() {
+        return myRound;
+    }
+
+    public void startRound(){
+        myRound.start();
     }
 }

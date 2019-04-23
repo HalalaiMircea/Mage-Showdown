@@ -55,6 +55,8 @@ public class MageShowdownServer extends Game {
     public void serverStart(){
         myServer.start();
         myServer.bind(Network.TCP_PORT, Network.UDP_PORT);
+        
+        gameStage.startRound();
 
         myServer.addListener(new ServerListener(gameStage));
     }

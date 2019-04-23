@@ -58,6 +58,7 @@ public class ServerListener extends Listener {
             toBeSent.userName=packet.user;
             toBeSent.id=connection.getID();
             toBeSent.pos=new Vector2(500f+(float)Math.random()*(900f-500f),200f+(float)Math.random()*(600f-200f));
+            toBeSent.roundTimePassed=gameStage.getRound().getTimePassed();
             gameStage.addPlayerCharacter(connection.getID(),toBeSent.pos);
 
             myServer.sendToAllTCP(toBeSent);

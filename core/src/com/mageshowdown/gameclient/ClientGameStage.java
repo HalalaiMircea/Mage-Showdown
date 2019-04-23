@@ -7,14 +7,10 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.mageshowdown.gamelogic.GameLevel;
 import com.mageshowdown.gamelogic.GameWorld;
+import com.mageshowdown.gamelogic.Round;
 
 
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.TimeUnit;
 
 public class ClientGameStage extends Stage {
     private GameLevel gameLevel;
@@ -22,6 +18,7 @@ public class ClientGameStage extends Stage {
     private ClientPlayerCharacter playerCharacter;
     private HashMap<Integer,ClientPlayerCharacter> otherPlayers;
 
+    private Round myRound;
 
     public ClientGameStage() {
         super();
@@ -31,6 +28,7 @@ public class ClientGameStage extends Stage {
         setViewport(new StretchViewport(1280f,720f,camera));
         gameLevel=new GameLevel(this);
         otherPlayers=new HashMap<Integer, ClientPlayerCharacter>();
+        myRound =new Round(60,true);
 
     }
 
@@ -86,9 +84,15 @@ public class ClientGameStage extends Stage {
     public void spawnMyPlayerCharacter(Vector2 position, String userName){
         playerCharacter=new ClientPlayerCharacter(this,position,userName);
         setKeyboardFocus(playerCharacter);
+        myRound.start();
+        addActor(myRound);
     }
 
     public void spawnOtherPlayer(int id, Vector2 position, String userName){
         otherPlayers.put(id,new ClientPlayerCharacter(this,position,userName));
+    }
+
+    public Round getRound() {
+        return myRound;
     }
 }
