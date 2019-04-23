@@ -35,10 +35,8 @@ public class ClientListener extends Listener {
     private void handleLoginServerRequest(Connection connection,Object object){
         if(object instanceof Network.LoginRequest){
             Network.LoginRequest packet=((Network.LoginRequest) object);
-
-            Scanner reader=new Scanner(System.in);
-            packet.user=reader.nextLine();
-            myClient.setUserName(packet.user);
+            
+            packet.user=myClient.getUserName();
             myClient.sendTCP(packet);
         }
     }
@@ -61,7 +59,7 @@ public class ClientListener extends Listener {
                     pc=gameScreen.getGameStage().getOtherPlayers().get(x.id);
                 }
 
-                pc.setQueuedPos(x.pos);
+                //pc.setQueuedPos(x.pos);
                 pc.setQueuedVel(x.linVel);
             }
         }

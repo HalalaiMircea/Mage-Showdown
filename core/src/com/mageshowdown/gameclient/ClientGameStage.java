@@ -22,8 +22,6 @@ public class ClientGameStage extends Stage {
     private ClientPlayerCharacter playerCharacter;
     private HashMap<Integer,ClientPlayerCharacter> otherPlayers;
 
-    private LinkedList<ClientPlayerCharacter> characterRemovalQueue;
-
 
     public ClientGameStage() {
         super();
@@ -34,7 +32,6 @@ public class ClientGameStage extends Stage {
         gameLevel=new GameLevel(this);
         otherPlayers=new HashMap<Integer, ClientPlayerCharacter>();
 
-        characterRemovalQueue=new LinkedList<ClientPlayerCharacter>();
     }
 
     @Override

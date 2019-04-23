@@ -32,7 +32,8 @@ public class ClientPlayerCharacter extends DynamicGameActor implements AnimatedA
      */
     private Vector2 queuedPos;
     private Vector2 queuedVel;
-    private boolean canClear=false;
+    private boolean canClearPos=false;
+    private boolean canClearVel=false;
 
     public ClientPlayerCharacter(Stage stage, Vector2 position, String userName) {
         super(stage,position, new Vector2(22,32),1.5f   );
@@ -225,19 +226,23 @@ public class ClientPlayerCharacter extends DynamicGameActor implements AnimatedA
 
     public void setQueuedPos(Vector2 queuedPos) {
         this.queuedPos = queuedPos;
-        canClear=true;
+        canClearPos=true;
     }
 
     public void setQueuedVel(Vector2 queuedVel) {
         this.queuedVel = queuedVel;
+        canClearVel=true;
     }
 
 
     public void clearQueue(){
-        if(canClear){
+        if(canClearPos){
             body.setTransform(queuedPos,body.getAngle());
+            canClearPos=false;
+        }
+        if(canClearVel){
             body.setLinearVelocity(queuedVel);
-            canClear=false;
+            canClearVel=false;
         }
     }
 
