@@ -38,7 +38,7 @@ public class ClientAssetLoader {
         waterSphereSpriteSheet = new Texture("water sphere 6.png");
         map1 = new TmxMapLoader().load("Maps\\level1.tmx");
 
-        prefs = Gdx.app.getPreferences("MageShowdownPrefs");
+        //prefs = Gdx.app.getPreferences("MageShowdownPrefs");
     }
 
     public static void dispose() {

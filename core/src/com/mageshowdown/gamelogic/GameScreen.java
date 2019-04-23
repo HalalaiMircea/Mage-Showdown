@@ -174,7 +174,7 @@ public class GameScreen implements Screen {
             }
         });
 
-        disconnectButton.addListener(new ClickListener(){
+        disconnectButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 MageShowdownClient.getInstance().setScreen(MenuScreen.getInstance());

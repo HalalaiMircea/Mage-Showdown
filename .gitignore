@@ -124,3 +124,7 @@ Thumbs.db
 !/ios-moe/xcode/*.xcodeproj/xcshareddata
 !/ios-moe/xcode/*.xcodeproj/project.pbxproj
 /ios-moe/xcode/native/
+
+\.idea/inspectionProfiles/Project_Default\.xml
+
+\.idea/dictionaries/Mirceaboss\.xml
