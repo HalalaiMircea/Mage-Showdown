@@ -24,12 +24,15 @@ public class GamePreferences implements Preferences {
         if (OSDetector.getOSType() == OSDetector.OSType.WINDOWS)
             prefsPath = FileSystemView.getFileSystemView().getDefaultDirectory().getPath() + "\\My Games\\MageShowdown\\UserPrefs.xml";
         else
-            prefsPath = FileSystemView.getFileSystemView().getHomeDirectory().getPath() + "\\.MageShowdown\\UserPrefs.xml";
-        File file = new File(prefsPath);
-        file.getParentFile().mkdirs(); // Will create parent directories if not exists
-        file.createNewFile();
+            prefsPath = FileSystemView.getFileSystemView().getHomeDirectory().getPath() + "/.MageShowdown/UserPrefs.xml";
         this.fileHandle = new FileHandle(prefsPath);
-        properties.loadFromXML(fileHandle.read());
+        File file = new File(prefsPath);
+        if (file.exists())
+            properties.loadFromXML(fileHandle.read());
+        else {
+            file.getParentFile().mkdirs();
+            file.createNewFile();
+        }
     }
 
     /**
@@ -37,10 +40,13 @@ public class GamePreferences implements Preferences {
      **/
     public GamePreferences(String path_to_file) throws IOException {
         File file = new File(path_to_file);
-        file.getParentFile().mkdirs();
-        file.createNewFile();
         this.fileHandle = new FileHandle(path_to_file);
-        properties.loadFromXML(fileHandle.read());
+        if (file.exists())
+            properties.loadFromXML(fileHandle.read());
+        else {
+            file.getParentFile().mkdirs();
+            file.createNewFile();
+        }
     }
 
     @Override
