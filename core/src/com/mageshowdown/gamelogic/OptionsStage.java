@@ -5,12 +5,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mageshowdown.gameclient.ClientAssetLoader;
+import com.mageshowdown.gameclient.GameClient;
 import com.mageshowdown.gameclient.MageShowdownClient;
 
 public class OptionsStage extends Stage {
@@ -28,9 +27,14 @@ public class OptionsStage extends Stage {
         foreground.setFillParent(true);
         foreground.debug();
 
+        Label playerNameLabel = new Label("Player name: ", ClientAssetLoader.interfaceSkin);
+        final TextField playerNameField = new TextField("", ClientAssetLoader.interfaceSkin);
         TextButton backButton = new TextButton("Back", ClientAssetLoader.interfaceSkin);
 
-        foreground.add(backButton);
+        foreground.add(playerNameLabel).padBottom(20);
+        foreground.add(playerNameField).padBottom(20);
+        foreground.row();
+        foreground.add(backButton).colspan(2);
 
         backButton.addListener(new ClickListener() {
             @Override
@@ -43,8 +47,10 @@ public class OptionsStage extends Stage {
                     GameScreen.setGameState(GameScreen.GameState.GAME_PAUSED);
                     Gdx.input.setInputProcessor(GameScreen.getEscMenuStage());
                 }
+                GameClient.getInstance().setUserName(playerNameField.getText());
             }
         });
+
         this.addActor(background);
         this.addActor(foreground);
     }

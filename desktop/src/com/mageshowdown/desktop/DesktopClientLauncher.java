@@ -10,14 +10,14 @@ public class DesktopClientLauncher {
     public static void main(String[] arg) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 
-        config.width = 1280;
-        config.height = 720;
+        config.width = 1366;
+        config.height = 768;
         config.resizable = false;
         config.foregroundFPS = 0;
         //config.backgroundFPS = 0;
         config.vSyncEnabled = true;
         //config.useGL30=true;
-        //config.fullscreen=true;
+        config.fullscreen=true;
         //testStuff();
         new LwjglApplication(MageShowdownClient.getInstance(), config);
     }

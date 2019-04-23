@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mageshowdown.gameclient.ClientAssetLoader;
 import com.mageshowdown.gameclient.ClientGameStage;
+import com.mageshowdown.gameclient.MageShowdownClient;
 
 public class GameScreen implements Screen {
 
@@ -144,12 +145,15 @@ public class GameScreen implements Screen {
         TextButton resumeButton = new TextButton("Resume Game", ClientAssetLoader.interfaceSkin);
         TextButton optionsButton = new TextButton("Options", ClientAssetLoader.interfaceSkin);
         TextButton quitButton = new TextButton("Quit to Desktop", ClientAssetLoader.interfaceSkin);
+        TextButton disconnectButton = new TextButton("Disconnect", ClientAssetLoader.interfaceSkin);
         Image semiTL = new Image(ClientAssetLoader.solidBlack);
         semiTL.setColor(0, 0, 0, 0.8f);
 
         menuTable.add(resumeButton).padBottom(20);
         menuTable.row();
         menuTable.add(optionsButton).padBottom(20);
+        menuTable.row();
+        menuTable.add(disconnectButton).padBottom(20);
         menuTable.row();
         menuTable.add(quitButton);
         background.add(semiTL);
@@ -167,6 +171,14 @@ public class GameScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 gameState = GameState.GAME_OPTIONS;
                 Gdx.input.setInputProcessor(gameOptionsStage);
+            }
+        });
+
+        disconnectButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                MageShowdownClient.getInstance().setScreen(MenuScreen.getInstance());
+                Gdx.input.setInputProcessor(MenuScreen.getMainMenuStage());
             }
         });
 
