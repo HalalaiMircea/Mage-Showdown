@@ -141,10 +141,10 @@ public class GameScreen implements Screen {
         Table background = new Table();
         background.setFillParent(true);
 
-        TextButton resumeButton = new TextButton("Resume Game", ClientAssetLoader.interfaceSkin);
-        TextButton optionsButton = new TextButton("Options", ClientAssetLoader.interfaceSkin);
-        TextButton quitButton = new TextButton("Quit to Desktop", ClientAssetLoader.interfaceSkin);
-        TextButton disconnectButton = new TextButton("Disconnect", ClientAssetLoader.interfaceSkin);
+        TextButton resumeButton = new TextButton("Resume Game", ClientAssetLoader.uiSkin);
+        TextButton optionsButton = new TextButton("Options", ClientAssetLoader.uiSkin);
+        TextButton quitButton = new TextButton("Quit to Desktop", ClientAssetLoader.uiSkin);
+        TextButton disconnectButton = new TextButton("Disconnect", ClientAssetLoader.uiSkin);
         Image semiTL = new Image(ClientAssetLoader.solidBlack);
         semiTL.setColor(0, 0, 0, 0.8f);
 
