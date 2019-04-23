@@ -105,10 +105,10 @@ public class MenuScreen implements Screen {
         //foreground.debug();
 
         //Widgets declarations
-        TextButton connectButton = new TextButton("Connect to:", ClientAssetLoader.interfaceSkin);
-        TextButton optionsButton = new TextButton("Options", ClientAssetLoader.interfaceSkin);
-        TextButton quitButton = new TextButton("Quit to Desktop", ClientAssetLoader.interfaceSkin);
-        final TextField addressField = new TextField("127.0.0.1", ClientAssetLoader.interfaceSkin);
+        TextButton connectButton = new TextButton("Connect to:", ClientAssetLoader.uiSkin);
+        TextButton optionsButton = new TextButton("Options", ClientAssetLoader.uiSkin);
+        TextButton quitButton = new TextButton("Quit to Desktop", ClientAssetLoader.uiSkin);
+        final TextField addressField = new TextField("127.0.0.1", ClientAssetLoader.uiSkin);
 
         //
         //Order sensitive addition and positioning of widgets into table
