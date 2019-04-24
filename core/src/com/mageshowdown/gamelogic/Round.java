@@ -44,6 +44,12 @@ public class Round extends Actor {
         started=true;
     }
 
+    public void stop(){
+        finished=true;
+        started=false;
+        timePassed=0f;
+    }
+
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);

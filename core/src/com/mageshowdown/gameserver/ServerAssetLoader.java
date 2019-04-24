@@ -16,12 +16,15 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 public class ServerAssetLoader {
     public static TiledMap map1;
+    public static TiledMap dungeonMap;
 
     public static void load(){
         map1=new TmxMapLoader().load("Maps\\level1.tmx");
+        dungeonMap=new TmxMapLoader().load("Maps\\level2.tmx");
     }
 
     public static void dispose(){
         map1.dispose();
+        dungeonMap.dispose();
     }
 }

@@ -78,6 +78,12 @@ public class ServerPlayerCharacter extends DynamicGameActor {
         moveDirection=-1;
     }
 
+    @Override
+    public void destroyActor() {
+        myWeapon.destroyActor();
+        super.destroyActor();
+    }
+
     public Weapon getMyWeapon() {
         return myWeapon;
     }
@@ -101,4 +107,5 @@ public class ServerPlayerCharacter extends DynamicGameActor {
     public void damageBy(int damageValue){
         health-=damageValue;
     }
+
 }

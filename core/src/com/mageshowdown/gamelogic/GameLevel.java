@@ -7,25 +7,38 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.mageshowdown.gameclient.ClientAssetLoader;
 
 import java.util.ArrayList;
 
 public class GameLevel {
     private ArrayList<MapObjectHitbox> platforms;
     private TiledMap map;
+    private int mapNr;
     private OrthogonalTiledMapRenderer renderer;
     private OrthographicCamera cam;
     private Stage stage;
+
+    private Boolean changedLevel=false;
 
     public GameLevel(Stage stage){
         platforms=new ArrayList<MapObjectHitbox>();
         cam=(OrthographicCamera)stage.getCamera();
         this.stage=stage;
+        renderer=new OrthogonalTiledMapRenderer(map,1f);
     }
 
-    public void changeTo(TiledMap map){
-        this.map=map;
-        renderer=new OrthogonalTiledMapRenderer(map,1f);
+    public void changeLevel(){
+        System.out.println("level changed");
+
+        changedLevel=true;
+        renderer.setMap(map);
+        //first empty the hitboxes of the previous map
+        for(MapObjectHitbox x:platforms){
+            x.destroyActor();
+        }
+
+
         /*
         * we have to be careful when creating the maps for the object layer to be the first one
         */
@@ -41,8 +54,27 @@ public class GameLevel {
     }
 
     public void render(){
-        cam.update();
-        renderer.setView(cam);
-        renderer.render();
+        if(changedLevel){
+            cam.update();
+            renderer.setView(cam);
+            renderer.render();
+        }
+    }
+
+    public void setMap(int nr) {
+        mapNr=nr;
+        System.out.println("map set");
+        switch (mapNr){
+            case 1:
+                map=ClientAssetLoader.map1;
+                break;
+            case 2:
+                map=ClientAssetLoader.dungeonMap;
+                break;
+        }
+    }
+
+    public int getMapNr() {
+        return mapNr;
     }
 }

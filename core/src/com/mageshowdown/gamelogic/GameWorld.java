@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import com.mageshowdown.gameclient.GameClient;
 import com.mageshowdown.gameserver.GameServer;
 
@@ -55,8 +56,15 @@ public class GameWorld {
     }
 
     public static void clearBodyRemovalQueue(){
+        Array<Body> existingBodies=new Array<Body>();
         while(bodiesToBeRemoved.size()>0){
-            world.destroyBody(bodiesToBeRemoved.remove());
+            world.getBodies(existingBodies);
+            //we make sure the body exists before we delete it; if it does we just pop the queue
+            if(existingBodies.contains(bodiesToBeRemoved.peek(),true))
+                world.destroyBody(bodiesToBeRemoved.remove());
+            else{
+                bodiesToBeRemoved.remove();
+            }
         }
     }
 

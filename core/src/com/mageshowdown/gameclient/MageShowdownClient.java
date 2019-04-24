@@ -14,7 +14,6 @@ public class MageShowdownClient extends Game {
     private GameClient myClient=GameClient.getInstance();
 
     private MageShowdownClient() {
-
     }
 
     @Override

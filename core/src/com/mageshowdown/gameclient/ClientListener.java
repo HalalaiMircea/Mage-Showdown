@@ -30,12 +30,13 @@ public class ClientListener extends Listener {
         handleShootProjectile(connection,object);
         handleProjectileCollided(connection,object);
         handlePlayerDisconnected(connection,object);
+        handleCurrentMap(connection,object);
     }
 
     private void handleLoginServerRequest(Connection connection,Object object){
         if(object instanceof Network.LoginRequest){
             Network.LoginRequest packet=((Network.LoginRequest) object);
-            
+
             packet.user=myClient.getUserName();
             myClient.sendTCP(packet);
         }
@@ -102,10 +103,18 @@ public class ClientListener extends Listener {
 
     private void handlePlayerDisconnected(Connection connection, Object object){
         if(object instanceof Network.PlayerDisconnected){
-            System.out.println("dadsadsa");
             Network.PlayerDisconnected packet=(Network.PlayerDisconnected)object;
 
             gameScreen.getGameStage().removePlayerCharacter(packet.id);
+        }
+    }
+
+    private void handleCurrentMap(Connection connection, Object object){
+        if(object instanceof Network.CurrentMap){
+            Network.CurrentMap packet=(Network.CurrentMap)object;
+
+            gameScreen.getGameStage().getGameLevel().setMap(packet.nr);
+            gameScreen.getGameStage().getGameLevel().changeLevel();
         }
     }
 }

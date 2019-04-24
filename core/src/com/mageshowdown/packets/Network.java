@@ -62,4 +62,8 @@ public class Network {
         public int id;
     }
 
+    public static class CurrentMap{
+        public int nr;
+    }
+
 }

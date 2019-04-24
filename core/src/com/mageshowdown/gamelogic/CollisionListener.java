@@ -36,7 +36,6 @@ public class CollisionListener implements ContactListener {
             pc.ownerId=projectile.getOwnerId();
             pc.playerHitId=player.getId();
 
-            System.out.println("yo");
             GameServer.getInstance().sendToAllTCP(pc);
         }
     }

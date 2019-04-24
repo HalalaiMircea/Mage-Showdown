@@ -49,6 +49,7 @@ public class GameServer extends Server {
         kryo.register(Network.LoginRequest.class);
         kryo.register(Network.NewPlayerSpawned.class);
         kryo.register(Network.PlayerDisconnected.class);
+        kryo.register(Network.CurrentMap.class);
     }
 
     public HashMap<Integer, String> getUsers() {

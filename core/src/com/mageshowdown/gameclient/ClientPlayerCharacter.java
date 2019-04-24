@@ -216,6 +216,12 @@ public class ClientPlayerCharacter extends DynamicGameActor implements AnimatedA
         }
     }
 
+    @Override
+    public void destroyActor() {
+        myWeapon.destroyActor();
+        super.destroyActor();
+    }
+
     public Weapon getMyWeapon() {
         return myWeapon;
     }
@@ -249,4 +255,6 @@ public class ClientPlayerCharacter extends DynamicGameActor implements AnimatedA
     public void damageBy(int damageValue){
         health-=damageValue;
     }
+
+
 }

@@ -110,4 +110,10 @@ public class GameActor extends Actor {
     public Body getBody() {
         return body;
     }
+
+    public void destroyActor(){
+        if(body!=null)
+            GameWorld.bodiesToBeRemoved.add(body);
+        remove();
+    }
 }

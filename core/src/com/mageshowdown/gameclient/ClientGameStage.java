@@ -58,7 +58,6 @@ public class ClientGameStage extends Stage {
     }
 
     public void start(){
-        gameLevel.changeTo(ClientAssetLoader.map1);
         Gdx.input.setInputProcessor(this);
     }
 
@@ -77,8 +76,10 @@ public class ClientGameStage extends Stage {
         otherPlayers.remove(connectionId);
     }
 
-    public void addToRemovalQueue(int connectionId){
-
+    public void removeMyCharacter(){
+        GameWorld.bodiesToBeRemoved.add(playerCharacter.getBody());
+        playerCharacter.getMyWeapon().remove();
+        playerCharacter.remove();
     }
 
     public void spawnMyPlayerCharacter(Vector2 position, String userName){
@@ -94,5 +95,9 @@ public class ClientGameStage extends Stage {
 
     public Round getRound() {
         return myRound;
+    }
+
+    public GameLevel getGameLevel() {
+        return gameLevel;
     }
 }

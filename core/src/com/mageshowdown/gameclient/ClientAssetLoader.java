@@ -21,10 +21,13 @@ public class ClientAssetLoader {
     public static Texture gunTexture;
     public static Texture waterSphereSpriteSheet;
     public static Texture laserShotTexture;
-    public static TiledMap map1;
     public static BitmapFont font1;
 
     public static Preferences prefs;
+
+    public static TiledMap map1;
+    public static TiledMap dungeonMap;
+
 
     public static void load() {
         idlePlayerSpriteSheet = new Texture("idleAnimationSpritesheet.png");
@@ -41,6 +44,8 @@ public class ClientAssetLoader {
         map1 = new TmxMapLoader().load("Maps\\level1.tmx");
         font1=new BitmapFont(Gdx.files.internal("UIAssets/default.fnt"));
         prefs = Gdx.app.getPreferences("MageShowdownPrefs");
+
+        dungeonMap=new TmxMapLoader().load("Maps\\level2.tmx");
     }
 
 
@@ -57,5 +62,7 @@ public class ClientAssetLoader {
         waterSphereSpriteSheet.dispose();
         laserShotTexture.dispose();
         map1.dispose();
+        font1.dispose();
+        dungeonMap.dispose();
     }
 }

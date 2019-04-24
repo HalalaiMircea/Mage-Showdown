@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mageshowdown.gameclient.ClientAssetLoader;
 import com.mageshowdown.gameclient.ClientGameStage;
+import com.mageshowdown.gameclient.GameClient;
 import com.mageshowdown.gameclient.MageShowdownClient;
 
 public class GameScreen implements Screen {
@@ -177,6 +178,13 @@ public class GameScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 MageShowdownClient.getInstance().setScreen(MenuScreen.getInstance());
+
+                for(int id:gameStage.getOtherPlayers().keySet())
+                    gameStage.removePlayerCharacter(id);
+                gameStage.removeMyCharacter();
+                GameClient.getInstance().stop();
+                gameStage.getRound().stop();
+
                 Gdx.input.setInputProcessor(MenuScreen.getMainMenuStage());
             }
         });

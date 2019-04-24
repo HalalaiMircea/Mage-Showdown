@@ -47,8 +47,7 @@ public class Weapon extends GameActor implements AnimatedActorInterface{
             Projectile x=iter.next();
             if(x.isOutOfBounds() || x.hasCollided())
             {
-                GameWorld.bodiesToBeRemoved.add(x.getBody());
-                x.remove();
+                x.destroyActor();
                 iter.remove();
             }
         }

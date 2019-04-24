@@ -1,5 +1,7 @@
 package com.mageshowdown.gameserver;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -9,6 +11,7 @@ import com.mageshowdown.gamelogic.CollisionListener;
 import com.mageshowdown.gamelogic.GameLevel;
 import com.mageshowdown.gamelogic.GameWorld;
 import com.mageshowdown.gamelogic.Round;
+import com.mageshowdown.packets.Network;
 
 import java.util.HashMap;
 
@@ -41,6 +44,7 @@ public class ServerGameStage extends Stage {
     @Override
     public void act() {
         super.act();
+        getInput();
     }
 
     public void addPlayerCharacter(int connectionId, Vector2 pos){
@@ -58,7 +62,8 @@ public class ServerGameStage extends Stage {
     }
 
     public void start(){
-        gameLevel.changeTo(ServerAssetLoader.map1);
+        gameLevel.setMap(2);
+        gameLevel.changeLevel();
     }
 
     public Round getRound() {
@@ -67,5 +72,26 @@ public class ServerGameStage extends Stage {
 
     public void startRound(){
         myRound.start();
+    }
+
+    public GameLevel getGameLevel() {
+        return gameLevel;
+    }
+
+    public void getInput(){
+        Network.CurrentMap mapToBeSent=new Network.CurrentMap();
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.F1)){
+            mapToBeSent.nr=1;
+            gameLevel.setMap(1);
+            gameLevel.changeLevel();
+            GameServer.getInstance().sendToAllTCP(mapToBeSent);
+        }
+        if(Gdx.input.isKeyJustPressed(Input.Keys.F2)){
+            mapToBeSent.nr=2;
+            gameLevel.setMap(2);
+            gameLevel.changeLevel();
+            GameServer.getInstance().sendToAllTCP(mapToBeSent);
+        }
     }
 }
