@@ -41,11 +41,9 @@ public class ClientAssetLoader {
         borderTexture = new Texture("border.png");
         gunTexture = new Texture("gun.png");
         waterSphereSpriteSheet = new Texture("water sphere 6.png");
-        map1 = new TmxMapLoader().load("Maps\\level1.tmx");
+        dungeonMap = new TmxMapLoader().load(Gdx.files.internal("Maps/level2.tmx").toString());
         font1=new BitmapFont(Gdx.files.internal("UIAssets/default.fnt"));
-        prefs = Gdx.app.getPreferences("MageShowdownPrefs");
-
-        dungeonMap=new TmxMapLoader().load("Maps\\level2.tmx");
+        map1 = new TmxMapLoader().load(Gdx.files.internal("Maps/level1.tmx").toString());
     }
 
 
