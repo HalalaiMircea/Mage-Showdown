@@ -42,7 +42,7 @@ public class ClientAssetLoader {
         gunTexture = new Texture("gun.png");
         waterSphereSpriteSheet = new Texture("water sphere 6.png");
         dungeonMap = new TmxMapLoader().load(Gdx.files.internal("Maps/level2.tmx").toString());
-        font1=new BitmapFont(Gdx.files.internal("UIAssets/default.fnt"));
+        font1 = new BitmapFont(Gdx.files.internal("UIAssets/default.fnt"));
         map1 = new TmxMapLoader().load(Gdx.files.internal("Maps/level1.tmx").toString());
     }
 
