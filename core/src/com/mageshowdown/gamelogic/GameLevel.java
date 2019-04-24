@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mageshowdown.gameclient.ClientAssetLoader;
 
 import java.util.ArrayList;
+import java.util.ListIterator;
 
 public class GameLevel {
     private ArrayList<MapObjectHitbox> platforms;
@@ -34,8 +35,11 @@ public class GameLevel {
         changedLevel=true;
         renderer.setMap(map);
         //first empty the hitboxes of the previous map
-        for(MapObjectHitbox x:platforms){
+        ListIterator<MapObjectHitbox> iter=platforms.listIterator();
+        while(iter.hasNext()){
+            MapObjectHitbox x=iter.next();
             x.destroyActor();
+            iter.remove();
         }
 
 
@@ -54,6 +58,7 @@ public class GameLevel {
     }
 
     public void render(){
+        System.out.println(platforms.size());
         if(changedLevel){
             cam.update();
             renderer.setView(cam);
