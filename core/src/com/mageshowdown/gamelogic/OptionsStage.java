@@ -14,7 +14,7 @@ import com.mageshowdown.gameclient.MageShowdownClient;
 
 public class OptionsStage extends Stage {
 
-    private static String playerNameAtribute = "PlayerName";
+    private static final String PLAYERNAME = "PlayerName";
 
     public OptionsStage(Viewport viewport, Batch batch, Texture backgroundTexture) {
         super(viewport, batch);
@@ -30,7 +30,7 @@ public class OptionsStage extends Stage {
         //foreground.debug();
 
         Label playerNameLabel = new Label("Player name: ", ClientAssetLoader.uiSkin);
-        final TextField playerNameField = new TextField(ClientAssetLoader.prefs.getString(playerNameAtribute)
+        final TextField playerNameField = new TextField(ClientAssetLoader.prefs.getString(PLAYERNAME)
                 , ClientAssetLoader.uiSkin);
         TextButton backButton = new TextButton("Back", ClientAssetLoader.uiSkin);
 
@@ -50,8 +50,8 @@ public class OptionsStage extends Stage {
                     GameScreen.setGameState(GameScreen.GameState.GAME_PAUSED);
                     Gdx.input.setInputProcessor(GameScreen.getEscMenuStage());
                 }
-                ClientAssetLoader.prefs.putString(playerNameAtribute, playerNameField.getText());
-                GameClient.getInstance().setUserName(ClientAssetLoader.prefs.getString(playerNameAtribute));
+                ClientAssetLoader.prefs.putString(PLAYERNAME, playerNameField.getText());
+                GameClient.getInstance().setUserName(ClientAssetLoader.prefs.getString(PLAYERNAME));
                 ClientAssetLoader.prefs.flush();
             }
         });

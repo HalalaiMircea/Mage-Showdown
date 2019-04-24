@@ -11,7 +11,7 @@ public class MageShowdownClient extends Game {
 
     private static final MageShowdownClient INSTANCE = new MageShowdownClient();
 
-    private GameClient myClient=GameClient.getInstance();
+    private GameClient myClient = GameClient.getInstance();
 
     private MageShowdownClient() {
     }
@@ -20,9 +20,6 @@ public class MageShowdownClient extends Game {
     public void create() {
         GameWorld.setResolutionScale(Gdx.graphics.getWidth() / 1280f);
         ClientAssetLoader.load();
-        if(ClientAssetLoader.prefs.get().isEmpty())
-            System.out.println("PREFS IS EMPTY!!!!");
-        else System.out.println("Phew, prefs file already exists");
 
         this.setScreen(MenuScreen.getInstance());
     }
