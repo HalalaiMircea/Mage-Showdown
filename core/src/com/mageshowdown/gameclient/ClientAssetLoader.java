@@ -18,7 +18,6 @@ public class ClientAssetLoader {
     public static Texture idlePlayerSpriteSheet;
     public static Texture jumpingPlayerSpritesheet;
     public static Texture runningPlayerSpritesheet;
-    public static Texture gunTexture;
     public static Texture waterSphereSpriteSheet;
     public static Texture laserShotTexture;
     public static BitmapFont font1;
@@ -27,6 +26,7 @@ public class ClientAssetLoader {
 
     public static TiledMap map1;
     public static TiledMap dungeonMap;
+    public static TiledMap purpleMap;
 
 
     public static void load() {
@@ -39,11 +39,12 @@ public class ClientAssetLoader {
         solidBlack = new Texture(Gdx.files.internal("UIAssets/Black_1080p.png"));
         groundTexture = new Texture("ground.png");
         borderTexture = new Texture("border.png");
-        gunTexture = new Texture("gun.png");
         waterSphereSpriteSheet = new Texture("water sphere 6.png");
-        dungeonMap = new TmxMapLoader().load(Gdx.files.internal("Maps/level2.tmx").toString());
         font1 = new BitmapFont(Gdx.files.internal("UIAssets/default.fnt"));
+
         map1 = new TmxMapLoader().load(Gdx.files.internal("Maps/level1.tmx").toString());
+        dungeonMap = new TmxMapLoader().load(Gdx.files.internal("Maps/level2.tmx").toString());
+        purpleMap = new TmxMapLoader().load(Gdx.files.internal("Maps/level3.tmx").toString());
     }
 
 
@@ -56,11 +57,11 @@ public class ClientAssetLoader {
         idlePlayerSpriteSheet.dispose();
         jumpingPlayerSpritesheet.dispose();
         runningPlayerSpritesheet.dispose();
-        gunTexture.dispose();
         waterSphereSpriteSheet.dispose();
         laserShotTexture.dispose();
-        map1.dispose();
         font1.dispose();
+        map1.dispose();
         dungeonMap.dispose();
+        purpleMap.dispose();
     }
 }

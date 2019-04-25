@@ -12,14 +12,14 @@ import java.io.IOException;
 public class DesktopClientLauncher {
     public static void main(String[] arg) throws IOException {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        config.width = 1280;
-        config.height = 720;
+        config.width = 1920;
+        config.height = 1080;
         config.resizable = false;
         config.foregroundFPS = 0;
         //config.backgroundFPS = 0;
         config.vSyncEnabled = true;
         //config.useGL30=true;
-        //config.fullscreen=true;
+        config.fullscreen=true;
         //testStuff();
         settingsInterface();
         new LwjglApplication(MageShowdownClient.getInstance(), config);
@@ -34,7 +34,5 @@ public class DesktopClientLauncher {
 
     private static void settingsInterface() throws IOException {
         ClientAssetLoader.prefs = new GamePreferences();
-        ClientAssetLoader.prefs.putString("PlayerName", "Default");
-        ClientAssetLoader.prefs.flush();
     }
 }

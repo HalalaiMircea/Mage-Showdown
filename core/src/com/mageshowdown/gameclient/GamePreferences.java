@@ -32,8 +32,10 @@ public class GamePreferences implements Preferences {
         else {
             file.getParentFile().mkdirs();
             file.createNewFile();
+            defaultValues();
         }
     }
+
 
     /**
      * Specific location for UserPrefs
@@ -46,6 +48,7 @@ public class GamePreferences implements Preferences {
         else {
             file.getParentFile().mkdirs();
             file.createNewFile();
+            defaultValues();
         }
     }
 
@@ -185,5 +188,12 @@ public class GamePreferences implements Preferences {
     @Override
     public void remove(String key) {
         properties.remove(key);
+    }
+
+    private void defaultValues() {
+        this.putString("PlayerName", "UnknownMage");
+        //TO-DO put default values for settings at launch
+
+        this.flush();
     }
 }
