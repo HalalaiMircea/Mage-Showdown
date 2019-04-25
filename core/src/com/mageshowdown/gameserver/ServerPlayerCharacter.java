@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mageshowdown.gamelogic.DynamicGameActor;
+import com.mageshowdown.gamelogic.GameWorld;
 import com.mageshowdown.gamelogic.Weapon;
 
 
@@ -16,6 +17,7 @@ public class ServerPlayerCharacter extends DynamicGameActor {
     private int moveDirection=-1;
     private int id;
     private int health=15;
+
 
     public ServerPlayerCharacter(Stage stage, Vector2 pos, int id) {
         super(stage,pos, new Vector2(22,32),1.5f);
@@ -30,6 +32,7 @@ public class ServerPlayerCharacter extends DynamicGameActor {
 
     @Override
     public void act(float delta) {
+        System.out.println(getX()+" "+getY());
         switch (moveDirection){
             case Input.Keys.A:
                 velocity.x=-2.5f;
@@ -82,6 +85,11 @@ public class ServerPlayerCharacter extends DynamicGameActor {
     public void destroyActor() {
         myWeapon.destroyActor();
         super.destroyActor();
+    }
+
+    public void setQueuedPos(Vector2 queuedPos) {
+        this.queuedPos = queuedPos;
+        canClearPos=true;
     }
 
     public Weapon getMyWeapon() {

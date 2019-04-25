@@ -16,6 +16,14 @@ public class GameActor extends Actor {
     protected float passedTime=0f;
     protected TextureRegion currFrame;
 
+    /*
+     * declaring the variable where im holding the position of the actor
+     * after the world steps, we update its body with these values
+     */
+    protected Vector2 queuedPos;
+    protected boolean canClearPos=false;
+
+
     public GameActor(Stage stage, Vector2 position, Vector2 size, float spriteScaling){
         setScale(spriteScaling);
         setPosition(position.x,position.y);
@@ -101,6 +109,18 @@ public class GameActor extends Actor {
 
         //we set the body's user data to the current object in order to retrieve it later for collision handling
         body.setUserData(this);
+    }
+
+    public void clearQueue(){
+        if(canClearPos){
+            body.setTransform(queuedPos,body.getAngle());
+            canClearPos=false;
+        }
+    }
+
+    public void setQueuedPos(Vector2 queuedPos) {
+        this.queuedPos = queuedPos;
+        canClearPos=true;
     }
 
     protected void createBody(BodyDef.BodyType bodyType){

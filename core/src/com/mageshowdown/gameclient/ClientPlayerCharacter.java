@@ -26,10 +26,6 @@ public class ClientPlayerCharacter extends DynamicGameActor implements AnimatedA
     private int health=15;
     private String userName;
 
-    /*
-    * declaring the variables where im holding the positions and velocities of player and projectiles
-    * after the world steps, we update their bodies with these values
-     */
     private Vector2 queuedPos;
     private Vector2 queuedVel;
     private boolean canClearPos=false;
@@ -230,27 +226,6 @@ public class ClientPlayerCharacter extends DynamicGameActor implements AnimatedA
         isMyPlayer = myPlayer;
     }
 
-    public void setQueuedPos(Vector2 queuedPos) {
-        this.queuedPos = queuedPos;
-        canClearPos=true;
-    }
-
-    public void setQueuedVel(Vector2 queuedVel) {
-        this.queuedVel = queuedVel;
-        canClearVel=true;
-    }
-
-
-    public void clearQueue(){
-        if(canClearPos){
-            body.setTransform(queuedPos,body.getAngle());
-            canClearPos=false;
-        }
-        if(canClearVel){
-            body.setLinearVelocity(queuedVel);
-            canClearVel=false;
-        }
-    }
 
     public void damageBy(int damageValue){
         health-=damageValue;

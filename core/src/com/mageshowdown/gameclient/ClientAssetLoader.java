@@ -13,8 +13,6 @@ public class ClientAssetLoader {
     public static Texture solidBlack;
     public static Skin uiSkin;
     public static Texture menuBackground;
-    public static Texture groundTexture;
-    public static Texture borderTexture;
     public static Texture idlePlayerSpriteSheet;
     public static Texture jumpingPlayerSpritesheet;
     public static Texture runningPlayerSpritesheet;
@@ -37,8 +35,6 @@ public class ClientAssetLoader {
         uiSkin = new Skin(Gdx.files.internal("UIAssets/uiskin.json"));
         menuBackground = new Texture(Gdx.files.internal("UIAssets/placeholder.jpg"));
         solidBlack = new Texture(Gdx.files.internal("UIAssets/Black_1080p.png"));
-        groundTexture = new Texture("ground.png");
-        borderTexture = new Texture("border.png");
         waterSphereSpriteSheet = new Texture("water sphere 6.png");
         font1 = new BitmapFont(Gdx.files.internal("UIAssets/default.fnt"));
 
@@ -52,8 +48,6 @@ public class ClientAssetLoader {
         uiSkin.dispose();
         menuBackground.dispose();
         solidBlack.dispose();
-        groundTexture.dispose();
-        borderTexture.dispose();
         idlePlayerSpriteSheet.dispose();
         jumpingPlayerSpritesheet.dispose();
         runningPlayerSpritesheet.dispose();

@@ -2,7 +2,9 @@ package com.mageshowdown.gameserver;
 
 import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
+import com.mageshowdown.gamelogic.GameWorld;
 import com.mageshowdown.packets.Network;
 
 import java.io.IOException;
@@ -17,6 +19,7 @@ public class GameServer extends Server {
     private HashMap<Integer,String> users;
     private boolean updatePositions=false;
     private float timeSinceLastUpdate=0;
+    private ServerGameStage gameStage;
 
     private GameServer(){
         super();
@@ -52,6 +55,28 @@ public class GameServer extends Server {
         kryo.register(Network.CurrentMap.class);
     }
 
+    public void sendMapChange(int nr){
+        Network.CurrentMap mapToBeSent=new Network.CurrentMap();
+        mapToBeSent.nr=nr;
+        gameStage.getGameLevel().setMap(nr);
+        gameStage.getGameLevel().changeLevel();
+
+        for(Connection x:getConnections()){
+            //before we change the body's position to a spawn point it needs to be converted to box2d coordinates
+            gameStage.getPlayerById(x.getID()).setQueuedPos(GameWorld.convertPixelsToWorld(generateSpownPoint(x.getID())));
+        }
+
+        GameServer.getInstance().sendToAllTCP(mapToBeSent);
+    }
+
+    public Vector2 generateSpownPoint(int id){
+        ArrayList<Vector2> spawnPoints=gameStage.getGameLevel().getSpawnPoints();
+        System.out.println(spawnPoints.get(id));
+        if(spawnPoints.size()>id)
+            return spawnPoints.get(id);
+        else return spawnPoints.get(id%spawnPoints.size());
+    }
+
     public HashMap<Integer, String> getUsers() {
         return users;
     }
@@ -78,5 +103,9 @@ public class GameServer extends Server {
 
     public static GameServer getInstance() {
         return instance;
+    }
+
+    public void setGameStage(ServerGameStage gameStage) {
+        this.gameStage = gameStage;
     }
 }

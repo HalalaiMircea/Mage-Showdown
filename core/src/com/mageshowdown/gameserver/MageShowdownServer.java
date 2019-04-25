@@ -18,6 +18,7 @@ public class MageShowdownServer extends Game {
     public void create () {
         GameWorld.resolutionScale=1f;
         gameStage=new ServerGameStage();
+        myServer.setGameStage(gameStage);
         serverStart();
         ServerAssetLoader.load();
         ClientAssetLoader.load();
@@ -42,7 +43,6 @@ public class MageShowdownServer extends Game {
             }
         }
 
-        GameWorld.world.step(Gdx.graphics.getDeltaTime(),6,2);
 
         GameWorld.clearBodyRemovalQueue();
     }
