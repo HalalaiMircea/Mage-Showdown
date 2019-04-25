@@ -1,5 +1,6 @@
 package com.mageshowdown.gameserver;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -45,6 +46,12 @@ public class ServerGameStage extends Stage {
     public void act() {
         super.act();
         getInput();
+
+        GameWorld.world.step(Gdx.graphics.getDeltaTime(),6,2);
+
+        for(ServerPlayerCharacter x:playerCharacters.values()){
+            x.clearQueue();
+        }
     }
 
     public void addPlayerCharacter(int connectionId, Vector2 pos){
@@ -79,19 +86,12 @@ public class ServerGameStage extends Stage {
     }
 
     public void getInput(){
-        Network.CurrentMap mapToBeSent=new Network.CurrentMap();
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.F1)){
-            mapToBeSent.nr=1;
-            gameLevel.setMap(1);
-            gameLevel.changeLevel();
-            GameServer.getInstance().sendToAllTCP(mapToBeSent);
+            GameServer.getInstance().sendMapChange(1);
         }
         if(Gdx.input.isKeyJustPressed(Input.Keys.F2)){
-            mapToBeSent.nr=2;
-            gameLevel.setMap(2);
-            gameLevel.changeLevel();
-            GameServer.getInstance().sendToAllTCP(mapToBeSent);
+            GameServer.getInstance().sendMapChange(2);
         }
     }
 }

@@ -60,6 +60,12 @@ public class DynamicGameActor extends GameActor {
     protected VerticalState verticalState;
     protected HorizontalState horizontalState;
 
+    /*
+    * because the dynamic game actor also has velocity we'll want to change, we also queue that up
+    */
+    protected Vector2 queuedVel;
+    protected boolean canClearVel=false;
+
     public DynamicGameActor(Stage stage, Vector2 position, Vector2 size, float spriteScaling){
         super(stage,position,size, spriteScaling);
         velocity=new Vector2(0,0);
@@ -86,6 +92,20 @@ public class DynamicGameActor extends GameActor {
         if(body!=null)
             body.setLinearVelocity(new Vector2(velocity.x,velocity.y));
         updateGameActor(delta);
+    }
+
+    @Override
+    public void clearQueue() {
+        super.clearQueue();
+        if(canClearVel){
+            body.setLinearVelocity(queuedVel);
+            canClearVel=false;
+        }
+    }
+
+    public void setQueuedVel(Vector2 queuedVel) {
+        this.queuedVel = queuedVel;
+        canClearVel=true;
     }
 
     public void setHorizontalState(HorizontalState horizontalState) {

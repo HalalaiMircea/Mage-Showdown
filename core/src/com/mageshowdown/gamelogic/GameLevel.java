@@ -14,6 +14,8 @@ import java.util.ListIterator;
 
 public class GameLevel {
     private ArrayList<MapObjectHitbox> platforms;
+    private ArrayList<Vector2> spawnPoints;
+
     private TiledMap map;
     private int mapNr;
     private OrthogonalTiledMapRenderer renderer;
@@ -24,6 +26,7 @@ public class GameLevel {
 
     public GameLevel(Stage stage){
         platforms=new ArrayList<MapObjectHitbox>();
+        spawnPoints=new ArrayList<Vector2>();
         cam=(OrthographicCamera)stage.getCamera();
         this.stage=stage;
         renderer=new OrthogonalTiledMapRenderer(map,1f);
@@ -34,17 +37,22 @@ public class GameLevel {
 
         changedLevel=true;
         renderer.setMap(map);
-        //first empty the hitboxes of the previous map
+        //first empty the hitboxes and spawn points of the previous map
         ListIterator<MapObjectHitbox> iter=platforms.listIterator();
         while(iter.hasNext()){
             MapObjectHitbox x=iter.next();
             x.destroyActor();
             iter.remove();
         }
+        ListIterator<Vector2> spawnIter=spawnPoints.listIterator();
+        while(iter.hasNext()){
+            iter.remove();
+        }
 
 
         /*
-        * we have to be careful when creating the maps for the object layer to be the first one
+        * we have to be careful when creating the maps for the layer with hitboxes to be the first one
+        * and the one with spawn points on the second one
         */
         for(MapObject x:map.getLayers().get(0).getObjects()){
             RectangleMapObject currObj=(RectangleMapObject)x;
@@ -52,6 +60,13 @@ public class GameLevel {
             Vector2 size=new Vector2(currObj.getRectangle().getWidth(),currObj.getRectangle().getHeight());
 
             platforms.add(new MapObjectHitbox(stage,position,size));
+        }
+
+        for(MapObject x:map.getLayers().get(1).getObjects()){
+            RectangleMapObject currObj=(RectangleMapObject)x;
+
+            spawnPoints.add(new Vector2(currObj.getRectangle().getX(),currObj.getRectangle().getY()));
+
         }
 
 
@@ -81,5 +96,9 @@ public class GameLevel {
 
     public int getMapNr() {
         return mapNr;
+    }
+
+    public ArrayList<Vector2> getSpawnPoints() {
+        return spawnPoints;
     }
 }

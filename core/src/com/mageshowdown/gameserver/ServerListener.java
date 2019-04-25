@@ -6,6 +6,8 @@ import com.esotericsoftware.kryonet.Listener;
 import com.mageshowdown.gamelogic.GameWorld;
 import com.mageshowdown.packets.Network;
 
+import java.util.ArrayList;
+
 public class ServerListener extends Listener {
 
     private GameServer myServer=GameServer.getInstance();
@@ -57,7 +59,7 @@ public class ServerListener extends Listener {
             Network.NewPlayerSpawned toBeSent=new Network.NewPlayerSpawned();
             toBeSent.userName=packet.user;
             toBeSent.id=connection.getID();
-            toBeSent.pos=new Vector2(500f+(float)Math.random()*(900f-500f),200f+(float)Math.random()*(600f-200f));
+            toBeSent.pos=myServer.generateSpownPoint(connection.getID());
             toBeSent.roundTimePassed=gameStage.getRound().getTimePassed();
             gameStage.addPlayerCharacter(connection.getID(),toBeSent.pos);
 
@@ -107,5 +109,6 @@ public class ServerListener extends Listener {
 
         }
     }
+
 
 }
