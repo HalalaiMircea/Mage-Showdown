@@ -34,5 +34,7 @@ public class DesktopClientLauncher {
 
     private static void settingsInterface() throws IOException {
         ClientAssetLoader.prefs = new GamePreferences();
+        ClientAssetLoader.prefs.putString("PlayerName", "Default");
+        ClientAssetLoader.prefs.flush();
     }
 }
