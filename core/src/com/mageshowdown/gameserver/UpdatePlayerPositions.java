@@ -1,7 +1,6 @@
 package com.mageshowdown.gameserver;
 
 import com.esotericsoftware.kryonet.Connection;
-import com.mageshowdown.gamelogic.GameWorld;
 import com.mageshowdown.packets.Network;
 
 
@@ -11,26 +10,29 @@ public class UpdatePlayerPositions extends Thread{
 
     private GameServer myServer=GameServer.getInstance();
 
-    private Network.CharacterLocations loc;
+    private Network.CharacterStates loc;
     private ServerGameStage gameStage;
 
     UpdatePlayerPositions(ServerGameStage gameStage){
-        loc=new Network.CharacterLocations();
-        loc.playersPos=new ArrayList<Network.OneCharacterLocation>();
+        loc=new Network.CharacterStates();
+        loc.playerStates=new ArrayList<Network.OneCharacterState>();
         this.gameStage=gameStage;
         start();
     }
 
     public void run(){
         for(Connection x: myServer.getConnections()) {
-            Network.OneCharacterLocation oneLoc = new Network.OneCharacterLocation();
+            Network.OneCharacterState oneLoc = new Network.OneCharacterState();
             ServerPlayerCharacter pc = gameStage.getPlayerById(x.getID());
 
             oneLoc.linVel = pc.getBody().getLinearVelocity();
             oneLoc.pos = pc.getBody().getPosition();
             oneLoc.id = x.getID();
+            oneLoc.health=pc.getHealth();
+            oneLoc.score=pc.getScore();
+            oneLoc.dmgImmune=pc.isDmgImmune();
 
-            loc.playersPos.add(oneLoc);
+            loc.playerStates.add(oneLoc);
         }
 
         myServer.sendToAllTCP(loc);

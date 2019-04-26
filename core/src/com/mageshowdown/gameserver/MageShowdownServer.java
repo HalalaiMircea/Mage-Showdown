@@ -43,8 +43,6 @@ public class MageShowdownServer extends Game {
             }
         }
 
-
-        GameWorld.clearBodyRemovalQueue();
     }
 
     @Override

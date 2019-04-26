@@ -15,6 +15,11 @@ public class GameWorld {
     public static float resolutionScale;
     public static LinkedList<Body> bodiesToBeRemoved;
 
+    /*
+    * box2d doesnt like deleting too many bodies in one go so we set a hard limit
+     */
+    private final static int BODY_REMOVAL_LIMIT=5;
+
     static{
         world=new World(new Vector2(0,-9.8f),true);
         bodiesToBeRemoved=new LinkedList<Body>();
@@ -57,12 +62,16 @@ public class GameWorld {
 
     public static void clearBodyRemovalQueue(){
         Array<Body> existingBodies=new Array<Body>();
-        while(bodiesToBeRemoved.size()>0){
+        int count=0;
+        while(bodiesToBeRemoved.size()>0 && count<BODY_REMOVAL_LIMIT ){
             world.getBodies(existingBodies);
             //we make sure the body exists before we delete it; if it does we just pop the queue
-            if(existingBodies.contains(bodiesToBeRemoved.peek(),true))
-                world.destroyBody(bodiesToBeRemoved.remove());
-            else{
+            if(existingBodies.contains(bodiesToBeRemoved.peek(),true)) {
+                if(!world.isLocked())
+                    world.destroyBody(bodiesToBeRemoved.remove());
+                else return;
+                count++;
+            }else{
                 bodiesToBeRemoved.remove();
             }
         }

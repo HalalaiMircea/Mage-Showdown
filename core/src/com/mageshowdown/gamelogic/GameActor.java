@@ -8,7 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.*;
 
 import java.util.HashMap;
 
-public class GameActor extends Actor {
+public abstract class GameActor extends Actor {
 
     protected Sprite sprite;
     protected Body body;
@@ -24,21 +24,20 @@ public class GameActor extends Actor {
     protected boolean canClearPos=false;
 
 
-    public GameActor(Stage stage, Vector2 position, Vector2 size, float spriteScaling){
+    protected GameActor(Stage stage, Vector2 position, Vector2 size, float spriteScaling){
         setScale(spriteScaling);
         setPosition(position.x,position.y);
         setSize(size.x,size.y);
         setOrigin(getWidth()*getScaleX()/2f,getHeight()*getScaleY()/2f);
-
         stage.addActor(this);
 
         animations=new HashMap<String, Animation<TextureRegion>>();
     }
-    public GameActor(Stage stage,Vector2 position, Vector2 size){
+    protected GameActor(Stage stage,Vector2 position, Vector2 size){
         this(stage,position,size,1f);
     }
 
-    public GameActor(Stage stage,Vector2 position, Vector2 size, Texture texture, float spriteScaling){
+    protected GameActor(Stage stage,Vector2 position, Vector2 size, Texture texture, float spriteScaling){
         this(stage,position, size,spriteScaling+(size.x/texture.getWidth()-1));
 
             sprite=new Sprite(texture);
@@ -48,9 +47,6 @@ public class GameActor extends Actor {
             sprite.setOrigin(getOriginX(),getOriginY());
     }
 
-    public GameActor(Stage stage,Vector2 position, Vector2 size, Texture texture){
-        this(stage,position, size,texture,1f);
-    }
 
     @Override
     public void act(float delta) {

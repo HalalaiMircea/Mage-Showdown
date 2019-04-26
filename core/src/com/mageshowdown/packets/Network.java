@@ -9,14 +9,17 @@ public class Network {
     public final static int TCP_PORT=1311;
     public final static int UDP_PORT=1333;
 
-    public static class OneCharacterLocation{
+    public static class OneCharacterState{
         public Vector2 pos;
         public Vector2 linVel;
         public int id;
+        public int health;
+        public int score;
+        public boolean dmgImmune;
     }
 
-    public static class CharacterLocations {
-        public ArrayList<OneCharacterLocation> playersPos;
+    public static class CharacterStates {
+        public ArrayList<OneCharacterState> playerStates;
     }
 
     public static class PlayerConnected {
@@ -64,6 +67,11 @@ public class Network {
 
     public static class CurrentMap{
         public int nr;
+    }
+
+    public static class PlayerDead{
+        public int id;
+        public Vector2 respawnPos;
     }
 
 }

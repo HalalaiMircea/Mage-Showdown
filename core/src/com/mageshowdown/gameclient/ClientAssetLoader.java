@@ -16,7 +16,7 @@ public class ClientAssetLoader {
     public static Texture idlePlayerSpriteSheet;
     public static Texture jumpingPlayerSpritesheet;
     public static Texture runningPlayerSpritesheet;
-    public static Texture waterSphereSpriteSheet;
+    public static Texture crystalSpriteSheet;
     public static Texture laserShotTexture;
     public static BitmapFont font1;
 
@@ -35,7 +35,7 @@ public class ClientAssetLoader {
         uiSkin = new Skin(Gdx.files.internal("UIAssets/uiskin.json"));
         menuBackground = new Texture(Gdx.files.internal("UIAssets/placeholder.jpg"));
         solidBlack = new Texture(Gdx.files.internal("UIAssets/Black_1080p.png"));
-        waterSphereSpriteSheet = new Texture("water sphere 6.png");
+        crystalSpriteSheet = new Texture("Crystal.png");
         font1 = new BitmapFont(Gdx.files.internal("UIAssets/default.fnt"));
 
         map1 = new TmxMapLoader().load(Gdx.files.internal("Maps/level1.tmx").toString());
@@ -51,7 +51,7 @@ public class ClientAssetLoader {
         idlePlayerSpriteSheet.dispose();
         jumpingPlayerSpritesheet.dispose();
         runningPlayerSpritesheet.dispose();
-        waterSphereSpriteSheet.dispose();
+        crystalSpriteSheet.dispose();
         laserShotTexture.dispose();
         font1.dispose();
         map1.dispose();

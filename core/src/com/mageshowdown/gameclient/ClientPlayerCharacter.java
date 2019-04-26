@@ -1,47 +1,34 @@
 package com.mageshowdown.gameclient;
 
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.mageshowdown.gamelogic.AnimatedActorInterface;
-import com.mageshowdown.gamelogic.DynamicGameActor;
-import com.mageshowdown.gamelogic.GameWorld;
-import com.mageshowdown.gamelogic.Weapon;
+import com.mageshowdown.gamelogic.*;
 import com.mageshowdown.packets.Network.*;
 
-public class ClientPlayerCharacter extends DynamicGameActor implements AnimatedActorInterface {
+public class ClientPlayerCharacter extends PlayerCharacter implements AnimatedActorInterface {
 
     private GameClient myClient=GameClient.getInstance();
-
-    private Weapon myWeapon;
 
     private boolean moveLeft=false;
     private boolean moveRight=false;
     private boolean jump=false;
     private boolean isMyPlayer=false;
-    private int health=15;
     private String userName;
 
-    private Vector2 queuedPos;
-    private Vector2 queuedVel;
-    private boolean canClearPos=false;
-    private boolean canClearVel=false;
-
     public ClientPlayerCharacter(Stage stage, Vector2 position, String userName) {
-        super(stage,position, new Vector2(22,32),1.5f   );
+        super(stage,position,true);
         addAnimation(4,1,1.2f,"idle",ClientAssetLoader.idlePlayerSpriteSheet);
         addAnimation(2,1,.8f,"jumping",ClientAssetLoader.jumpingPlayerSpritesheet);
         addAnimation(8,1,1f,"running",ClientAssetLoader.runningPlayerSpritesheet);
         this.userName=userName;
 
-        myWeapon=new Weapon(stage,true);
 
-        createBody(BodyDef.BodyType.DynamicBody);
-        body.setFixedRotation(true);
         addListener(new InputListener() {
 
             @Override
@@ -96,12 +83,58 @@ public class ClientPlayerCharacter extends DynamicGameActor implements AnimatedA
 
     }
 
-    public void setPosition(Vector2 position){
-        setPosition(position.x,position.y);
-    }
 
     @Override
     public void act(float delta) {
+        sendInputPackets();
+        pickFrame();
+        calcState();
+        updateWeaponPos();
+
+        super.updateGameActor(delta);
+    }
+
+
+
+    @Override
+    public void draw(Batch batch, float parentAlpha) {
+        if(dmgImmune)
+            batch.setColor(batch.getColor().r,batch.getColor().g,batch.getColor().b,125);
+        if(currFrame!=null)
+            batch.draw(currFrame,getX(),getY(),getWidth()*getScaleX(),getHeight()*getScaleY());
+        if(dmgImmune)
+            batch.setColor(batch.getColor().r,batch.getColor().g,batch.getColor().b,255);
+    }
+
+
+    @Override
+    public void pickFrame() {
+        boolean looping=true;
+        /*
+         * if the character is grounded, we have to see if hes moving left or right or standing and change the animation accordingly
+         * regardless of wether its flying or its grounded, the animation frame needs
+         * to be flipped if youre going left, looking right being the "default" position
+         */
+        switch(verticalState){
+            case GROUNDED:
+                switch (horizontalState) {
+                    case STANDING:
+                        currFrame = animations.get("idle").getKeyFrame(passedTime, looping);
+                        break;
+                    default:
+                        currFrame = animations.get("running").getKeyFrame(passedTime,looping);
+                        break;
+                }
+                break;
+            case FLYING:
+                looping=false;
+                if(animations.get("jumping")!=null)
+                    currFrame = animations.get("jumping").getKeyFrame(passedTime,looping);
+                break;
+        }
+    }
+
+    private void sendInputPackets(){
         MoveKeyDown keyPress=new MoveKeyDown();
 
         if(moveLeft){
@@ -114,9 +147,9 @@ public class ClientPlayerCharacter extends DynamicGameActor implements AnimatedA
             keyPress.keycode=Input.Keys.W;
             myClient.sendTCP(keyPress);
         }
+    }
 
-        pickFrame();
-
+    private void calcState(){
         if(body!=null) {
             if (body.getLinearVelocity().y > 0.0001f || body.getLinearVelocity().y < -0.0001f) {
                 //if we detect that we start flying, then we need to reset the passed time so the animation wont loop
@@ -169,67 +202,10 @@ public class ClientPlayerCharacter extends DynamicGameActor implements AnimatedA
                     break;
             }
         }
-
-        if(myWeapon!=null)
-            myWeapon.updatePosition(new Vector2(getX(),getY()));
-
-        super.updateGameActor(delta);
-    }
-
-
-
-    @Override
-    public void draw(Batch batch, float parentAlpha) {
-        if(currFrame!=null)
-            batch.draw(currFrame,getX(),getY(),getWidth()*getScaleX(),getHeight()*getScaleY());
-    }
-
-
-    @Override
-    public void pickFrame() {
-        boolean looping=true;
-        /*
-         * if the character is grounded, we have to see if hes moving left or right or standing and change the animation accordingly
-         * regardless of wether its flying or its grounded, the animation frame needs
-         * to be flipped if youre going left, looking right being the "default" position
-         */
-        switch(verticalState){
-            case GROUNDED:
-                switch (horizontalState) {
-                    case STANDING:
-                        currFrame = animations.get("idle").getKeyFrame(passedTime, looping);
-                        break;
-                    default:
-                        currFrame = animations.get("running").getKeyFrame(passedTime,looping);
-                        break;
-                }
-                break;
-            case FLYING:
-                looping=false;
-                if(animations.get("jumping")!=null)
-                    currFrame = animations.get("jumping").getKeyFrame(passedTime,looping);
-                break;
-        }
-    }
-
-    @Override
-    public void destroyActor() {
-        myWeapon.destroyActor();
-        super.destroyActor();
-    }
-
-    public Weapon getMyWeapon() {
-        return myWeapon;
     }
 
     public void setMyPlayer(boolean myPlayer) {
         isMyPlayer = myPlayer;
     }
-
-
-    public void damageBy(int damageValue){
-        health-=damageValue;
-    }
-
 
 }

@@ -10,6 +10,7 @@ import com.mageshowdown.packets.Network;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 public class GameServer extends Server {
 
@@ -39,8 +40,8 @@ public class GameServer extends Server {
 
     private void registerClasses(){
         Kryo kryo = getKryo();
-        kryo.register(Network.OneCharacterLocation.class);
-        kryo.register(Network.CharacterLocations.class);
+        kryo.register(Network.OneCharacterState.class);
+        kryo.register(Network.CharacterStates.class);
         kryo.register(Network.PlayerConnected.class);
         kryo.register(Vector2.class);
         kryo.register(Network.UpdatePositions.class);
@@ -53,6 +54,7 @@ public class GameServer extends Server {
         kryo.register(Network.NewPlayerSpawned.class);
         kryo.register(Network.PlayerDisconnected.class);
         kryo.register(Network.CurrentMap.class);
+        kryo.register(Network.PlayerDead.class);
     }
 
     public void sendMapChange(int nr){
@@ -62,19 +64,18 @@ public class GameServer extends Server {
         gameStage.getGameLevel().changeLevel();
 
         for(Connection x:getConnections()){
-            //before we change the body's position to a spawn point it needs to be converted to box2d coordinates
-            gameStage.getPlayerById(x.getID()).setQueuedPos(GameWorld.convertPixelsToWorld(generateSpownPoint(x.getID())));
+            gameStage.getPlayerById(x.getID()).setQueuedPos(generateSpawnPoint(x.getID()));
         }
 
         GameServer.getInstance().sendToAllTCP(mapToBeSent);
     }
 
-    public Vector2 generateSpownPoint(int id){
+    public Vector2 generateSpawnPoint(int id){
         ArrayList<Vector2> spawnPoints=gameStage.getGameLevel().getSpawnPoints();
-        System.out.println(spawnPoints.get(id));
-        if(spawnPoints.size()>id)
-            return spawnPoints.get(id);
-        else return spawnPoints.get(id%spawnPoints.size());
+        Vector2 spawnPoint=new Vector2(spawnPoints.get(new Random().nextInt(spawnPoints.size())));
+
+        //before we change the body's position to a spawn point it needs to be converted to box2d coordinates
+        return GameWorld.convertPixelsToWorld(spawnPoint);
     }
 
     public HashMap<Integer, String> getUsers() {

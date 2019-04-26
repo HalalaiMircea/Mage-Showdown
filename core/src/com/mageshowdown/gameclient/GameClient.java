@@ -36,8 +36,8 @@ public class GameClient extends Client{
 
     private void registerClasses(){
         Kryo kryo = getKryo();
-        kryo.register(Network.OneCharacterLocation.class);
-        kryo.register(Network.CharacterLocations.class);
+        kryo.register(Network.OneCharacterState.class);
+        kryo.register(Network.CharacterStates.class);
         kryo.register(Network.PlayerConnected.class);
         kryo.register(Vector2.class);
         kryo.register(Network.UpdatePositions.class);
@@ -50,6 +50,7 @@ public class GameClient extends Client{
         kryo.register(Network.NewPlayerSpawned.class);
         kryo.register(Network.PlayerDisconnected.class);
         kryo.register(Network.CurrentMap.class);
+        kryo.register(Network.PlayerDead.class);
 
     }
 

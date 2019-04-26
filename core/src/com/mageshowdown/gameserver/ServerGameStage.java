@@ -34,7 +34,7 @@ public class ServerGameStage extends Stage {
 
         myRound=new Round(60f,false);
 
-        GameWorld.world.setContactListener(new CollisionListener());
+        GameWorld.world.setContactListener(new CollisionListener(this));
         addActor(myRound);
     }
 
@@ -47,7 +47,10 @@ public class ServerGameStage extends Stage {
         super.act();
         getInput();
 
+
         GameWorld.world.step(Gdx.graphics.getDeltaTime(),6,2);
+
+        GameWorld.clearBodyRemovalQueue();
 
         for(ServerPlayerCharacter x:playerCharacters.values()){
             x.clearQueue();
@@ -63,8 +66,7 @@ public class ServerGameStage extends Stage {
     }
 
     public void removePlayerCharacter(int connectionId){
-        GameWorld.bodiesToBeRemoved.add(playerCharacters.get(connectionId).getBody());
-        playerCharacters.get(connectionId).remove();
+        playerCharacters.get(connectionId).destroyActor();
         playerCharacters.remove(connectionId);
     }
 
@@ -92,6 +94,9 @@ public class ServerGameStage extends Stage {
         }
         if(Gdx.input.isKeyJustPressed(Input.Keys.F2)){
             GameServer.getInstance().sendMapChange(2);
+        }
+        if(Gdx.input.isKeyJustPressed(Input.Keys.F3)){
+            GameServer.getInstance().sendMapChange(3);
         }
     }
 }

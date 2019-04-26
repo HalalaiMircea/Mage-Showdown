@@ -3,7 +3,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
-public class DynamicGameActor extends GameActor {
+public abstract class DynamicGameActor extends GameActor {
     public static enum VerticalState{
         GROUNDED(1),
         FLYING(2);
@@ -66,25 +66,17 @@ public class DynamicGameActor extends GameActor {
     protected Vector2 queuedVel;
     protected boolean canClearVel=false;
 
-    public DynamicGameActor(Stage stage, Vector2 position, Vector2 size, float spriteScaling){
+    protected DynamicGameActor(Stage stage, Vector2 position, Vector2 size, float spriteScaling){
         super(stage,position,size, spriteScaling);
         velocity=new Vector2(0,0);
         horizontalState=HorizontalState.STANDING;
         verticalState=VerticalState.FLYING;
     }
 
-    public DynamicGameActor(Stage stage,Vector2 position, Vector2 size){
-        this(stage,position,size,1f);
-    }
-
-    public DynamicGameActor(Stage stage,Vector2 position, Vector2 size, Texture texture, float spriteScaling){
+    protected DynamicGameActor(Stage stage,Vector2 position, Vector2 size, Texture texture, float spriteScaling){
         super(stage,position,size,texture, spriteScaling);
         velocity=new Vector2(0,0);
         horizontalState=HorizontalState.STANDING;
-    }
-
-    public DynamicGameActor(Stage stage,Vector2 position, Vector2 size, Texture texture){
-        this(stage,position,size,texture,1f);
     }
 
     @Override

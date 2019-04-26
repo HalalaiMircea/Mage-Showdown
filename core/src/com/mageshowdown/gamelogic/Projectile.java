@@ -47,9 +47,13 @@ public class Projectile extends DynamicGameActor {
         super.act(delta);
 
         //every frame we check if the projectile is out of bounds
-        Vector2 convPosition=GameWorld.convertWorldToPixels(body.getPosition());
-        if(convPosition.x > Gdx.graphics.getWidth() || convPosition.x<0 || convPosition.y>Gdx.graphics.getHeight() || convPosition.y<0)
-            outOfBounds=true;
+        if(body!=null){
+            Vector2 convPosition=GameWorld.convertWorldToPixels(body.getPosition());
+            if(convPosition.x > 1280 || convPosition.x<0 || convPosition.y>720 || convPosition.y<0)
+            {
+                outOfBounds=true;
+            }
+        }
     }
 
     public void setCollided(boolean collided) {

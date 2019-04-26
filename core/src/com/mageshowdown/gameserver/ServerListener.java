@@ -1,12 +1,9 @@
 package com.mageshowdown.gameserver;
 
-import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.mageshowdown.gamelogic.GameWorld;
 import com.mageshowdown.packets.Network;
-
-import java.util.ArrayList;
 
 public class ServerListener extends Listener {
 
@@ -38,8 +35,6 @@ public class ServerListener extends Listener {
         Network.PlayerDisconnected toBeSent=new Network.PlayerDisconnected();
         toBeSent.id=connection.getID();
 
-        System.out.println(connection.getID()+" has disconnected");
-
         myServer.removeUser(connection.getID());
         gameStage.removePlayerCharacter(connection.getID());
 
@@ -59,7 +54,7 @@ public class ServerListener extends Listener {
             Network.NewPlayerSpawned toBeSent=new Network.NewPlayerSpawned();
             toBeSent.userName=packet.user;
             toBeSent.id=connection.getID();
-            toBeSent.pos=myServer.generateSpownPoint(connection.getID());
+            toBeSent.pos=GameWorld.convertWorldToPixels(myServer.generateSpawnPoint(connection.getID()));
             toBeSent.roundTimePassed=gameStage.getRound().getTimePassed();
             gameStage.addPlayerCharacter(connection.getID(),toBeSent.pos);
 
@@ -77,7 +72,7 @@ public class ServerListener extends Listener {
                 if(con.getID()!=connection.getID()){
                     toBeSent.userName=myServer.getUserNameById(con.getID());
                     toBeSent.id=con.getID();
-                    toBeSent.pos=gameStage.getPlayerById(con.getID()).getBody().getPosition();
+                    toBeSent.pos= GameWorld.convertPixelsToWorld(gameStage.getPlayerById(con.getID()).getBody().getPosition());
 
                     myServer.sendToTCP(connection.getID(),toBeSent);
                 }

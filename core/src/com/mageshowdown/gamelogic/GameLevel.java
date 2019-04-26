@@ -45,8 +45,9 @@ public class GameLevel {
             iter.remove();
         }
         ListIterator<Vector2> spawnIter=spawnPoints.listIterator();
-        while(iter.hasNext()){
-            iter.remove();
+        while(spawnIter.hasNext()){
+            spawnIter.next();
+            spawnIter.remove();
         }
 
 
@@ -69,11 +70,9 @@ public class GameLevel {
 
         }
 
-
     }
 
     public void render(){
-        System.out.println(platforms.size());
         if(changedLevel){
             cam.update();
             renderer.setView(cam);
@@ -90,6 +89,9 @@ public class GameLevel {
                 break;
             case 2:
                 map=ClientAssetLoader.dungeonMap;
+                break;
+            case 3:
+                map=ClientAssetLoader.purpleMap;
                 break;
         }
     }

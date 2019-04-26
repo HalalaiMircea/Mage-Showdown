@@ -70,15 +70,12 @@ public class ClientGameStage extends Stage {
     }
 
     public void removePlayerCharacter(int connectionId){
-        GameWorld.bodiesToBeRemoved.add(otherPlayers.get(connectionId).getBody());
-        otherPlayers.get(connectionId).getMyWeapon().remove();
-        otherPlayers.get(connectionId).remove();
+        otherPlayers.get(connectionId).destroyActor();
         otherPlayers.remove(connectionId);
     }
 
     public void removeMyCharacter(){
-        GameWorld.bodiesToBeRemoved.add(playerCharacter.getBody());
-        playerCharacter.getMyWeapon().remove();
+        playerCharacter.getMyWeapon().destroyActor();
         playerCharacter.remove();
     }
 

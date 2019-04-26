@@ -14,23 +14,25 @@ public class Weapon extends GameActor implements AnimatedActorInterface{
     private boolean loadAnimation;
 
     public Weapon(Stage stage, boolean loadAnimation){
-        super(stage,new Vector2(0,0),new Vector2(32,33));
+        super(stage,new Vector2(0,0),new Vector2(64,66));
         weaponShots=new ArrayList<Projectile>();
         this.loadAnimation=loadAnimation;
 
+
         if(loadAnimation)
-            addAnimation(3,1,.5f,"idle", ClientAssetLoader.waterSphereSpriteSheet);
+            addAnimation(6,1,.5f,"idle", ClientAssetLoader.crystalSpriteSheet);
     }
 
 
     public void updatePosition(Vector2 position){
-        Vector2 offset=new Vector2(-5f,35f);
+        Vector2 offset=new Vector2(-15f,35f);
         setPosition(position.x+offset.x,position.y+offset.y);
      }
 
     @Override
     public void act(float delta) {
         super.act(delta);
+
 
         destroyEliminatedProjectiles();
 
@@ -56,7 +58,7 @@ public class Weapon extends GameActor implements AnimatedActorInterface{
     public void projectileHasCollided(int projId){
         for(Projectile x:weaponShots){
             if(x.getId()==projId){
-                x.hasCollided();
+                x.setCollided(true);
                 break;
             }
         }
@@ -64,7 +66,7 @@ public class Weapon extends GameActor implements AnimatedActorInterface{
 
 
     public void shoot(Vector2 direction, float rotation, int ownerId){
-        Vector2 shootingOrigin=new Vector2((getX()),(getY()+getHeight()/2));
+        Vector2 shootingOrigin=new Vector2((getX()+getWidth()/8),(getY()+getHeight()/2));
         weaponShots.add(new Projectile(getStage(),shootingOrigin,rotation,direction,weaponShots.size(),ownerId));
     }
 
