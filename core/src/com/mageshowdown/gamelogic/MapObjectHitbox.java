@@ -19,8 +19,6 @@ public class MapObjectHitbox extends GameActor {
 
     @Override
     public boolean equals(Object obj) {
-        if(body.getPosition().equals(((MapObjectHitbox)obj).getBody().getPosition()))
-            return true;
-        return false;
+        return body.getPosition().equals(((MapObjectHitbox) obj).getBody().getPosition());
     }
 }
