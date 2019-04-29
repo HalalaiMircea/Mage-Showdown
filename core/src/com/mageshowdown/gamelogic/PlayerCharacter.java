@@ -32,6 +32,7 @@ public abstract class PlayerCharacter extends DynamicGameActor{
             myWeapon.updatePosition(new Vector2(getX(),getY()));
     }
 
+
     public Weapon getMyWeapon() {
         return myWeapon;
     }

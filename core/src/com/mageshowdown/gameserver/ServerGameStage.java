@@ -21,8 +21,6 @@ public class ServerGameStage extends Stage {
     private OrthographicCamera camera;
     private HashMap<Integer,ServerPlayerCharacter> playerCharacters;
 
-    private Round myRound;
-
     public ServerGameStage() {
         super();
         camera=new OrthographicCamera(1280f,720f);
@@ -32,10 +30,9 @@ public class ServerGameStage extends Stage {
         gameLevel=new GameLevel(this);
         playerCharacters=new HashMap<Integer, ServerPlayerCharacter>();
 
-        myRound=new Round(60f,false);
 
         GameWorld.world.setContactListener(new CollisionListener(this));
-        addActor(myRound);
+        addActor(ServerRound.getInstance());
     }
 
     @Override
@@ -75,19 +72,15 @@ public class ServerGameStage extends Stage {
         gameLevel.changeLevel();
     }
 
-    public Round getRound() {
-        return myRound;
-    }
-
     public void startRound(){
-        myRound.start();
+        ServerRound.getInstance().start();
     }
 
     public GameLevel getGameLevel() {
         return gameLevel;
     }
 
-    public void getInput(){
+    private void getInput(){
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.F1)){
             GameServer.getInstance().sendMapChange(1);

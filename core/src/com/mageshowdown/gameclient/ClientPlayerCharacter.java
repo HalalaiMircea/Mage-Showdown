@@ -19,6 +19,7 @@ public class ClientPlayerCharacter extends PlayerCharacter implements AnimatedAc
     private boolean moveRight=false;
     private boolean jump=false;
     private boolean isMyPlayer=false;
+    private boolean shoot=false;
     private String userName;
 
     public ClientPlayerCharacter(Stage stage, Vector2 position, String userName) {
@@ -43,16 +44,7 @@ public class ClientPlayerCharacter extends PlayerCharacter implements AnimatedAc
                     jump=true;
                 }
                 if(keycode==Input.Keys.Q){
-                    ShootProjectile sp=new ShootProjectile();
-                    Vector2 shootingOrigin=new Vector2((myWeapon.getX()),(myWeapon.getY()+myWeapon.getHeight()/2));
-                    float rotation= GameWorld.getMouseVectorAngle(shootingOrigin);
-                    Vector2 direction=GameWorld.getNormalizedMouseVector(shootingOrigin);
-
-                    sp.id=myClient.getID();
-                    sp.rot=rotation;
-                    sp.dir=direction;
-                    myClient.sendTCP(sp);
-                    myWeapon.shoot(direction,rotation,myClient.getID());
+                    shoot=true;
                 }
 
                 return true;
@@ -99,7 +91,7 @@ public class ClientPlayerCharacter extends PlayerCharacter implements AnimatedAc
     @Override
     public void draw(Batch batch, float parentAlpha) {
         if(dmgImmune)
-            batch.setColor(batch.getColor().r,batch.getColor().g,batch.getColor().b,125);
+            batch.setColor(batch.getColor().r,batch.getColor().g,batch.getColor().b,55);
         if(currFrame!=null)
             batch.draw(currFrame,getX(),getY(),getWidth()*getScaleX(),getHeight()*getScaleY());
         if(dmgImmune)
@@ -146,6 +138,9 @@ public class ClientPlayerCharacter extends PlayerCharacter implements AnimatedAc
         }else if (jump){
             keyPress.keycode=Input.Keys.W;
             myClient.sendTCP(keyPress);
+        }
+        if(shoot){
+            shootMyWeapon();
         }
     }
 
@@ -202,6 +197,21 @@ public class ClientPlayerCharacter extends PlayerCharacter implements AnimatedAc
                     break;
             }
         }
+    }
+
+    private void shootMyWeapon(){
+        ShootProjectile sp=new ShootProjectile();
+        Vector2 shootingOrigin=new Vector2((myWeapon.getX()),(myWeapon.getY()+myWeapon.getHeight()/2));
+        float rotation= GameWorld.getMouseVectorAngle(shootingOrigin);
+        Vector2 direction=GameWorld.getNormalizedMouseVector(shootingOrigin);
+
+        sp.id=myClient.getID();
+        sp.rot=rotation;
+        sp.dir=direction;
+        myClient.sendTCP(sp);
+        myWeapon.shoot(direction,rotation,myClient.getID());
+
+        shoot=false;
     }
 
     public void setMyPlayer(boolean myPlayer) {
