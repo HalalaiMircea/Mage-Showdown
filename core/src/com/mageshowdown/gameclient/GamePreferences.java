@@ -191,8 +191,15 @@ public class GamePreferences implements Preferences {
     }
 
     private void defaultValues() {
-        this.putString("PlayerName", "UnknownMage");
-        //TO-DO put default values for settings at launch
+        this.putString("playerName", "UnknownMage");
+        this.putInteger("width", 1280);
+        this.putInteger("height", 720);
+        this.putInteger("foregroundFPS", 0);
+        this.putInteger("backgroundFPS", 60);
+        this.putBoolean("vSyncEnabled", true);
+        this.putBoolean("useGL30", false);
+        this.putBoolean("fullscreen", false);
+        //TO-DO: put defaults to load into preference xml
 
         this.flush();
     }

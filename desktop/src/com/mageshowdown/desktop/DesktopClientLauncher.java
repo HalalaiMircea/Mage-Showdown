@@ -1,59 +1,43 @@
 package com.mageshowdown.desktop;
 
-import com.badlogic.gdx.Graphics;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.mageshowdown.gameclient.ClientAssetLoader;
 import com.mageshowdown.gameclient.GamePreferences;
-import com.mageshowdown.gameclient.MageShowdownClient;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.Arrays;
 
-public class DesktopClientLauncher {
-    public static void main(String[] arg) throws IOException {
-        final JFrame launcherFrame = new JFrame();
-        launcherFrame.setTitle("Mage Showdown Launcher");
-        launcherFrame.setVisible(true);
-        launcherFrame.setLayout(new BorderLayout());
-        launcherFrame.setSize(800, 600);
-        final JButton launchButton = new JButton("Launch game!");
-        launchButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-                config.width = 1920;
-                config.height = 1080;
-                config.resizable = false;
-                config.foregroundFPS = 0;
-                //config.backgroundFPS = 0;
-                config.vSyncEnabled = true;
-                //config.useGL30=true;
-                config.fullscreen = true;
-                //testStuff();
-                try {
-                    ClientAssetLoader.prefs = new GamePreferences();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-                new LwjglApplication(MageShowdownClient.getInstance(), config);
-                launcherFrame.setVisible(false);
-            }
-        });
-        launcherFrame.add(launchButton);
+import static com.mageshowdown.gameclient.ClientAssetLoader.prefs;
+
+public class DesktopClientLauncher extends Application {
+
+    static Stage mainStage;
+    static Scene mainScene;
+    static Scene configScene;
+    static LwjglApplicationConfiguration config;
+
+    public static void main(String[] arg) {
+        launch(arg);
+    }
+
+
+    @Override
+    public void start(Stage primaryStage) throws IOException {
+        prefs = new GamePreferences();
+        testStuff();
+        mainStage = primaryStage;
+        mainStage.setTitle("Mage Showdown Launcher");
+        mainStage.setResizable(false);
+
+        mainScene = new Scene(MainSceneBase.getInstance());
+        configScene = new Scene(ConfigSceneBase.getInstance());
+        mainStage.setScene(mainScene);
+        mainStage.show();
     }
 
     private static void testStuff() {
-        Graphics.DisplayMode[] kek = LwjglApplicationConfiguration.getDisplayModes();
-        for (Graphics.DisplayMode each : kek) {
-            System.out.println(each.toString());
-        }
-    }
-
-    public static void settingsInterface() throws IOException {
-        ClientAssetLoader.prefs = new GamePreferences();
+        //System.out.println(Arrays.toString(LwjglApplicationConfiguration.getDisplayModes()));
     }
 }

@@ -1,6 +1,7 @@
 package com.mageshowdown.gamelogic;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -14,7 +15,7 @@ import com.mageshowdown.gameclient.MageShowdownClient;
 
 public class OptionsStage extends Stage {
 
-    private static final String PLAYERNAME = "PlayerName";
+    private static final String PLAYERNAME = "playerName";
 
     public OptionsStage(Viewport viewport, Batch batch, Texture backgroundTexture) {
         super(viewport, batch);
