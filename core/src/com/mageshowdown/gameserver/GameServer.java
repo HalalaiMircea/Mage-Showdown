@@ -16,6 +16,7 @@ public class GameServer extends Server {
 
     private static GameServer instance=new GameServer();
 
+    private final int NUMBER_OF_MAPS=3;
     //a hashmap where the values are the usernames and the keys the id's of the player
     private HashMap<Integer,String> users;
     private boolean updatePositions=false;
@@ -70,6 +71,32 @@ public class GameServer extends Server {
         GameServer.getInstance().sendToAllTCP(mapToBeSent);
     }
 
+    public int getARandomMap(){
+        //we want the next map to always be different so we pick a random one, but were careful not to pick the current one
+        int nextMap;
+
+        do{
+            nextMap=(new Random().nextInt(NUMBER_OF_MAPS))+1;
+        }
+        while(nextMap==getGameStage().getGameLevel().getMapNr());
+
+        return nextMap;
+    }
+
+    public void startRound(){
+        for(Connection x:getConnections()){
+            ServerPlayerCharacter pc=gameStage.getPlayerById(x.getID());
+
+            pc.setQueuedPos(generateSpawnPoint(x.getID()));
+            pc.setHealth(15);
+            pc.setScore(0);
+        }
+    }
+
+    public void registerRound(){
+
+    }
+
     public Vector2 generateSpawnPoint(int id){
         ArrayList<Vector2> spawnPoints=gameStage.getGameLevel().getSpawnPoints();
         Vector2 spawnPoint=new Vector2(spawnPoints.get(new Random().nextInt(spawnPoints.size())));
@@ -108,5 +135,9 @@ public class GameServer extends Server {
 
     public void setGameStage(ServerGameStage gameStage) {
         this.gameStage = gameStage;
+    }
+
+    public ServerGameStage getGameStage() {
+        return gameStage;
     }
 }

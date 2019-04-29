@@ -10,10 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.mageshowdown.gameclient.ClientAssetLoader;
-import com.mageshowdown.gameclient.ClientGameStage;
-import com.mageshowdown.gameclient.GameClient;
-import com.mageshowdown.gameclient.MageShowdownClient;
+import com.mageshowdown.gameclient.*;
 
 public class GameScreen implements Screen {
 
@@ -46,9 +43,12 @@ public class GameScreen implements Screen {
 
         switch (gameState) {
             case GAME_RUNNING:
-                gameStage.act();
+                if(!ClientRound.getInstance().isFinished()){
+                    gameStage.act();
+                    gameRunningInput();
+                }else
+                    ClientRound.getInstance().act(Gdx.graphics.getDeltaTime());
                 gameStage.draw();
-                gameRunningInput();
                 break;
             case GAME_PAUSED:
                 gameStage.act();
@@ -183,7 +183,7 @@ public class GameScreen implements Screen {
                     gameStage.removePlayerCharacter(id);
                 gameStage.removeMyCharacter();
                 GameClient.getInstance().stop();
-                gameStage.getRound().stop();
+                ClientRound.getInstance().stop();
 
                 Gdx.input.setInputProcessor(MenuScreen.getMainMenuStage());
             }

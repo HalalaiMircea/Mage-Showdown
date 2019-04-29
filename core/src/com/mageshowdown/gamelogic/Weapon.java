@@ -81,6 +81,13 @@ public class Weapon extends GameActor implements AnimatedActorInterface{
         currFrame=animations.get("idle").getKeyFrame(passedTime,true);
     }
 
+    @Override
+    public void clearQueue() {
+        for(Projectile x:weaponShots){
+            x.clearQueue();
+        }
+    }
+
     public ArrayList<Vector2> getProjectileLocations(){
         ArrayList<Vector2> locations=new ArrayList<Vector2>();
         for(Projectile x:weaponShots){

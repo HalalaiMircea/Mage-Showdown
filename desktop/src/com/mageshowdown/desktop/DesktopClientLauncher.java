@@ -25,14 +25,14 @@ public class DesktopClientLauncher {
             @Override
             public void actionPerformed(ActionEvent e) {
                 LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-                config.width = 1920;
-                config.height = 1080;
+                config.width = 1280;
+                config.height = 720;
                 config.resizable = false;
                 config.foregroundFPS = 0;
                 //config.backgroundFPS = 0;
                 config.vSyncEnabled = true;
                 //config.useGL30=true;
-                config.fullscreen = true;
+                //config.fullscreen = true;
                 //testStuff();
                 try {
                     ClientAssetLoader.prefs = new GamePreferences();

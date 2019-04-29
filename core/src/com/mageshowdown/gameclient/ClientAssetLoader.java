@@ -19,6 +19,7 @@ public class ClientAssetLoader {
     public static Texture crystalSpriteSheet;
     public static Texture laserShotTexture;
     public static BitmapFont font1;
+    public static Texture roundOverScreen;
 
     public static Preferences prefs;
 
@@ -37,6 +38,7 @@ public class ClientAssetLoader {
         solidBlack = new Texture(Gdx.files.internal("UIAssets/Black_1080p.png"));
         crystalSpriteSheet = new Texture("Crystal.png");
         font1 = new BitmapFont(Gdx.files.internal("UIAssets/default.fnt"));
+        roundOverScreen=new Texture(Gdx.files.internal("round over.png"));
 
         map1 = new TmxMapLoader().load(Gdx.files.internal("Maps/level1.tmx").toString());
         dungeonMap = new TmxMapLoader().load(Gdx.files.internal("Maps/level2.tmx").toString());

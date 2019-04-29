@@ -2,6 +2,7 @@ package com.mageshowdown.gameserver;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
+import com.esotericsoftware.kryonet.Server;
 import com.mageshowdown.gamelogic.GameWorld;
 import com.mageshowdown.packets.Network;
 
@@ -55,7 +56,7 @@ public class ServerListener extends Listener {
             toBeSent.userName=packet.user;
             toBeSent.id=connection.getID();
             toBeSent.pos=GameWorld.convertWorldToPixels(myServer.generateSpawnPoint(connection.getID()));
-            toBeSent.roundTimePassed=gameStage.getRound().getTimePassed();
+            toBeSent.roundTimePassed=ServerRound.getInstance().getTimePassed();
             gameStage.addPlayerCharacter(connection.getID(),toBeSent.pos);
 
             myServer.sendToAllTCP(toBeSent);

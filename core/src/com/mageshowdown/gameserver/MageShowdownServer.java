@@ -6,6 +6,8 @@ import com.mageshowdown.gameclient.ClientAssetLoader;
 import com.mageshowdown.gamelogic.GameWorld;
 import com.mageshowdown.packets.Network;
 
+import java.util.Random;
+
 public class MageShowdownServer extends Game {
 
     private GameServer myServer=GameServer.getInstance();
@@ -28,7 +30,11 @@ public class MageShowdownServer extends Game {
     @Override
     public void render () {
         Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond()+" ");
-        gameStage.act();
+
+        //if the round is finished we "pause" the stage and only update the round
+        if(!ServerRound.getInstance().isFinished())
+            gameStage.act();
+        else ServerRound.getInstance().act(Gdx.graphics.getDeltaTime());
 
         if(myServer.getUpdatePositions()){
             new UpdatePlayerPositions(gameStage);

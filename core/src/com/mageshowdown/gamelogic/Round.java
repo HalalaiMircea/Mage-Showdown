@@ -8,22 +8,20 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mageshowdown.gameclient.ClientAssetLoader;
 
-public class Round extends Actor {
+public abstract class Round extends Actor {
 
-    private boolean finished=false;
-    private boolean started=false;
+    protected final float TIME_BETWEEN_ROUNDS=10f;
+    protected final float ROUND_LENGTH=25f;
 
-    private float timePassed;
-    private float roundLength;
+    protected boolean finished=false;
+    protected boolean started=false;
 
-    private BitmapFont font;
+    protected float timePassed;
 
-    public Round(float roundLength, boolean assignFont){
-        timePassed=0f;
-        this.roundLength=roundLength;
-        if(true) {
-            font=ClientAssetLoader.font1;
-        }
+    protected float timePassedRoundFinished;
+
+    protected Round(){
+        start();
     }
 
     @Override
@@ -32,16 +30,23 @@ public class Round extends Actor {
         if(!finished && started)
             timePassed+= Gdx.graphics.getDeltaTime();
 
-        if(timePassed>roundLength)
+        if(timePassed>ROUND_LENGTH)
         {
-            finished=true;
-            started=false;
+            stop();
+        }
+
+        if(finished){
+            timePassedRoundFinished-=Gdx.graphics.getDeltaTime();
+            if(timePassedRoundFinished<=0){
+                start();
+            }
         }
     }
 
     public void start(){
         finished=false;
         started=true;
+        timePassedRoundFinished=TIME_BETWEEN_ROUNDS;
     }
 
     public void stop(){
@@ -50,11 +55,6 @@ public class Round extends Actor {
         timePassed=0f;
     }
 
-    @Override
-    public void draw(Batch batch, float parentAlpha) {
-        super.draw(batch, parentAlpha);
-        font.draw(batch,Float.toString(timePassed),Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()/2);
-    }
 
 
     public float getTimePassed() {
