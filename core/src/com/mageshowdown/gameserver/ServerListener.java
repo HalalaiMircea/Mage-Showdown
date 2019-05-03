@@ -1,5 +1,6 @@
 package com.mageshowdown.gameserver;
 
+import com.badlogic.gdx.Gdx;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
@@ -69,6 +70,7 @@ public class ServerListener extends Listener {
             * for the player that just logged in we also need to send him packets
             * with who was already logged in
              */
+            System.out.println(myServer.getConnections().length);
             for(Connection con:myServer.getConnections()){
                 if(con.getID()!=connection.getID()){
                     toBeSent.userName=myServer.getUserNameById(con.getID());
@@ -100,9 +102,7 @@ public class ServerListener extends Listener {
         if(object instanceof Network.ShootProjectile){
             Network.ShootProjectile packet=(Network.ShootProjectile)object;
 
-            gameStage.getPlayerById(connection.getID()).getMyWeapon().shoot(packet.dir,packet.rot,connection.getID());
-            myServer.sendToAllExceptTCP(connection.getID(),packet);
-
+            gameStage.getPlayerById(connection.getID()).shootProjectile(packet);
         }
     }
 

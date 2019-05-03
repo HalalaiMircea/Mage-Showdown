@@ -8,7 +8,7 @@ import java.util.Random;
 
 public class ServerRound extends Round {
 
-    private static ServerRound instance=new ServerRound(5f);
+    private static ServerRound instance=new ServerRound(25f);
 
 
     private float mapChangeInterval;

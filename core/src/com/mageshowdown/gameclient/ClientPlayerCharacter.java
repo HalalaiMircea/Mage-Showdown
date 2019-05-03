@@ -1,10 +1,9 @@
 package com.mageshowdown.gameclient;
 
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -15,6 +14,9 @@ public class ClientPlayerCharacter extends PlayerCharacter implements AnimatedAc
 
     private GameClient myClient=GameClient.getInstance();
 
+    private TextureRegion currShieldFrame;
+    private TextureRegion currFrozenFrame;
+
     private boolean moveLeft=false;
     private boolean moveRight=false;
     private boolean jump=false;
@@ -22,11 +24,22 @@ public class ClientPlayerCharacter extends PlayerCharacter implements AnimatedAc
     private boolean shoot=false;
     private String userName;
 
-    public ClientPlayerCharacter(Stage stage, Vector2 position, String userName) {
+    public ClientPlayerCharacter(Stage stage, Vector2 position, String userName, boolean isMyPlayer) {
         super(stage,position,true);
-        addAnimation(4,1,1.2f,"idle",ClientAssetLoader.idlePlayerSpriteSheet);
-        addAnimation(2,1,.8f,"jumping",ClientAssetLoader.jumpingPlayerSpritesheet);
-        addAnimation(8,1,1f,"running",ClientAssetLoader.runningPlayerSpritesheet);
+        this.isMyPlayer=isMyPlayer;
+
+        if(isMyPlayer) {
+            addAnimation(4, 1, 1.2f, "idle", ClientAssetLoader.friendlyIdleSpritesheet);
+            addAnimation(2, 1, .8f, "jumping", ClientAssetLoader.friendlyJumpingSpritesheet);
+            addAnimation(8, 1, 1f, "running", ClientAssetLoader.friendlyRunningSpritesheet);
+        }else{
+            addAnimation(4, 1, 1.2f, "idle", ClientAssetLoader.enemyIdleSpritesheet);
+            addAnimation(2, 1, .8f, "jumping", ClientAssetLoader.enemyJumpingSpritesheet);
+            addAnimation(8, 1, 1f, "running", ClientAssetLoader.enemyRunningSpritesheet);
+        }
+
+        addAnimation(5,4,2f,"energy shield",ClientAssetLoader.energyShieldSpritesheet);
+        addAnimation(5,6,2f,"frozen",ClientAssetLoader.frozenSpritesheet);
         this.userName=userName;
 
 
@@ -82,8 +95,9 @@ public class ClientPlayerCharacter extends PlayerCharacter implements AnimatedAc
         pickFrame();
         calcState();
         updateWeaponPos();
+        updateFrozenState();
 
-        super.updateGameActor(delta);
+        updateGameActor(delta);
     }
 
 
@@ -94,6 +108,10 @@ public class ClientPlayerCharacter extends PlayerCharacter implements AnimatedAc
             batch.setColor(batch.getColor().r,batch.getColor().g,batch.getColor().b,55);
         if(currFrame!=null)
             batch.draw(currFrame,getX(),getY(),getWidth()*getScaleX(),getHeight()*getScaleY());
+        if(energyShield>0 && currShieldFrame!=null)
+            batch.draw(currShieldFrame,getX()-getWidth()/2,getY()-getHeight()/2,getWidth()*getScaleX()*1.5f,getHeight()*getScaleY()*1.5f);
+        if(frozen && currFrozenFrame!=null)
+            batch.draw(currFrozenFrame,getX()-getWidth()/2,getY()-getHeight()/2,getWidth()*getScaleX()*1.5f,getHeight()*getScaleY()*1.5f);
         if(dmgImmune)
             batch.setColor(batch.getColor().r,batch.getColor().g,batch.getColor().b,255);
     }
@@ -102,6 +120,11 @@ public class ClientPlayerCharacter extends PlayerCharacter implements AnimatedAc
     @Override
     public void pickFrame() {
         boolean looping=true;
+        if(animations.get("energy shield")!=null)
+            currShieldFrame=animations.get("energy shield").getKeyFrame(passedTime,looping);
+        if(frozen && animations.get("frozen")!=null)
+            currFrozenFrame=animations.get("frozen").getKeyFrame(frozenTimer,looping);
+
         /*
          * if the character is grounded, we have to see if hes moving left or right or standing and change the animation accordingly
          * regardless of wether its flying or its grounded, the animation frame needs
@@ -111,10 +134,12 @@ public class ClientPlayerCharacter extends PlayerCharacter implements AnimatedAc
             case GROUNDED:
                 switch (horizontalState) {
                     case STANDING:
-                        currFrame = animations.get("idle").getKeyFrame(passedTime, looping);
+                        if(animations.get("idle")!=null)
+                            currFrame = animations.get("idle").getKeyFrame(passedTime, looping);
                         break;
                     default:
-                        currFrame = animations.get("running").getKeyFrame(passedTime,looping);
+                        if(animations.get("running")!=null)
+                            currFrame = animations.get("running").getKeyFrame(passedTime,looping);
                         break;
                 }
                 break;
@@ -201,7 +226,7 @@ public class ClientPlayerCharacter extends PlayerCharacter implements AnimatedAc
 
     private void shootMyWeapon(){
         ShootProjectile sp=new ShootProjectile();
-        Vector2 shootingOrigin=new Vector2((myWeapon.getX()),(myWeapon.getY()+myWeapon.getHeight()/2));
+        Vector2 shootingOrigin=new Vector2((frostCrystal.getX()),(frostCrystal.getY()+ frostCrystal.getHeight()/2));
         float rotation= GameWorld.getMouseVectorAngle(shootingOrigin);
         Vector2 direction=GameWorld.getNormalizedMouseVector(shootingOrigin);
 
@@ -209,7 +234,7 @@ public class ClientPlayerCharacter extends PlayerCharacter implements AnimatedAc
         sp.rot=rotation;
         sp.dir=direction;
         myClient.sendTCP(sp);
-        myWeapon.shoot(direction,rotation,myClient.getID());
+        frostCrystal.shoot(direction,rotation,myClient.getID());
 
         shoot=false;
     }

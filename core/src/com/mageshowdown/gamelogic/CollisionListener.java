@@ -38,7 +38,7 @@ public class CollisionListener implements ContactListener {
         if(player.getId()!=projectile.getOwnerId()){
             //Network.ProjectileCollided pc=new Network.ProjectileCollided();
             Network.PlayerDead packet=new Network.PlayerDead();
-            player.damageBy(3);
+            player.damageBy(3, projectile);
             projectile.setCollided(true);
 /*
             pc.projId=projectile.getId();

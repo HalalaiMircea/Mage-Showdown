@@ -43,11 +43,11 @@ public class GameScreen implements Screen {
 
         switch (gameState) {
             case GAME_RUNNING:
-                if(!ClientRound.getInstance().isFinished()){
+                if(!ClientRound.getInstance().isFinished())
                     gameStage.act();
-                    gameRunningInput();
-                }else
+                else
                     ClientRound.getInstance().act(Gdx.graphics.getDeltaTime());
+                gameRunningInput();
                 gameStage.draw();
                 break;
             case GAME_PAUSED:

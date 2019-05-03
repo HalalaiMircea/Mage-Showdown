@@ -13,9 +13,11 @@ public class Network {
         public Vector2 pos;
         public Vector2 linVel;
         public int id;
-        public int health;
+        public float health;
+        public float energyShield;
         public int score;
         public boolean dmgImmune;
+        public boolean frozen;
     }
 
     public static class CharacterStates {

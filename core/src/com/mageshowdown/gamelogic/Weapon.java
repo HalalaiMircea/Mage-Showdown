@@ -1,5 +1,6 @@
 package com.mageshowdown.gamelogic;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -13,14 +14,31 @@ public class Weapon extends GameActor implements AnimatedActorInterface{
     private ArrayList<Projectile> weaponShots;
     private boolean loadAnimation;
 
-    public Weapon(Stage stage, boolean loadAnimation){
+    /*
+    * weapons will work like an energy shield; their "ammo" capacity will constantly regenerate
+    * shooting the weapon interrupts that process, after which there is a small cooldown until the regeneration starts again
+     */
+    private final float COOLDOWN_TIME;
+    private final float MAXIMUM_CAPACITY;
+    private final float RECHARGE_RATE=5f;   //recharge rate per second
+
+    private float currentCapacity;
+    private float projectileCost;
+    private float rechargeTimer=0f;
+    private boolean recharge=false;
+
+    public Weapon(Stage stage, boolean loadAnimation, float cd, int capacity, int projectileCost){
         super(stage,new Vector2(0,0),new Vector2(64,66));
+        COOLDOWN_TIME=cd;
+        MAXIMUM_CAPACITY=capacity;
+        currentCapacity=MAXIMUM_CAPACITY;
+        this.projectileCost=projectileCost;
         weaponShots=new ArrayList<Projectile>();
         this.loadAnimation=loadAnimation;
 
 
         if(loadAnimation)
-            addAnimation(6,1,.5f,"idle", ClientAssetLoader.crystalSpriteSheet);
+            addAnimation(6,1,.5f,"idle", ClientAssetLoader.crystalSpritesheet);
     }
 
 
@@ -32,9 +50,9 @@ public class Weapon extends GameActor implements AnimatedActorInterface{
     @Override
     public void act(float delta) {
         super.act(delta);
-
-
         destroyEliminatedProjectiles();
+        rechargeWeapon();
+        System.out.println(currentCapacity);
 
         if(loadAnimation)
             pickFrame();
@@ -66,8 +84,26 @@ public class Weapon extends GameActor implements AnimatedActorInterface{
 
 
     public void shoot(Vector2 direction, float rotation, int ownerId){
-        Vector2 shootingOrigin=new Vector2((getX()+getWidth()/8),(getY()+getHeight()/2));
-        weaponShots.add(new Projectile(getStage(),shootingOrigin,rotation,direction,weaponShots.size(),ownerId));
+        if(currentCapacity>projectileCost){
+            currentCapacity-=projectileCost;
+            Vector2 shootingOrigin=new Vector2((getX()+getWidth()/8),(getY()+getHeight()/2));
+            weaponShots.add(new Projectile(getStage(),shootingOrigin,rotation,direction,weaponShots.size(),ownerId));
+            recharge=false;
+        }
+    }
+
+    private void rechargeWeapon(){
+        if(recharge){
+            if(currentCapacity<MAXIMUM_CAPACITY){
+                currentCapacity+= RECHARGE_RATE*Gdx.graphics.getDeltaTime();
+            }
+        }else{
+            rechargeTimer+=Gdx.graphics.getDeltaTime();
+            if(rechargeTimer>=COOLDOWN_TIME){
+                recharge=true;
+                rechargeTimer=0f;
+            }
+        }
     }
 
     @Override
@@ -78,7 +114,8 @@ public class Weapon extends GameActor implements AnimatedActorInterface{
 
     @Override
     public void pickFrame() {
-        currFrame=animations.get("idle").getKeyFrame(passedTime,true);
+        if(animations.get("idle")!=null)
+            currFrame=animations.get("idle").getKeyFrame(passedTime,true);
     }
 
     @Override
@@ -88,19 +125,4 @@ public class Weapon extends GameActor implements AnimatedActorInterface{
         }
     }
 
-    public ArrayList<Vector2> getProjectileLocations(){
-        ArrayList<Vector2> locations=new ArrayList<Vector2>();
-        for(Projectile x:weaponShots){
-            locations.add(x.getBody().getPosition());
-        }
-        return locations;
-    }
-
-    public ArrayList<Vector2> getProjectileVelocities() {
-        ArrayList<Vector2> locations = new ArrayList<Vector2>();
-        for (Projectile x : weaponShots) {
-            locations.add(x.getBody().getLinearVelocity());
-        }
-        return locations;
-    }
 }

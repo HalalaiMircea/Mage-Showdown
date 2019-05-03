@@ -11,7 +11,7 @@ import com.mageshowdown.gameclient.ClientAssetLoader;
 public abstract class Round extends Actor {
 
     protected final float TIME_BETWEEN_ROUNDS=10f;
-    protected final float ROUND_LENGTH=25f;
+    protected final float ROUND_LENGTH=100f;
 
     protected boolean finished=false;
     protected boolean started=false;

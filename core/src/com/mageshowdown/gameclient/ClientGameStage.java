@@ -7,7 +7,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.mageshowdown.gamelogic.GameLevel;
 import com.mageshowdown.gamelogic.GameWorld;
-import com.mageshowdown.gamelogic.Round;
 
 
 import java.util.HashMap;
@@ -41,7 +40,6 @@ public class ClientGameStage extends Stage {
         * and the bodies that have to be removed are removed
         */
         GameWorld.clearBodyRemovalQueue();
-
         if(playerCharacter!=null)
             playerCharacter.clearQueue();
         for(ClientPlayerCharacter pc:otherPlayers.values()){
@@ -73,19 +71,19 @@ public class ClientGameStage extends Stage {
     }
 
     public void removeMyCharacter(){
-        playerCharacter.getMyWeapon().destroyActor();
+        playerCharacter.getFrostCrystal().destroyActor();
         playerCharacter.remove();
     }
 
     public void spawnMyPlayerCharacter(Vector2 position, String userName){
-        playerCharacter=new ClientPlayerCharacter(this,position,userName);
+        playerCharacter=new ClientPlayerCharacter(this,position,userName,true);
         setKeyboardFocus(playerCharacter);
         ClientRound.getInstance().start();
         addActor(ClientRound.getInstance());
     }
 
     public void spawnOtherPlayer(int id, Vector2 position, String userName){
-        otherPlayers.put(id,new ClientPlayerCharacter(this,position,userName));
+        otherPlayers.put(id,new ClientPlayerCharacter(this,position,userName,false));
     }
 
 

@@ -29,8 +29,10 @@ public class UpdatePlayerPositions extends Thread{
             oneLoc.pos = pc.getBody().getPosition();
             oneLoc.id = x.getID();
             oneLoc.health=pc.getHealth();
+            oneLoc.energyShield=pc.getEnergyShield();
             oneLoc.score=pc.getScore();
             oneLoc.dmgImmune=pc.isDmgImmune();
+            oneLoc.frozen=pc.isFrozen();
 
             loc.playerStates.add(oneLoc);
         }

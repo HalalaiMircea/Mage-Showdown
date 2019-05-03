@@ -27,8 +27,8 @@ public class Projectile extends DynamicGameActor {
         body.setGravityScale(0f);
         sprite.setRotation(rotation);
         sprite.setOrigin(getWidth()/2,getHeight()/2);
-        velocity.x=5f*direction.x;
-        velocity.y=5f*direction.y;
+        velocity.x=3.5f*direction.x;
+        velocity.y=3.5f*direction.y;
         stage.addActor(this);
     }
 
