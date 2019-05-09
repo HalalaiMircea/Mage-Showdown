@@ -72,4 +72,12 @@ public abstract class Round extends Actor {
     public boolean isStarted() {
         return started;
     }
+
+    public float getTIME_BETWEEN_ROUNDS() {
+        return TIME_BETWEEN_ROUNDS;
+    }
+
+    public float getROUND_LENGTH() {
+        return ROUND_LENGTH;
+    }
 }
