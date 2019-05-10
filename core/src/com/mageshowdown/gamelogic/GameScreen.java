@@ -125,6 +125,7 @@ public class GameScreen implements Screen {
         gameStage.dispose();
         escMenuStage.dispose();
         gameOptionsStage.dispose();
+        ScoreboardStage.getInstance().dispose();
         INSTANCE.dispose();
     }
 
