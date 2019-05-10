@@ -1,7 +1,6 @@
 package com.mageshowdown.gamelogic;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -10,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mageshowdown.gameclient.ClientAssetLoader;
-import com.mageshowdown.gameclient.GameClient;
 import com.mageshowdown.gameclient.MageShowdownClient;
 
 public class OptionsStage extends Stage {
@@ -52,7 +50,6 @@ public class OptionsStage extends Stage {
                     Gdx.input.setInputProcessor(GameScreen.getEscMenuStage());
                 }
                 ClientAssetLoader.prefs.putString(PLAYERNAME, playerNameField.getText());
-                GameClient.getInstance().setUserName(ClientAssetLoader.prefs.getString(PLAYERNAME));
                 ClientAssetLoader.prefs.flush();
             }
         });

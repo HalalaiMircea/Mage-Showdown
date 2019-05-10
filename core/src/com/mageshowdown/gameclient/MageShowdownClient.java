@@ -36,10 +36,10 @@ public class MageShowdownClient extends Game {
     }
 
     public void clientStart(String ipAddress) {
+        myClient.setUserName(ClientAssetLoader.prefs.getString("playerName"));
         myClient.start();
 
         myClient.connect(5000, ipAddress, Network.TCP_PORT, Network.UDP_PORT);
-
         myClient.addListener(new ClientListener(GameScreen.getInstance()));
     }
 

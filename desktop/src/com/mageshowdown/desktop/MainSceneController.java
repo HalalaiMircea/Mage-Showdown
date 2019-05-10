@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import static com.mageshowdown.desktop.DesktopClientLauncher.config;
 import static com.mageshowdown.gameclient.ClientAssetLoader.prefs;
 
 public class MainSceneController implements Initializable {
@@ -29,17 +28,16 @@ public class MainSceneController implements Initializable {
 
     @FXML
     void playBtnClicked(ActionEvent actionEvent) {
-        config = new LwjglApplicationConfiguration();
+        LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.width = prefs.getInteger("width");
         config.height = prefs.getInteger("height");
-        config.resizable = false;
+        //config.resizable = false;
         config.foregroundFPS = prefs.getInteger("foregroundFPS");
         config.backgroundFPS = prefs.getInteger("backgroundFPS");
         config.vSyncEnabled = prefs.getBoolean("vSyncEnabled");
         config.useGL30 = prefs.getBoolean("useGL30");
         config.fullscreen = prefs.getBoolean("fullscreen");
         config.title = "Mage Showdown";
-
 
         new LwjglApplication(MageShowdownClient.getInstance(), config);
         DesktopClientLauncher.mainStage.close();

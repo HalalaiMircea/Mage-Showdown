@@ -18,9 +18,7 @@ import java.util.HashMap;
 public class GameScreen implements Screen {
 
     enum GameState {
-        GAME_RUNNING,
-        GAME_PAUSED,
-        GAME_OPTIONS
+        GAME_RUNNING, GAME_PAUSED, GAME_OPTIONS, SCOREBOARD
     }
 
     private static final GameScreen INSTANCE = new GameScreen();
@@ -29,12 +27,14 @@ public class GameScreen implements Screen {
     private static OptionsStage gameOptionsStage;
     private static Stage escMenuStage;          //menu overlay after pressing escape during gameplay
     private static GameState gameState;
+    //private static ScoreboardStage scoreboardStage;
 
     private GameScreen() {
         gameStage = new ClientGameStage();
-        escMenuStage = new Stage(gameStage.getViewport(), gameStage.getBatch());
-        gameOptionsStage = new OptionsStage(gameStage.getViewport(), gameStage.getBatch(),
+        escMenuStage = new Stage(MenuScreen.getMainMenuStage().getViewport(), gameStage.getBatch());
+        gameOptionsStage = new OptionsStage(MenuScreen.getMainMenuStage().getViewport(), gameStage.getBatch(),
                 ClientAssetLoader.solidBlack);
+        //scoreboardStage = new ScoreboardStage();
 
         prepareEscMenu();
     }
@@ -46,7 +46,7 @@ public class GameScreen implements Screen {
 
         switch (gameState) {
             case GAME_RUNNING:
-                if(!ClientRound.getInstance().isFinished())
+                if (!ClientRound.getInstance().isFinished())
                     gameStage.act();
                 else
                     ClientRound.getInstance().act(Gdx.graphics.getDeltaTime());
@@ -65,6 +65,13 @@ public class GameScreen implements Screen {
                 gameOptionsStage.act();
                 gameStage.draw();
                 gameOptionsStage.draw();
+                break;
+            case SCOREBOARD:
+                gameStage.act();
+                gameStage.draw();
+                ScoreboardStage.getInstance().act();
+                ScoreboardStage.getInstance().draw();
+                scoreboardInput();
                 break;
         }
 
@@ -121,6 +128,7 @@ public class GameScreen implements Screen {
         gameStage.dispose();
         escMenuStage.dispose();
         gameOptionsStage.dispose();
+        ScoreboardStage.getInstance().dispose();
         INSTANCE.dispose();
     }
 
@@ -129,6 +137,8 @@ public class GameScreen implements Screen {
             gameState = GameState.GAME_PAUSED;
             Gdx.input.setInputProcessor(escMenuStage);
         }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.TAB) && gameState == GameState.GAME_RUNNING)
+            gameState = GameState.SCOREBOARD;
     }
 
     private static void gamePausedInput() {
@@ -136,6 +146,11 @@ public class GameScreen implements Screen {
             gameState = GameState.GAME_RUNNING;
             Gdx.input.setInputProcessor(gameStage);
         }
+    }
+
+    private static void scoreboardInput() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.TAB) && gameState == GameState.SCOREBOARD)
+            gameState = GameState.GAME_RUNNING;
     }
 
     private static void prepareEscMenu() {
@@ -182,7 +197,7 @@ public class GameScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 MageShowdownClient.getInstance().setScreen(MenuScreen.getInstance());
 
-                for(int id:gameStage.getOtherPlayers().keySet())
+                for (int id : gameStage.getOtherPlayers().keySet())
                     gameStage.removePlayerCharacter(id);
                 gameStage.removeMyCharacter();
                 GameClient.getInstance().stop();

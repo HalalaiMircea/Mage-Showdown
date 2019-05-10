@@ -8,29 +8,29 @@ import com.mageshowdown.gamelogic.Round;
 
 public class ClientRound extends Round {
 
-    private static ClientRound instance=new ClientRound();
+    private static final ClientRound INSTANCE = new ClientRound();
 
     private Sprite roundOverSprite;
     private BitmapFont font;
 
-    public ClientRound(){
+    private ClientRound() {
         super();
-        font=ClientAssetLoader.font1;
-        roundOverSprite=new Sprite(ClientAssetLoader.roundOverScreen);
+        font = ClientAssetLoader.font1;
+        roundOverSprite = new Sprite(ClientAssetLoader.roundOverScreen);
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
-        font.draw(batch,Float.toString(timePassed),Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()/2);
-        if(finished){
+        font.draw(batch, Float.toString(timePassed), Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+        if (finished) {
             roundOverSprite.draw(batch);
-            font.draw(batch,Float.toString(timePassedRoundFinished),Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()/2);
+            font.draw(batch, Float.toString(timePassedRoundFinished), Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
         }
     }
 
-    public static ClientRound getInstance(){
-        return instance;
+    public static ClientRound getInstance() {
+        return INSTANCE;
     }
 
 }
