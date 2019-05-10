@@ -30,6 +30,7 @@ public class ClientListener extends Listener {
         handlePlayerDisconnected(connection,object);
         handleCurrentMap(connection,object);
         handlePlayerDead(connection,object);
+        handleSwitchWeapons(connection,object);
     }
 
     private void handleLoginServerRequest(Connection connection,Object object){
@@ -37,6 +38,7 @@ public class ClientListener extends Listener {
             Network.LoginRequest packet=((Network.LoginRequest) object);
             System.out.println("received login request!");
             packet.user=myClient.getUserName();
+            System.out.println(packet.user);
             myClient.sendTCP(packet);
         }
     }
@@ -66,6 +68,7 @@ public class ClientListener extends Listener {
                 pc.setScore(x.score);
                 pc.setDmgImmune(x.dmgImmune);
                 pc.setFrozen(x.frozen);
+                pc.setKills(x.kills);
             }
         }
     }
@@ -88,7 +91,7 @@ public class ClientListener extends Listener {
         if(object instanceof Network.ShootProjectile){
             Network.ShootProjectile packet=(Network.ShootProjectile)object;
 
-            gameScreen.getGameStage().getOtherPlayers().get(packet.id).getFrostCrystal().shoot(packet.dir,packet.rot,packet.id);
+            gameScreen.getGameStage().getOtherPlayers().get(packet.id).getCurrWeapon().shoot(packet.dir,packet.rot,packet.id);
         }
     }
 
@@ -99,11 +102,11 @@ public class ClientListener extends Listener {
 
             //if the bullet is the client's player's
             if(packet.ownerId==connection.getID()){
-                gameScreen.getGameStage().getPlayerCharacter().getFrostCrystal().projectileHasCollided(packet.projId);
+                gameScreen.getGameStage().getPlayerCharacter().getCurrWeapon().projectileHasCollided(packet.projId);
             }
             //if the bullet is some other client's player's
             else{
-                gameScreen.getGameStage().getOtherPlayers().get(packet.ownerId).getFrostCrystal().projectileHasCollided(packet.projId);
+                gameScreen.getGameStage().getOtherPlayers().get(packet.ownerId).getCurrWeapon().projectileHasCollided(packet.projId);
             }
         }
     }
@@ -134,6 +137,14 @@ public class ClientListener extends Listener {
             }else{
                 System.out.println(packet.id+" died he sucks");
             }
+        }
+    }
+
+    private void handleSwitchWeapons(Connection connection, Object object){
+        if(object instanceof Network.SwitchWeapons){
+            Network.SwitchWeapons packet=(Network.SwitchWeapons) object;
+
+            gameScreen.getGameStage().getOtherPlayers().get(packet.id).switchMyWeapons();
         }
     }
 }

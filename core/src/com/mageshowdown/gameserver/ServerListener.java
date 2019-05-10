@@ -29,6 +29,7 @@ public class ServerListener extends Listener {
         handleLoginRequest(connection,object);
         handleMoveKeyDown(connection,object);
         handleShootProjectile(connection,object);
+        handleSwitchWeapons(connection,object);
     }
 
     @Override
@@ -103,6 +104,15 @@ public class ServerListener extends Listener {
             Network.ShootProjectile packet=(Network.ShootProjectile)object;
 
             gameStage.getPlayerById(connection.getID()).shootProjectile(packet);
+        }
+    }
+
+    private void handleSwitchWeapons(Connection connection, Object object){
+        if(object instanceof Network.SwitchWeapons){
+            Network.SwitchWeapons packet=(Network.SwitchWeapons)object;
+
+            packet.id=connection.getID();
+            myServer.sendToAllExceptTCP(connection.getID(),packet);
         }
     }
 

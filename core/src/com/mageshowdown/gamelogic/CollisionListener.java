@@ -25,28 +25,29 @@ public class CollisionListener implements ContactListener {
 
 
 
-        if(obj1 instanceof Projectile && obj2 instanceof ServerPlayerCharacter) {
-            handlePlayerProjectileCollision((Projectile)obj1,(ServerPlayerCharacter)obj2);
+        if(obj1 instanceof Ammo && obj2 instanceof ServerPlayerCharacter) {
+            handlePlayerProjectileCollision((Ammo)obj1,(ServerPlayerCharacter)obj2);
         }
-        else if (obj1 instanceof ServerPlayerCharacter && obj2 instanceof Projectile){
-            handlePlayerProjectileCollision((Projectile)obj2,(ServerPlayerCharacter)obj1);
+        else if (obj1 instanceof ServerPlayerCharacter && obj2 instanceof Ammo){
+            handlePlayerProjectileCollision((Ammo)obj2,(ServerPlayerCharacter)obj1);
         }
     }
 
-    private void handlePlayerProjectileCollision(Projectile projectile, ServerPlayerCharacter player){
+    private void handlePlayerProjectileCollision(Ammo projectile, ServerPlayerCharacter player){
       //a player cant damage itself so we check if the projectile's owner id is the same as the player's it hit
         if(player.getId()!=projectile.getOwnerId()){
             //Network.ProjectileCollided pc=new Network.ProjectileCollided();
             Network.PlayerDead packet=new Network.PlayerDead();
-            player.damageBy(3, projectile);
+            player.damageBy(projectile.getDamageValue(), projectile);
             projectile.setCollided(true);
 /*
             pc.projId=projectile.getId();
             pc.ownerId=projectile.getOwnerId();
             pc.playerHitId=player.getId();
   */
-            System.out.println(player.getHealth());
+            //if the player died from the hit
             if(player.getHealth()<0){
+                gameStage.getPlayerById(projectile.ownerId).addKill();
                 packet.id=player.getId();
                 packet.respawnPos=GameServer.getInstance().generateSpawnPoint(packet.id);
                 player.respawn(packet.respawnPos);

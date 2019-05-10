@@ -51,7 +51,7 @@ public class GameClient extends Client{
         kryo.register(Network.PlayerDisconnected.class);
         kryo.register(Network.CurrentMap.class);
         kryo.register(Network.PlayerDead.class);
-
+        kryo.register(Network.SwitchWeapons.class);
     }
 
 

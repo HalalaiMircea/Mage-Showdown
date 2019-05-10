@@ -100,8 +100,10 @@ public class MenuScreen implements Screen {
         background.add(new Image(ClientAssetLoader.menuBackground));
         background.setFillParent(true);
 
+
         Table foreground = new Table();
         foreground.setFillParent(true);
+
         //foreground.debug();
 
         //Widgets declarations
@@ -144,7 +146,7 @@ public class MenuScreen implements Screen {
                 stagePhase = StagePhase.OPTIONS_STAGE;
                 Gdx.input.setInputProcessor(menuOptionsStage);
             }
-        });
+        });;
         mainMenuStage.addActor(background);
         mainMenuStage.addActor(foreground);
     }

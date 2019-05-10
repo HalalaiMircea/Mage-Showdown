@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
 public class CreateBodies {
-    public static Body createRectangleBody(Vector2 position, Vector2 size, BodyDef.BodyType bodyType, float density, float friction, float restitution){
+    public static Body createRectangleBody(Vector2 position, Vector2 size, BodyDef.BodyType bodyType, float density, float friction, float restitution, float rotation){
         Body body;
 
         BodyDef bd=new BodyDef();
@@ -16,7 +16,7 @@ public class CreateBodies {
         bd.position.set(new Vector2(convPosition.x+(convSize.x/2),convPosition.y+(convSize.y/2)));
 
         body=GameWorld.world.createBody(bd);
-        Shape shape = createPolygonShape(size);
+        Shape shape = createPolygonShape(size,rotation);
         body.createFixture(createFixtureDef(shape,density,friction,restitution));
         shape.dispose();
 
@@ -31,10 +31,10 @@ public class CreateBodies {
         return cs;
     }
 
-    private static PolygonShape createPolygonShape(Vector2 size){
+    private static PolygonShape createPolygonShape(Vector2 size, float rotation){
         PolygonShape ps=new PolygonShape();
         Vector2 convSize=GameWorld.convertPixelsToWorld(size);
-        ps.setAsBox(convSize.x/2f,convSize.y/2f);
+        ps.setAsBox(convSize.x/2f,convSize.y/2f,new Vector2(0,0),rotation);
 
         return ps;
     }

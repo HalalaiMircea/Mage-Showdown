@@ -30,9 +30,9 @@ public abstract class GameActor extends Actor {
         setScale(spriteScaling);
         setPosition(position.x,position.y);
         setSize(size.x,size.y);
-        setOrigin(getWidth()*getScaleX()/2f,getHeight()*getScaleY()/2f);
+        setOrigin(0,0);
         stage.addActor(this);
-
+        //debug();
         animations=new HashMap<String, Animation<TextureRegion>>();
     }
     protected GameActor(Stage stage,Vector2 position, Vector2 size){
@@ -98,12 +98,13 @@ public abstract class GameActor extends Actor {
     }
 
 
-    protected void createBody(float density, float friction, float restitution, BodyDef.BodyType bodyType){
+    protected void createBody(float density, float friction, float restitution, float rotation, BodyDef.BodyType bodyType){
         Vector2 bodySize=new Vector2(getWidth(),
                 getHeight());
 
-        body=CreateBodies.createRectangleBody(new Vector2(getX(),getY()), bodySize,bodyType,density,friction,restitution);
+        body=CreateBodies.createRectangleBody(new Vector2(getX(),getY()), bodySize,bodyType,density,friction,restitution,rotation);
         setTouchable(Touchable.enabled);
+        //body.setTransform(body.getPosition(),rotation);
 
         //we set the body's user data to the current object in order to retrieve it later for collision handling
         body.setUserData(this);
@@ -121,8 +122,12 @@ public abstract class GameActor extends Actor {
         canClearPos=true;
     }
 
+    protected void createBody(float rotation,BodyDef.BodyType bodyType){
+        createBody(.6f,0f,0f,rotation,bodyType);
+    }
+
     protected void createBody(BodyDef.BodyType bodyType){
-        createBody(.6f,0f,0f,bodyType);
+        createBody(.6f,0f,0f,0f,bodyType);
     }
 
     public Body getBody() {

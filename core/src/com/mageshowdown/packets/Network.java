@@ -18,6 +18,7 @@ public class Network {
         public int score;
         public boolean dmgImmune;
         public boolean frozen;
+        public int kills;
     }
 
     public static class CharacterStates {
@@ -74,6 +75,10 @@ public class Network {
     public static class PlayerDead{
         public int id;
         public Vector2 respawnPos;
+    }
+
+    public static class SwitchWeapons{
+        public int id;
     }
 
 }

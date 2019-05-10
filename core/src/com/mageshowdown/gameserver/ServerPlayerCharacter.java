@@ -4,8 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.mageshowdown.gamelogic.FreezeProjectile;
 import com.mageshowdown.gamelogic.PlayerCharacter;
-import com.mageshowdown.gamelogic.Projectile;
+import com.mageshowdown.gamelogic.Ammo;
 import com.mageshowdown.packets.Network;
 
 public class ServerPlayerCharacter extends PlayerCharacter {
@@ -65,8 +66,8 @@ public class ServerPlayerCharacter extends PlayerCharacter {
             }
         }
 
-        if(frostCrystal !=null)
-            frostCrystal.updatePosition(new Vector2(getX(),getY()));
+        if(currWeapon !=null)
+            currWeapon.updatePosition(new Vector2(getX(),getY()));
         super.act(delta);
         moveDirection=-1;
     }
@@ -107,7 +108,7 @@ public class ServerPlayerCharacter extends PlayerCharacter {
         score+=value;
     }
 
-    public void damageBy(int damageValue, Object object) {
+    public void damageBy(float damageValue, Object object) {
         if (!dmgImmune) {
             //everytime youre hit the cooldown for shield regen resets
             regenShield=false;
@@ -122,7 +123,7 @@ public class ServerPlayerCharacter extends PlayerCharacter {
             }else health-=damageValue;
 
             //check what the character gets damaged by
-            if(object instanceof Projectile){
+            if(object instanceof FreezeProjectile){
                 dmgImmune = true;
                 frozen=true;
             }
@@ -130,8 +131,12 @@ public class ServerPlayerCharacter extends PlayerCharacter {
     }
 
     public void shootProjectile(Network.ShootProjectile packet){
-        frostCrystal.shoot(packet.dir,packet.rot,packet.id);
+        currWeapon.shoot(packet.dir,packet.rot,packet.id);
         GameServer.getInstance().sendToAllExceptTCP(packet.id,packet);
+    }
+
+    public void addKill(){
+        kills++;
     }
 
 

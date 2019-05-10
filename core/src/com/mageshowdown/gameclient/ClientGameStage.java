@@ -71,7 +71,7 @@ public class ClientGameStage extends Stage {
     }
 
     public void removeMyCharacter(){
-        playerCharacter.getFrostCrystal().destroyActor();
+        playerCharacter.destroyActor();
         playerCharacter.remove();
     }
 

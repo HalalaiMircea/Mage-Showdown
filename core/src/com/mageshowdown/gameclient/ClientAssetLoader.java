@@ -24,9 +24,12 @@ public class ClientAssetLoader {
 
 
     public static Texture crystalSpritesheet;
+    public static Texture freezeProjectileTexture;
+    public static Texture sphereSpriteSheet;
+    public static Texture fireLaserSpritesheet;
+
     public static Texture energyShieldSpritesheet;
     public static Texture frozenSpritesheet;
-    public static Texture laserShotTexture;
     public static BitmapFont font1;
     public static Texture roundOverScreen;
 
@@ -46,14 +49,16 @@ public class ClientAssetLoader {
         enemyJumpingSpritesheet=new Texture(Gdx.files.internal("Player Animations/Enemy player/enemyJumpingAnimationSpritesheet.png"));
         enemyRunningSpritesheet=new Texture(Gdx.files.internal("Player Animations/Enemy player/enemyRunningAnimationSpritesheet.png"));
 
+        freezeProjectileTexture = new Texture("Player Animations/Ammo/freezeProjectile.png");
+        crystalSpritesheet = new Texture("Player Animations/Weapon/CrystalSpritesheet.png");
+        fireLaserSpritesheet=new Texture(Gdx.files.internal("Player Animations/Ammo/fireLaserSpritesheet.png"));
+        sphereSpriteSheet=new Texture(Gdx.files.internal("Player Animations/Weapon/sphereSpritesheet.png"));
 
         energyShieldSpritesheet=new Texture(Gdx.files.internal("energyShieldSpriteSheet.png"));
         frozenSpritesheet=new Texture(Gdx.files.internal("frozenSpriteSheet.png"));
-        laserShotTexture = new Texture("laser shot3.png");
         uiSkin = new Skin(Gdx.files.internal("UIAssets/uiskin.json"));
         menuBackground = new Texture(Gdx.files.internal("UIAssets/placeholder.jpg"));
         solidBlack = new Texture(Gdx.files.internal("UIAssets/Black_1080p.png"));
-        crystalSpritesheet = new Texture("Crystal.png");
         font1 = new BitmapFont(Gdx.files.internal("UIAssets/default.fnt"));
         roundOverScreen=new Texture(Gdx.files.internal("round over.png"));
 
@@ -77,7 +82,10 @@ public class ClientAssetLoader {
         enemyRunningSpritesheet.dispose();
 
         crystalSpritesheet.dispose();
-        laserShotTexture.dispose();
+        sphereSpriteSheet.dispose();
+        freezeProjectileTexture.dispose();
+        fireLaserSpritesheet.dispose();
+
         font1.dispose();
         map1.dispose();
         dungeonMap.dispose();

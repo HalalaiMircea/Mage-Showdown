@@ -6,11 +6,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mageshowdown.gamelogic.*;
 import com.mageshowdown.packets.Network.*;
 
-public class ClientPlayerCharacter extends PlayerCharacter implements AnimatedActorInterface {
+public class ClientPlayerCharacter extends PlayerCharacter implements AnimatedActorInterface{
 
     private GameClient myClient=GameClient.getInstance();
 
@@ -22,9 +21,10 @@ public class ClientPlayerCharacter extends PlayerCharacter implements AnimatedAc
     private boolean jump=false;
     private boolean isMyPlayer=false;
     private boolean shoot=false;
+    private boolean switchWeapons=false;
     private String userName;
 
-    public ClientPlayerCharacter(Stage stage, Vector2 position, String userName, boolean isMyPlayer) {
+    public ClientPlayerCharacter(ClientGameStage stage, Vector2 position, String userName, boolean isMyPlayer) {
         super(stage,position,true);
         this.isMyPlayer=isMyPlayer;
 
@@ -42,7 +42,6 @@ public class ClientPlayerCharacter extends PlayerCharacter implements AnimatedAc
         addAnimation(5,6,2f,"frozen",ClientAssetLoader.frozenSpritesheet);
         this.userName=userName;
 
-
         addListener(new InputListener() {
 
             @Override
@@ -59,10 +58,15 @@ public class ClientPlayerCharacter extends PlayerCharacter implements AnimatedAc
                 if(keycode==Input.Keys.Q){
                     shoot=true;
                 }
+                if(keycode==Input.Buttons.LEFT){
+                    shoot=true;
+                }
+                if(keycode==Input.Keys.R){
+                    switchWeapons=true;
+                }
 
                 return true;
             }
-
 
             @Override
             public boolean keyUp(InputEvent event, int keycode) {
@@ -166,6 +170,10 @@ public class ClientPlayerCharacter extends PlayerCharacter implements AnimatedAc
         }
         if(shoot){
             shootMyWeapon();
+        }else if(switchWeapons){
+            switchMyWeapons();
+            myClient.sendTCP(new SwitchWeapons());
+            switchWeapons=false;
         }
     }
 
@@ -226,7 +234,7 @@ public class ClientPlayerCharacter extends PlayerCharacter implements AnimatedAc
 
     private void shootMyWeapon(){
         ShootProjectile sp=new ShootProjectile();
-        Vector2 shootingOrigin=new Vector2((frostCrystal.getX()),(frostCrystal.getY()+ frostCrystal.getHeight()/2));
+        Vector2 shootingOrigin=new Vector2((currWeapon.getX()),(currWeapon.getY()+ currWeapon.getHeight()/2));
         float rotation= GameWorld.getMouseVectorAngle(shootingOrigin);
         Vector2 direction=GameWorld.getNormalizedMouseVector(shootingOrigin);
 
@@ -234,7 +242,7 @@ public class ClientPlayerCharacter extends PlayerCharacter implements AnimatedAc
         sp.rot=rotation;
         sp.dir=direction;
         myClient.sendTCP(sp);
-        frostCrystal.shoot(direction,rotation,myClient.getID());
+        currWeapon.shoot(direction,rotation,myClient.getID());
 
         shoot=false;
     }

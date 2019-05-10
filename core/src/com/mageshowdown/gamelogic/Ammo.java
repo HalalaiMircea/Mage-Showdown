@@ -1,22 +1,26 @@
 package com.mageshowdown.gamelogic;
 
-import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mageshowdown.gameclient.ClientAssetLoader;
 
-public class Projectile extends DynamicGameActor {
+public abstract class Ammo extends DynamicGameActor {
 
     protected boolean collided=false;
     protected boolean outOfBounds=false;
+    protected boolean expired=false;
     protected int id;
     protected int ownerId;
 
-    public Projectile(Stage stage, Vector2 position, float rotation, Vector2 direction, int id, int ownerId){
-        super(stage,position, new Vector2(46,31), ClientAssetLoader.laserShotTexture,.75f);
-        createBody(BodyDef.BodyType.DynamicBody);
+    private float damageValue;
 
+    protected Ammo(Stage stage, Vector2 velocity, Vector2 position, Vector2 size, Texture spriteSheet, float spriteScaling, float rotation, int id, int ownerId, float damageValue){
+        super(stage,position, size, spriteSheet,spriteScaling);
+        createBody(rotation,BodyDef.BodyType.DynamicBody);
+
+        this.damageValue=damageValue;
         //the id is used to identify the projectile when it needs to be destroyed
         this.id=id;
         //the owner id is the id of the player that shot the bullet
@@ -27,17 +31,29 @@ public class Projectile extends DynamicGameActor {
         body.setGravityScale(0f);
         sprite.setRotation(rotation);
         sprite.setOrigin(getWidth()/2,getHeight()/2);
-        velocity.x=3.5f*direction.x;
-        velocity.y=3.5f*direction.y;
+        this.velocity=velocity;
         stage.addActor(this);
     }
 
+    protected Ammo(Stage stage, Vector2 velocity, Vector2 position, Vector2 size, float spriteScaling, float rotation, int id, int ownerId, float damageValue){
+        super(stage,position, size, spriteScaling);
+        createBody(rotation,BodyDef.BodyType.DynamicBody);
+
+        this.damageValue=damageValue;
+        this.id=id;
+        this.ownerId=ownerId;
+
+        body.getFixtureList().get(0).setSensor(true);
+        body.setGravityScale(0f);
+        this.velocity=velocity;
+        stage.addActor(this);
+    }
 
     //if two projectiles have the same position then we know its the same projectile
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof Projectile){
-            return ((Projectile) obj).getX() == getX() && ((Projectile) obj).getY() == getY();
+        if(obj instanceof Ammo){
+            return ((Ammo) obj).getX() == getX() && ((Ammo) obj).getY() == getY();
         }
         return false;
     }
@@ -56,12 +72,17 @@ public class Projectile extends DynamicGameActor {
         }
     }
 
+
     public void setCollided(boolean collided) {
         this.collided = collided;
     }
 
     public void setOutOfBounds(boolean outOfBounds){
         this.outOfBounds=outOfBounds;
+    }
+
+    public void setExpired(boolean expired) {
+        this.expired = expired;
     }
 
     public boolean hasCollided() {
@@ -72,12 +93,20 @@ public class Projectile extends DynamicGameActor {
         return outOfBounds;
     }
 
+    public boolean isExpired() {
+        return expired;
+    }
+
     public int getId() {
         return id;
     }
 
     public int getOwnerId() {
         return ownerId;
+    }
+
+    public float getDamageValue() {
+        return damageValue;
     }
 
     @Override

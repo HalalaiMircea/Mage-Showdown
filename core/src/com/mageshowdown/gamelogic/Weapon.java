@@ -10,8 +10,17 @@ import com.mageshowdown.gameclient.ClientAssetLoader;
 import java.util.ArrayList;
 import java.util.ListIterator;
 
+
+
 public class Weapon extends GameActor implements AnimatedActorInterface{
-    private ArrayList<Projectile> weaponShots;
+    public static enum AmmoType{
+        FREEZE_BULLETS,
+        LASER
+    }
+
+
+    private AmmoType ammoType;
+    private ArrayList<Ammo> ammunition;
     private boolean loadAnimation;
 
     /*
@@ -20,25 +29,33 @@ public class Weapon extends GameActor implements AnimatedActorInterface{
      */
     private final float COOLDOWN_TIME;
     private final float MAXIMUM_CAPACITY;
-    private final float RECHARGE_RATE=5f;   //recharge rate per second
+    private final float RECHARGE_RATE=10f;   //recharge rate per second
 
     private float currentCapacity;
     private float projectileCost;
     private float rechargeTimer=0f;
     private boolean recharge=false;
 
-    public Weapon(Stage stage, boolean loadAnimation, float cd, int capacity, int projectileCost){
+    public Weapon(Stage stage, boolean loadAnimation, AmmoType ammoType, float cd, int capacity, int projectileCost){
         super(stage,new Vector2(0,0),new Vector2(64,66));
         COOLDOWN_TIME=cd;
         MAXIMUM_CAPACITY=capacity;
         currentCapacity=MAXIMUM_CAPACITY;
+        this.ammoType=ammoType;
         this.projectileCost=projectileCost;
-        weaponShots=new ArrayList<Projectile>();
+        ammunition =new ArrayList<Ammo>();
         this.loadAnimation=loadAnimation;
 
 
         if(loadAnimation)
-            addAnimation(6,1,.5f,"idle", ClientAssetLoader.crystalSpritesheet);
+            switch(ammoType) {
+                case FREEZE_BULLETS:
+                    addAnimation(6, 1, 1.5f, "idle", ClientAssetLoader.crystalSpritesheet);
+                    break;
+                case LASER:
+                    addAnimation(6,2,1.5f,"idle",ClientAssetLoader.sphereSpriteSheet);
+                    break;
+        }
     }
 
 
@@ -52,7 +69,6 @@ public class Weapon extends GameActor implements AnimatedActorInterface{
         super.act(delta);
         destroyEliminatedProjectiles();
         rechargeWeapon();
-        System.out.println(currentCapacity);
 
         if(loadAnimation)
             pickFrame();
@@ -62,10 +78,10 @@ public class Weapon extends GameActor implements AnimatedActorInterface{
         /*
          * if it has collided or out of the screen remove projectile from the arraylist and the stage so theres no reference to it left
          */
-        ListIterator<Projectile> iter=weaponShots.listIterator();
+        ListIterator<Ammo> iter= ammunition.listIterator();
         while(iter.hasNext()){
-            Projectile x=iter.next();
-            if(x.isOutOfBounds() || x.hasCollided())
+            Ammo x=iter.next();
+            if(x.isOutOfBounds() || x.hasCollided() || x.isExpired())
             {
                 x.destroyActor();
                 iter.remove();
@@ -74,7 +90,7 @@ public class Weapon extends GameActor implements AnimatedActorInterface{
     }
 
     public void projectileHasCollided(int projId){
-        for(Projectile x:weaponShots){
+        for(Ammo x: ammunition){
             if(x.getId()==projId){
                 x.setCollided(true);
                 break;
@@ -86,8 +102,15 @@ public class Weapon extends GameActor implements AnimatedActorInterface{
     public void shoot(Vector2 direction, float rotation, int ownerId){
         if(currentCapacity>projectileCost){
             currentCapacity-=projectileCost;
-            Vector2 shootingOrigin=new Vector2((getX()+getWidth()/8),(getY()+getHeight()/2));
-            weaponShots.add(new Projectile(getStage(),shootingOrigin,rotation,direction,weaponShots.size(),ownerId));
+            Vector2 shootingOrigin=new Vector2((getX()+getWidth()/2),(getY()+getHeight()/2));
+            switch(ammoType) {
+                case FREEZE_BULLETS:
+                    ammunition.add(new FreezeProjectile(getStage(), shootingOrigin, rotation, direction, ammunition.size(), ownerId));
+                    break;
+                case LASER:
+                    ammunition.add(new Laser(getStage(), shootingOrigin, rotation, ammunition.size(), ownerId));
+                    break;
+            }
             recharge=false;
         }
     }
@@ -120,7 +143,7 @@ public class Weapon extends GameActor implements AnimatedActorInterface{
 
     @Override
     public void clearQueue() {
-        for(Projectile x:weaponShots){
+        for(Ammo x: ammunition){
             x.clearQueue();
         }
     }

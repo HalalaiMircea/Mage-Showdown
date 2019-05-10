@@ -5,12 +5,16 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
+
 public abstract class PlayerCharacter extends DynamicGameActor{
+    protected Stage gameStage;
 
     protected float MAXIMUM_ENERGY_SHIELD=25;
     protected float MAXIMUM_HEALTH=15;
 
-    protected Weapon frostCrystal;
+    protected Weapon frostWeapon;
+    protected Weapon fireWeapon;
+    protected Weapon currWeapon;
 
     protected float energyShield=MAXIMUM_ENERGY_SHIELD;
     protected float health=MAXIMUM_HEALTH;
@@ -21,24 +25,35 @@ public abstract class PlayerCharacter extends DynamicGameActor{
     protected float frozenTimer=0f;
 
     protected int score=0;
+    protected int kills=0;
 
     protected PlayerCharacter(Stage stage, Vector2 position, boolean loadWeaponAnimation){
         super(stage,position, new Vector2(22,32),1.5f);
 
         createBody(BodyDef.BodyType.DynamicBody);
+        gameStage=stage;
         body.setFixedRotation(true);
-        frostCrystal =new Weapon(stage,loadWeaponAnimation,1.5f,16,2);
+
+        frostWeapon=new Weapon(stage,loadWeaponAnimation,Weapon.AmmoType.FREEZE_BULLETS,1.5f,25,2);
+        fireWeapon=new Weapon(stage,loadWeaponAnimation,Weapon.AmmoType.LASER,1.5f,25,1);
+
+        frostWeapon.remove();
+        fireWeapon.remove();
+
+        currWeapon = fireWeapon;
+        //currWeapon=frostWeapon;
+        gameStage.addActor(currWeapon);
     }
 
     @Override
     public void destroyActor() {
-        frostCrystal.destroyActor();
+        destroyWeapons();
         super.destroyActor();
     }
 
     protected void updateWeaponPos(){
-        if(frostCrystal !=null)
-            frostCrystal.updatePosition(new Vector2(getX(),getY()));
+        if(currWeapon !=null)
+            currWeapon.updatePosition(new Vector2(getX(),getY()));
     }
 
     protected void updateFrozenState(){
@@ -51,8 +66,24 @@ public abstract class PlayerCharacter extends DynamicGameActor{
         }
     }
 
-    public Weapon getFrostCrystal() {
-        return frostCrystal;
+    protected void destroyWeapons(){
+        frostWeapon.destroyActor();
+        fireWeapon.destroyActor();
+    }
+
+    public void switchMyWeapons(){
+        currWeapon.remove();
+
+        if(currWeapon.equals(frostWeapon))
+            currWeapon=fireWeapon;
+        else currWeapon=frostWeapon;
+
+        gameStage.addActor(currWeapon);
+
+    }
+
+    public Weapon getCurrWeapon() {
+        return currWeapon;
     }
 
     public int getScore() {
@@ -93,5 +124,13 @@ public abstract class PlayerCharacter extends DynamicGameActor{
 
     public void setFrozen(boolean frozen) {
         this.frozen = frozen;
+    }
+
+    public int getKills() {
+        return kills;
+    }
+
+    public void setKills(int kills) {
+        this.kills = kills;
     }
 }

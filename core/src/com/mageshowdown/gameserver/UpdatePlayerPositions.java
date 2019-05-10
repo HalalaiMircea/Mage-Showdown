@@ -33,6 +33,7 @@ public class UpdatePlayerPositions extends Thread{
             oneLoc.score=pc.getScore();
             oneLoc.dmgImmune=pc.isDmgImmune();
             oneLoc.frozen=pc.isFrozen();
+            oneLoc.kills=pc.getKills();
 
             loc.playerStates.add(oneLoc);
         }

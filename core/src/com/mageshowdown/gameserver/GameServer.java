@@ -56,6 +56,7 @@ public class GameServer extends Server {
         kryo.register(Network.PlayerDisconnected.class);
         kryo.register(Network.CurrentMap.class);
         kryo.register(Network.PlayerDead.class);
+        kryo.register(Network.SwitchWeapons.class);
     }
 
     public void sendMapChange(int nr){
