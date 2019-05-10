@@ -3,9 +3,9 @@ package com.mageshowdown.gamelogic;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mageshowdown.gameclient.ClientAssetLoader;
 import com.mageshowdown.gameclient.MageShowdownClient;
@@ -36,7 +36,6 @@ public class MenuScreen implements Screen {
 
     @Override
     public void show() {
-
     }
 
     @Override
@@ -58,7 +57,8 @@ public class MenuScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-
+//        mainMenuStage.getViewport().update(width, height, true);
+//        menuOptionsStage.getViewport().update(width, height, true);
     }
 
     @Override
@@ -102,7 +102,7 @@ public class MenuScreen implements Screen {
 
         Table foreground = new Table();
         foreground.setFillParent(true);
-        //foreground.debug();
+        foreground.debug();
 
         //Widgets declarations
         TextButton connectButton = new TextButton("Connect to:", ClientAssetLoader.uiSkin);
@@ -113,10 +113,11 @@ public class MenuScreen implements Screen {
         //
         //Order sensitive addition and positioning of widgets into table
         //
-        foreground.add(connectButton).padBottom(20);
-        foreground.add(addressField).padBottom(20);
+        foreground.defaults().padBottom(20);
+        foreground.add(connectButton);
+        foreground.add(addressField);
         foreground.row();
-        foreground.add(optionsButton).padBottom(20).colspan(2).width(200);
+        foreground.add(optionsButton).colspan(2).width(200);
         foreground.row();
         foreground.add(quitButton).colspan(2).width(200);
 

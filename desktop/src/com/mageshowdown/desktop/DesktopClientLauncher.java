@@ -1,6 +1,5 @@
 package com.mageshowdown.desktop;
 
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.mageshowdown.gameclient.GamePreferences;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -17,12 +16,12 @@ public class DesktopClientLauncher extends Application {
 
     static Stage mainStage;
     static Scene mainScene;
-    static LwjglApplicationConfiguration config;
 
     public static void main(String[] args) {
         launch(args);
     }
 
+    //Launcher entry point
     @Override
     public void start(Stage primaryStage) throws IOException {
         prefs = new GamePreferences();

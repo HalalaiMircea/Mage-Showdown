@@ -86,7 +86,6 @@ public class ClientGameStage extends Stage {
         otherPlayers.put(id,new ClientPlayerCharacter(this,position,userName,false));
     }
 
-
     public GameLevel getGameLevel() {
         return gameLevel;
     }
