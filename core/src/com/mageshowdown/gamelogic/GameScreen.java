@@ -68,8 +68,6 @@ public class GameScreen implements Screen {
                 gameStage.draw();
                 ScoreboardStage.getInstance().act();
                 ScoreboardStage.getInstance().draw();
-//                scoreboardStage.act();
-//                scoreboardStage.draw();
                 scoreboardInput();
                 break;
         }
@@ -127,8 +125,6 @@ public class GameScreen implements Screen {
         gameStage.dispose();
         escMenuStage.dispose();
         gameOptionsStage.dispose();
-        ScoreboardStage.getInstance().dispose();
-        //scoreboardStage.dispose();
         INSTANCE.dispose();
     }
 
