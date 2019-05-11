@@ -6,63 +6,71 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.mageshowdown.gamelogic.*;
-import com.mageshowdown.packets.Network.*;
+import com.mageshowdown.gamelogic.AnimatedActorInterface;
+import com.mageshowdown.gamelogic.GameWorld;
+import com.mageshowdown.gamelogic.PlayerCharacter;
+import com.mageshowdown.packets.Network.KeyUp;
+import com.mageshowdown.packets.Network.MoveKeyDown;
+import com.mageshowdown.packets.Network.ShootProjectile;
+import com.mageshowdown.packets.Network.SwitchWeapons;
 
-public class ClientPlayerCharacter extends PlayerCharacter implements AnimatedActorInterface{
+import java.util.Comparator;
 
-    private GameClient myClient=GameClient.getInstance();
+public class ClientPlayerCharacter extends PlayerCharacter
+        implements AnimatedActorInterface, Comparator<ClientPlayerCharacter> {
+
+    private GameClient myClient = GameClient.getInstance();
 
     private TextureRegion currShieldFrame;
     private TextureRegion currFrozenFrame;
 
-    private boolean moveLeft=false;
-    private boolean moveRight=false;
-    private boolean jump=false;
-    private boolean isMyPlayer=false;
-    private boolean shoot=false;
-    private boolean switchWeapons=false;
+    private boolean moveLeft = false;
+    private boolean moveRight = false;
+    private boolean jump = false;
+    private boolean isMyPlayer = false;
+    private boolean shoot = false;
+    private boolean switchWeapons = false;
     private String userName;
+    private int ID;
 
     public ClientPlayerCharacter(ClientGameStage stage, Vector2 position, String userName, boolean isMyPlayer) {
-        super(stage,position,true);
-        this.isMyPlayer=isMyPlayer;
+        super(stage, position, true);
+        this.isMyPlayer = isMyPlayer;
 
-        if(isMyPlayer) {
+        if (isMyPlayer) {
             addAnimation(4, 1, 1.2f, "idle", ClientAssetLoader.friendlyIdleSpritesheet);
             addAnimation(2, 1, .8f, "jumping", ClientAssetLoader.friendlyJumpingSpritesheet);
             addAnimation(8, 1, 1f, "running", ClientAssetLoader.friendlyRunningSpritesheet);
-        }else{
+        } else {
             addAnimation(4, 1, 1.2f, "idle", ClientAssetLoader.enemyIdleSpritesheet);
             addAnimation(2, 1, .8f, "jumping", ClientAssetLoader.enemyJumpingSpritesheet);
             addAnimation(8, 1, 1f, "running", ClientAssetLoader.enemyRunningSpritesheet);
         }
 
-        addAnimation(5,4,2f,"energy shield",ClientAssetLoader.energyShieldSpritesheet);
-        addAnimation(5,6,2f,"frozen",ClientAssetLoader.frozenSpritesheet);
-        this.userName=userName;
+        addAnimation(5, 4, 2f, "energy shield", ClientAssetLoader.energyShieldSpritesheet);
+        addAnimation(5, 6, 2f, "frozen", ClientAssetLoader.frozenSpritesheet);
+        this.userName = userName;
 
         addListener(new InputListener() {
 
             @Override
             public boolean keyDown(InputEvent event, int keycode) {
                 if (keycode == Input.Keys.D) {
-                    moveRight=true;
+                    moveRight = true;
+                } else if (keycode == Input.Keys.A) {
+                    moveLeft = true;
                 }
-                else if(keycode==Input.Keys.A){
-                    moveLeft=true;
+                if (keycode == Input.Keys.W) {
+                    jump = true;
                 }
-                if(keycode==Input.Keys.W){
-                    jump=true;
+                if (keycode == Input.Keys.Q) {
+                    shoot = true;
                 }
-                if(keycode==Input.Keys.Q){
-                    shoot=true;
+                if (keycode == Input.Buttons.LEFT) {
+                    shoot = true;
                 }
-                if(keycode==Input.Buttons.LEFT){
-                    shoot=true;
-                }
-                if(keycode==Input.Keys.R){
-                    switchWeapons=true;
+                if (keycode == Input.Keys.R) {
+                    switchWeapons = true;
                 }
 
                 return true;
@@ -71,18 +79,16 @@ public class ClientPlayerCharacter extends PlayerCharacter implements AnimatedAc
             @Override
             public boolean keyUp(InputEvent event, int keycode) {
                 //if we stop moving we send a packet informing the server that we want to synchronize
-                KeyUp ku=new KeyUp();
-                ku.keycode=keycode;
-                if(keycode==Input.Keys.A) {
-                    moveLeft=false;
+                KeyUp ku = new KeyUp();
+                ku.keycode = keycode;
+                if (keycode == Input.Keys.A) {
+                    moveLeft = false;
                     myClient.sendTCP(ku);
-                }
-                else if(keycode==Input.Keys.D) {
-                    moveRight=false;
+                } else if (keycode == Input.Keys.D) {
+                    moveRight = false;
                     myClient.sendTCP(ku);
-                }
-                else if(keycode==Input.Keys.W){
-                    jump=false;
+                } else if (keycode == Input.Keys.W) {
+                    jump = false;
                     myClient.sendTCP(ku);
                 }
                 return true;
@@ -91,7 +97,6 @@ public class ClientPlayerCharacter extends PlayerCharacter implements AnimatedAc
         });
 
     }
-
 
     @Override
     public void act(float delta) {
@@ -104,81 +109,78 @@ public class ClientPlayerCharacter extends PlayerCharacter implements AnimatedAc
         updateGameActor(delta);
     }
 
-
-
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        if(dmgImmune)
-            batch.setColor(batch.getColor().r,batch.getColor().g,batch.getColor().b,55);
-        if(currFrame!=null)
-            batch.draw(currFrame,getX(),getY(),getWidth()*getScaleX(),getHeight()*getScaleY());
-        if(energyShield>0 && currShieldFrame!=null)
-            batch.draw(currShieldFrame,getX()-getWidth()/2,getY()-getHeight()/2,getWidth()*getScaleX()*1.5f,getHeight()*getScaleY()*1.5f);
-        if(frozen && currFrozenFrame!=null)
-            batch.draw(currFrozenFrame,getX()-getWidth()/2,getY()-getHeight()/2,getWidth()*getScaleX()*1.5f,getHeight()*getScaleY()*1.5f);
-        if(dmgImmune)
-            batch.setColor(batch.getColor().r,batch.getColor().g,batch.getColor().b,255);
+        if (dmgImmune)
+            batch.setColor(batch.getColor().r, batch.getColor().g, batch.getColor().b, 55);
+        if (currFrame != null)
+            batch.draw(currFrame, getX(), getY(), getWidth() * getScaleX(), getHeight() * getScaleY());
+        if (energyShield > 0 && currShieldFrame != null)
+            batch.draw(currShieldFrame, getX() - getWidth() / 2, getY() - getHeight() / 2, getWidth() * getScaleX() * 1.5f, getHeight() * getScaleY() * 1.5f);
+        if (frozen && currFrozenFrame != null)
+            batch.draw(currFrozenFrame, getX() - getWidth() / 2, getY() - getHeight() / 2, getWidth() * getScaleX() * 1.5f, getHeight() * getScaleY() * 1.5f);
+        if (dmgImmune)
+            batch.setColor(batch.getColor().r, batch.getColor().g, batch.getColor().b, 255);
     }
-
 
     @Override
     public void pickFrame() {
-        boolean looping=true;
-        if(animations.get("energy shield")!=null)
-            currShieldFrame=animations.get("energy shield").getKeyFrame(passedTime,looping);
-        if(frozen && animations.get("frozen")!=null)
-            currFrozenFrame=animations.get("frozen").getKeyFrame(frozenTimer,looping);
+        boolean looping = true;
+        if (animations.get("energy shield") != null)
+            currShieldFrame = animations.get("energy shield").getKeyFrame(passedTime, looping);
+        if (frozen && animations.get("frozen") != null)
+            currFrozenFrame = animations.get("frozen").getKeyFrame(frozenTimer, looping);
 
         /*
          * if the character is grounded, we have to see if hes moving left or right or standing and change the animation accordingly
          * regardless of wether its flying or its grounded, the animation frame needs
          * to be flipped if youre going left, looking right being the "default" position
          */
-        switch(verticalState){
+        switch (verticalState) {
             case GROUNDED:
                 switch (horizontalState) {
                     case STANDING:
-                        if(animations.get("idle")!=null)
+                        if (animations.get("idle") != null)
                             currFrame = animations.get("idle").getKeyFrame(passedTime, looping);
                         break;
                     default:
-                        if(animations.get("running")!=null)
-                            currFrame = animations.get("running").getKeyFrame(passedTime,looping);
+                        if (animations.get("running") != null)
+                            currFrame = animations.get("running").getKeyFrame(passedTime, looping);
                         break;
                 }
                 break;
             case FLYING:
-                looping=false;
-                if(animations.get("jumping")!=null)
-                    currFrame = animations.get("jumping").getKeyFrame(passedTime,looping);
+                looping = false;
+                if (animations.get("jumping") != null)
+                    currFrame = animations.get("jumping").getKeyFrame(passedTime, looping);
                 break;
         }
     }
 
-    private void sendInputPackets(){
-        MoveKeyDown keyPress=new MoveKeyDown();
+    private void sendInputPackets() {
+        MoveKeyDown keyPress = new MoveKeyDown();
 
-        if(moveLeft){
-            keyPress.keycode=Input.Keys.A;
+        if (moveLeft) {
+            keyPress.keycode = Input.Keys.A;
             myClient.sendTCP(keyPress);
-        }else if (moveRight){
-            keyPress.keycode=Input.Keys.D;
+        } else if (moveRight) {
+            keyPress.keycode = Input.Keys.D;
             myClient.sendTCP(keyPress);
-        }else if (jump){
-            keyPress.keycode=Input.Keys.W;
+        } else if (jump) {
+            keyPress.keycode = Input.Keys.W;
             myClient.sendTCP(keyPress);
         }
-        if(shoot){
+        if (shoot) {
             shootMyWeapon();
-        }else if(switchWeapons){
+        } else if (switchWeapons) {
             switchMyWeapons();
             myClient.sendTCP(new SwitchWeapons());
-            switchWeapons=false;
+            switchWeapons = false;
         }
     }
 
-    private void calcState(){
-        if(body!=null) {
+    private void calcState() {
+        if (body != null) {
             if (body.getLinearVelocity().y > 0.0001f || body.getLinearVelocity().y < -0.0001f) {
                 //if we detect that we start flying, then we need to reset the passed time so the animation wont loop
                 if (verticalState != VerticalState.FLYING)
@@ -201,7 +203,7 @@ public class ClientPlayerCharacter extends PlayerCharacter implements AnimatedAc
                 velocity.y = body.getLinearVelocity().y;
             }
         }
-        if(currFrame!=null) {
+        if (currFrame != null) {
             switch (horizontalState) {
                 case GOING_LEFT:
                     //as there is no setFlip() for TextureRegion we have to check if the texture's already flipped, libgdx pls
@@ -232,20 +234,57 @@ public class ClientPlayerCharacter extends PlayerCharacter implements AnimatedAc
         }
     }
 
-    private void shootMyWeapon(){
-        ShootProjectile sp=new ShootProjectile();
-        Vector2 shootingOrigin=new Vector2((currWeapon.getX()),(currWeapon.getY()+ currWeapon.getHeight()/2));
-        float rotation= GameWorld.getMouseVectorAngle(shootingOrigin);
-        Vector2 direction=GameWorld.getNormalizedMouseVector(shootingOrigin);
+    private void shootMyWeapon() {
+        ShootProjectile sp = new ShootProjectile();
+        Vector2 shootingOrigin = new Vector2((currWeapon.getX()), (currWeapon.getY() + currWeapon.getHeight() / 2));
+        float rotation = GameWorld.getMouseVectorAngle(shootingOrigin);
+        Vector2 direction = GameWorld.getNormalizedMouseVector(shootingOrigin);
 
-        sp.id=myClient.getID();
-        sp.rot=rotation;
-        sp.dir=direction;
+        sp.id = myClient.getID();
+        sp.rot = rotation;
+        sp.dir = direction;
         myClient.sendTCP(sp);
-        currWeapon.shoot(direction,rotation,myClient.getID());
+        currWeapon.shoot(direction, rotation, myClient.getID());
 
-        shoot=false;
+        shoot = false;
     }
+
+    @Override
+    public int hashCode() {
+        return ID;
+    }
+
+    @Override
+    public int compare(ClientPlayerCharacter o1, ClientPlayerCharacter o2) {
+        if (o1.score < o2.score)
+            return -1;
+        else if (o1.score == o2.score)
+            return 0;
+        else return 1;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof ClientPlayerCharacter) {
+            ClientPlayerCharacter temp = (ClientPlayerCharacter) obj;
+            return temp.ID == this.ID;
+        }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return userName + " " + kills + " " + score;
+    }
+
+//    @Override
+//    public int compareTo(ClientPlayerCharacter o) {
+//        if (this.score < o.score)
+//            return -1;
+//        else if (this.score == o.score)
+//            return 0;
+//        else return 1;
+//    }
 
     public void setMyPlayer(boolean myPlayer) {
         isMyPlayer = myPlayer;
@@ -257,5 +296,13 @@ public class ClientPlayerCharacter extends PlayerCharacter implements AnimatedAc
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
     }
 }

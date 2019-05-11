@@ -146,7 +146,7 @@ public class MenuScreen implements Screen {
                 stagePhase = StagePhase.OPTIONS_STAGE;
                 Gdx.input.setInputProcessor(menuOptionsStage);
             }
-        });;
+        });
         mainMenuStage.addActor(background);
         mainMenuStage.addActor(foreground);
     }

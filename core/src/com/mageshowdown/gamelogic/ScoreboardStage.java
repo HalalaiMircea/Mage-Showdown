@@ -3,29 +3,62 @@ package com.mageshowdown.gamelogic;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Array;
 import com.mageshowdown.gameclient.ClientGameStage;
 import com.mageshowdown.gameclient.ClientPlayerCharacter;
 import com.mageshowdown.gameclient.ClientRound;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import static com.mageshowdown.gameclient.ClientAssetLoader.uiSkin;
 
 public class ScoreboardStage extends Stage {
-    private static ScoreboardStage ourInstance = new ScoreboardStage();
 
-    private Table root;
+    private static ScoreboardStage ourInstance = new ScoreboardStage();
     private final int WIDTH = 800;
     private final int HEIGHT = 400;
     private ClientGameStage gameStage = GameScreen.getGameStage();
     private ClientRound round = ClientRound.getInstance();
     private Label timeLeftLabel;
+    private PlayerStatsList psl;
+
+    private class PlayerStatsList {
+        Array<String> playerNames;
+        Array<Integer> playerKills;
+        Array<Integer> playerScore;
+        List<String> nameListWidget = new List<String>(uiSkin);
+        List<Integer> killsListWidget = new List<Integer>(uiSkin);
+        List<Integer> scoreListWidget = new List<Integer>(uiSkin);
+
+        private PlayerStatsList() {
+            playerNames = new Array<String>();
+            playerKills = new Array<Integer>();
+            playerScore = new Array<Integer>();
+        }
+
+        void update() {
+            playerNames.clear();
+            playerKills.clear();
+            playerScore.clear();
+            for (Map.Entry<Integer, ClientPlayerCharacter> each : gameStage.getSortedPlayers().entrySet()) {
+                playerNames.add(each.getValue().getUserName());
+                playerKills.add(each.getValue().getKills());
+                playerScore.add(each.getValue().getScore());
+            }
+            nameListWidget.setItems(playerNames);
+            killsListWidget.setItems(playerKills);
+            scoreListWidget.setItems(playerScore);
+        }
+    }
 
     private ScoreboardStage() {
-        super(MenuScreen.getMainMenuStage().getViewport(), GameScreen.getGameStage().getBatch());
+        //super(MenuScreen.getMainMenuStage().getViewport(), GameScreen.getGameStage().getBatch());
+        super(MenuScreen.getMainMenuStage().getViewport());
 
-        root = new Table(uiSkin);
+        psl = new PlayerStatsList();
+        Table root = new Table(uiSkin);
         root.setBackground("default-window");
         root.setColor(0, 0, 0, 0.8f);
         root.setSize(WIDTH, HEIGHT);
@@ -35,32 +68,30 @@ public class ScoreboardStage extends Stage {
         timeLeftLabel = new Label("", uiSkin);
 
         root.top();
-        root.add(timeLeftLabel);
+        root.add(timeLeftLabel).expandX().colspan(3);
+        root.row();
+        root.defaults().pad(1, 1, 1, 1).left().fill();
+        root.add(new Label("Player Name", uiSkin));
+        root.add(new Label("Kills", uiSkin));
+        root.add(new Label("Score", uiSkin));
         root.row();
 
-        root.defaults().pad(0, 0, 0, 10);
-        HashMap<Integer, ClientPlayerCharacter> otherPlayers = gameStage.getOtherPlayers();
-        root.add(new Label(gameStage.getPlayerCharacter().getUserName(), uiSkin));
-        root.add(new Label(Integer.toString(gameStage.getPlayerCharacter().getScore()), uiSkin));
-        root.row();
-        for (HashMap.Entry<Integer, ClientPlayerCharacter> each : otherPlayers.entrySet()) {
-            Label tempLabel = new Label(each.getValue().getUserName(), uiSkin);
-            root.add(tempLabel);
-            root.add(new Label(Integer.toString(each.getValue().getScore()), uiSkin));
-            root.row();
-        }
+        root.add(psl.nameListWidget);
+        root.add(psl.killsListWidget);
+        root.add(psl.scoreListWidget);
 
         this.addActor(root);
     }
 
-    @Override
-    public void act() {
-        timeLeftLabel.setText(Integer.toString((int) (round.ROUND_LENGTH - round.timePassed)));
-
-        super.act();
-    }
-
     public static ScoreboardStage getInstance() {
         return ourInstance;
+    }
+
+    @Override
+    public void act() {
+        timeLeftLabel.setText("TIME LEFT: " + (int) (round.ROUND_LENGTH - round.timePassed));
+        psl.update();
+
+        super.act();
     }
 }
