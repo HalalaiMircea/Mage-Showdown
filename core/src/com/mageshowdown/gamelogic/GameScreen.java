@@ -20,18 +20,16 @@ public class GameScreen implements Screen {
 
     private static final GameScreen INSTANCE = new GameScreen();
 
-    private static ClientGameStage gameStage;      //gameplay, or character control stage
+    private static ClientGameStage gameStage;
     private static OptionsStage gameOptionsStage;
-    private static Stage escMenuStage;          //menu overlay after pressing escape during gameplay
+    private static Stage escMenuStage;
     private static GameState gameState;
-    //private static ScoreboardStage scoreboardStage;
 
     private GameScreen() {
         gameStage = new ClientGameStage();
         escMenuStage = new Stage(MenuScreen.getMainMenuStage().getViewport(), gameStage.getBatch());
         gameOptionsStage = new OptionsStage(MenuScreen.getMainMenuStage().getViewport(), gameStage.getBatch(),
                 ClientAssetLoader.solidBlack);
-        //scoreboardStage = new ScoreboardStage();
 
         prepareEscMenu();
     }
@@ -102,7 +100,8 @@ public class GameScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-
+        gameStage.getViewport().update(width, height, true);
+        gameOptionsStage.getViewport().update(width, height, true);
     }
 
     @Override

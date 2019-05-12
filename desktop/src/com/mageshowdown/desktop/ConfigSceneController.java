@@ -2,6 +2,7 @@ package com.mageshowdown.desktop;
 
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.mageshowdown.utils.PrefsKeys;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -13,6 +14,7 @@ import javafx.scene.control.TextField;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.TreeSet;
 
 import static com.mageshowdown.gameclient.ClientAssetLoader.prefs;
 
@@ -37,16 +39,16 @@ public class ConfigSceneController implements Initializable {
     @FXML
     void okBtnClicked(ActionEvent actionEvent) {
         String[] str = rezChoiceBox.getValue().split("x");
-        prefs.putString("width", str[0]);
-        prefs.putString("height", str[1]);
+        prefs.putString(PrefsKeys.WIDTH, str[0]);
+        prefs.putString(PrefsKeys.HEIGHT, str[1]);
         if (modeChoiceBox.getValue().equals("Fullscreen"))
-            prefs.putBoolean("fullscreen", true);
+            prefs.putBoolean(PrefsKeys.FULLSCREEN, true);
         else if (modeChoiceBox.getValue().equals("Windowed"))
-            prefs.putBoolean("fullscreen", false);
-        prefs.putInteger("foregroundFPS", Integer.parseInt(foreFpsField.getText()));
-        prefs.putInteger("backgroundFPS", Integer.parseInt(backFpsField.getText()));
-        prefs.putBoolean("vSyncEnabled", vsyncCheckBox.isSelected());
-        prefs.putBoolean("useGL30", glCheckBox.isSelected());
+            prefs.putBoolean(PrefsKeys.FULLSCREEN, false);
+        prefs.putInteger(PrefsKeys.FOREGROUNDFPS, Integer.parseInt(foreFpsField.getText()));
+        prefs.putInteger(PrefsKeys.BACKGROUNDFPS, Integer.parseInt(backFpsField.getText()));
+        prefs.putBoolean(PrefsKeys.VSYNC, vsyncCheckBox.isSelected());
+        prefs.putBoolean(PrefsKeys.USEGL30, glCheckBox.isSelected());
         prefs.flush();
         DesktopClientLauncher.mainStage.setScene(DesktopClientLauncher.mainScene);
     }
@@ -64,22 +66,22 @@ public class ConfigSceneController implements Initializable {
             if (each.width >= 1280 && each.height >= 720 && aspectNum >= 15.9f && aspectNum <= 16.1f)
                 optimalDisplayModes.add(each);
         }
-        ArrayList<String> strResolutions = new ArrayList<String>();
+        TreeSet<String> strResolutions = new TreeSet<String>();
         for (Graphics.DisplayMode each : optimalDisplayModes) {
             strResolutions.add(each.width + "x" + each.height);
         }
         rezChoiceBox.getItems().setAll(strResolutions);
         modeChoiceBox.getItems().setAll("Fullscreen", "Windowed");
 
-        rezChoiceBox.setValue(prefs.getInteger("width") + "x" + prefs.getInteger("height"));
-        if (prefs.getBoolean("fullscreen"))
+        rezChoiceBox.setValue(prefs.getInteger(PrefsKeys.WIDTH) + "x" + prefs.getInteger(PrefsKeys.HEIGHT));
+        if (prefs.getBoolean(PrefsKeys.FULLSCREEN))
             modeChoiceBox.setValue("Fullscreen");
-        else if (!prefs.getBoolean("fullscreen"))
+        else
             modeChoiceBox.setValue("Windowed");
 
-        foreFpsField.setText(String.valueOf(prefs.getInteger("foregroundFPS")));
-        backFpsField.setText(String.valueOf(prefs.getInteger("backgroundFPS")));
-        vsyncCheckBox.setSelected(prefs.getBoolean("vSyncEnabled"));
-        glCheckBox.setSelected(prefs.getBoolean("useGL30"));
+        foreFpsField.setText(String.valueOf(prefs.getInteger(PrefsKeys.FOREGROUNDFPS)));
+        backFpsField.setText(String.valueOf(prefs.getInteger(PrefsKeys.BACKGROUNDFPS)));
+        vsyncCheckBox.setSelected(prefs.getBoolean(PrefsKeys.VSYNC));
+        glCheckBox.setSelected(prefs.getBoolean(PrefsKeys.USEGL30));
     }
 }

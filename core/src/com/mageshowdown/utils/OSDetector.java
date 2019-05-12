@@ -1,4 +1,4 @@
-package com.mageshowdown.gameclient;
+package com.mageshowdown.utils;
 
 import java.util.Locale;
 

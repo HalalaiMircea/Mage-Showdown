@@ -17,6 +17,7 @@ import static com.mageshowdown.gameclient.ClientAssetLoader.uiSkin;
 public class ScoreboardStage extends Stage {
 
     private static ScoreboardStage ourInstance = new ScoreboardStage();
+
     private final int WIDTH = 800;
     private final int HEIGHT = 400;
     private ClientGameStage gameStage = GameScreen.getGameStage();
@@ -63,14 +64,14 @@ public class ScoreboardStage extends Stage {
         root.setColor(0, 0, 0, 0.8f);
         root.setSize(WIDTH, HEIGHT);
         root.setPosition(Gdx.graphics.getWidth() / 2 - WIDTH / 2, Gdx.graphics.getHeight() / 2 - HEIGHT / 2);
-        root.debug();
+        //root.debug();
 
         timeLeftLabel = new Label("", uiSkin);
 
         root.top();
         root.add(timeLeftLabel).expandX().colspan(3);
         root.row();
-        root.defaults().pad(1, 1, 1, 1).left().fill();
+        root.defaults().pad(1, 1, 1, 1).center().fill();
         root.add(new Label("Player Name", uiSkin));
         root.add(new Label("Kills", uiSkin));
         root.add(new Label("Score", uiSkin));
@@ -89,9 +90,9 @@ public class ScoreboardStage extends Stage {
 
     @Override
     public void act() {
+        super.act();
+
         timeLeftLabel.setText("TIME LEFT: " + (int) (round.ROUND_LENGTH - round.timePassed));
         psl.update();
-
-        super.act();
     }
 }

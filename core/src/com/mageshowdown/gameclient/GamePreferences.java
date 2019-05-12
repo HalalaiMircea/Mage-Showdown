@@ -4,9 +4,13 @@ import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.StreamUtils;
+import com.mageshowdown.utils.OSDetector;
 
 import javax.swing.filechooser.FileSystemView;
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -194,6 +198,7 @@ public class GamePreferences implements Preferences {
         this.putString("playerName", "UnknownMage");
         this.putInteger("width", 1280);
         this.putInteger("height", 720);
+        this.putInteger("refreshRate", 60);
         this.putInteger("foregroundFPS", 0);
         this.putInteger("backgroundFPS", 60);
         this.putBoolean("vSyncEnabled", true);
