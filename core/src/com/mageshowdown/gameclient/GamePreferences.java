@@ -5,6 +5,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.StreamUtils;
 import com.mageshowdown.utils.OSDetector;
+import com.mageshowdown.utils.PrefsKeys;
 
 import javax.swing.filechooser.FileSystemView;
 import java.io.BufferedOutputStream;
@@ -195,15 +196,15 @@ public class GamePreferences implements Preferences {
     }
 
     private void defaultValues() {
-        this.putString("playerName", "UnknownMage");
-        this.putInteger("width", 1280);
-        this.putInteger("height", 720);
-        this.putInteger("refreshRate", 60);
-        this.putInteger("foregroundFPS", 0);
-        this.putInteger("backgroundFPS", 60);
-        this.putBoolean("vSyncEnabled", true);
-        this.putBoolean("useGL30", false);
-        this.putBoolean("fullscreen", false);
+        this.putString(PrefsKeys.PLAYERNAME, "UnknownMage");
+        this.putInteger(PrefsKeys.WIDTH, 1280);
+        this.putInteger(PrefsKeys.HEIGHT, 720);
+        this.putInteger(PrefsKeys.REFRESHRATE, 60);
+        this.putInteger(PrefsKeys.FOREGROUNDFPS, 0);
+        this.putInteger(PrefsKeys.BACKGROUNDFPS, 60);
+        this.putBoolean(PrefsKeys.VSYNC, true);
+        this.putBoolean(PrefsKeys.USEGL30, false);
+        this.putBoolean(PrefsKeys.FULLSCREEN, false);
         //TO-DO: put defaults to load into preference xml
 
         this.flush();
