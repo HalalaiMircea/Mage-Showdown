@@ -3,6 +3,7 @@ package com.mageshowdown.desktop;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.mageshowdown.gameclient.MageShowdownClient;
+import com.mageshowdown.utils.PrefsKeys;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -29,14 +30,14 @@ public class MainSceneController implements Initializable {
     @FXML
     void playBtnClicked(ActionEvent actionEvent) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        config.width = prefs.getInteger("width");
-        config.height = prefs.getInteger("height");
-        //config.resizable = false;
-        config.foregroundFPS = prefs.getInteger("foregroundFPS");
-        config.backgroundFPS = prefs.getInteger("backgroundFPS");
-        config.vSyncEnabled = prefs.getBoolean("vSyncEnabled");
-        config.useGL30 = prefs.getBoolean("useGL30");
-        config.fullscreen = prefs.getBoolean("fullscreen");
+        config.width = prefs.getInteger(PrefsKeys.WIDTH);
+        config.height = prefs.getInteger(PrefsKeys.HEIGHT);
+        config.resizable = false;
+        config.foregroundFPS = prefs.getInteger(PrefsKeys.FOREGROUNDFPS);
+        config.backgroundFPS = prefs.getInteger(PrefsKeys.BACKGROUNDFPS);
+        config.vSyncEnabled = prefs.getBoolean(PrefsKeys.VSYNC);
+        config.useGL30 = prefs.getBoolean(PrefsKeys.USEGL30);
+        config.fullscreen = prefs.getBoolean(PrefsKeys.FULLSCREEN);
         config.title = "Mage Showdown";
 
         new LwjglApplication(MageShowdownClient.getInstance(), config);

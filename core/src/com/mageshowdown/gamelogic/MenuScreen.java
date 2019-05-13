@@ -3,9 +3,12 @@ package com.mageshowdown.gamelogic;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.scenes.scene2d.*;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mageshowdown.gameclient.ClientAssetLoader;
 import com.mageshowdown.gameclient.MageShowdownClient;
@@ -20,14 +23,16 @@ public class MenuScreen implements Screen {
     //Singleton instantiation
     private static final MenuScreen INSTANCE = new MenuScreen();
 
+    private static Stage mainMenuStage;
     private static OptionsStage menuOptionsStage;
     private static StagePhase stagePhase;
-    private static Stage mainMenuStage;
 
     private MenuScreen() {
         mainMenuStage = new Stage();
         menuOptionsStage = new OptionsStage(mainMenuStage.getViewport(), mainMenuStage.getBatch(),
                 ClientAssetLoader.menuBackground);
+        System.out.println("MENU SCREEN WAS SET");
+
         prepareMainMenuStage();
 
         stagePhase = StagePhase.MAIN_MENU_STAGE;
@@ -57,8 +62,8 @@ public class MenuScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-//        mainMenuStage.getViewport().update(width, height, true);
-//        menuOptionsStage.getViewport().update(width, height, true);
+        mainMenuStage.getViewport().update(width, height, true);
+        menuOptionsStage.getViewport().update(width, height, true);
     }
 
     @Override
@@ -89,6 +94,10 @@ public class MenuScreen implements Screen {
 
     public static Stage getMainMenuStage() {
         return mainMenuStage;
+    }
+
+    public static OptionsStage getMenuOptionsStage() {
+        return menuOptionsStage;
     }
 
     public static void setStagePhase(StagePhase stagePhase) {
