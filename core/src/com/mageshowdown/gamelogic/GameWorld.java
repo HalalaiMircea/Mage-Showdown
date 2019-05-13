@@ -35,7 +35,7 @@ public class GameWorld {
 
         float rotation=(float)Math.atan2(dy,dx)* 180 / (float) Math.PI;
 
-        return rotation;
+        return rotation+180f;
     }
 
     //returns the normalized direction vector for where the mouse is pointing

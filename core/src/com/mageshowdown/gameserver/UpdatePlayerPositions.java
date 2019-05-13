@@ -21,23 +21,28 @@ public class UpdatePlayerPositions extends Thread{
     }
 
     public void run(){
+        boolean sendPacket=true;
         for(Connection x: myServer.getConnections()) {
             Network.OneCharacterState oneLoc = new Network.OneCharacterState();
             ServerPlayerCharacter pc = gameStage.getPlayerById(x.getID());
 
-            oneLoc.linVel = pc.getBody().getLinearVelocity();
-            oneLoc.pos = pc.getBody().getPosition();
-            oneLoc.id = x.getID();
-            oneLoc.health=pc.getHealth();
-            oneLoc.energyShield=pc.getEnergyShield();
-            oneLoc.score=pc.getScore();
-            oneLoc.dmgImmune=pc.isDmgImmune();
-            oneLoc.frozen=pc.isFrozen();
-            oneLoc.kills=pc.getKills();
+            if(pc!=null){
+                oneLoc.linVel = pc.getBody().getLinearVelocity();
+                oneLoc.pos = pc.getBody().getPosition();
+                oneLoc.id = x.getID();
+                oneLoc.health=pc.getHealth();
+                oneLoc.energyShield=pc.getEnergyShield();
+                oneLoc.score=pc.getScore();
+                oneLoc.dmgImmune=pc.isDmgImmune();
+                oneLoc.frozen=pc.isFrozen();
+                oneLoc.kills=pc.getKills();
 
-            loc.playerStates.add(oneLoc);
+                loc.playerStates.add(oneLoc);
+            }else{
+                sendPacket=false;
+            }
         }
-
-        myServer.sendToAllTCP(loc);
+        if(sendPacket)
+            myServer.sendToAllTCP(loc);
     }
 }

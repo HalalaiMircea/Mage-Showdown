@@ -236,9 +236,8 @@ public class ClientPlayerCharacter extends PlayerCharacter
 
     private void shootMyWeapon() {
         ShootProjectile sp = new ShootProjectile();
-        Vector2 shootingOrigin = new Vector2((currWeapon.getX()), (currWeapon.getY() + currWeapon.getHeight() / 2));
-        float rotation = GameWorld.getMouseVectorAngle(shootingOrigin);
-        Vector2 direction = GameWorld.getNormalizedMouseVector(shootingOrigin);
+        float rotation = GameWorld.getMouseVectorAngle(currWeapon.getShootingOrigin());
+        Vector2 direction = GameWorld.getNormalizedMouseVector(currWeapon.getShootingOrigin());
 
         sp.id = myClient.getID();
         sp.rot = rotation;

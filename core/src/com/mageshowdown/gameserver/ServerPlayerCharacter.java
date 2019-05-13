@@ -16,7 +16,7 @@ public class ServerPlayerCharacter extends PlayerCharacter {
 
     //whenever you're hit, there will be a short cooldown before your shield starts regenerating
     //when that cooldown expires, youll be regenerating the energy shield at SHIELD_REGEN_RATE/second
-    private float SHIELD_REGEN_RATE=5f;
+    private float SHIELD_REGEN_RATE=1f;
     private float SHIELD_COOLDOWN=3f;
     private float shieldRegenTimer=0f;
     private boolean regenShield=true;
@@ -39,15 +39,15 @@ public class ServerPlayerCharacter extends PlayerCharacter {
 
         switch (moveDirection){
             case Input.Keys.A:
-                velocity.x=-2.5f;
+                velocity.x=-3.5f;
                 break;
             case Input.Keys.D:
-                velocity.x=2.5f;
+                velocity.x=3.5f;
                 break;
             case Input.Keys.W:
                 if(body.getLinearVelocity().y<0.01f && body.getLinearVelocity().y>-0.01f)
-                    body.applyLinearImpulse(new Vector2(body.getLinearVelocity().x,.22f),body.getPosition(),false);
-                break;
+                    body.applyLinearImpulse(new Vector2(body.getLinearVelocity().x,.5f),body.getPosition(),false);
+                    break;
             default:
                 /*
                 * if the value isnt one of the keys that makes an action,
@@ -110,6 +110,7 @@ public class ServerPlayerCharacter extends PlayerCharacter {
 
     public void damageBy(float damageValue, Object object) {
         if (!dmgImmune) {
+            System.out.println("damaged");
             //everytime youre hit the cooldown for shield regen resets
             regenShield=false;
             shieldRegenTimer=0f;

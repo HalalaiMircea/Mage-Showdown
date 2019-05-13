@@ -112,6 +112,7 @@ public class ServerListener extends Listener {
             Network.SwitchWeapons packet=(Network.SwitchWeapons)object;
 
             packet.id=connection.getID();
+            gameStage.getPlayerById(packet.id).switchMyWeapons();
             myServer.sendToAllExceptTCP(connection.getID(),packet);
         }
     }

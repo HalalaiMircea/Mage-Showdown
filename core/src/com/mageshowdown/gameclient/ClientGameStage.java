@@ -3,6 +3,7 @@ package com.mageshowdown.gameclient;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.mageshowdown.gamelogic.GameLevel;
@@ -18,9 +19,12 @@ public class ClientGameStage extends Stage {
     private HashMap<Integer, ClientPlayerCharacter> otherPlayers;
     private TreeMap<Integer, ClientPlayerCharacter> sortedPlayers;
 
+    private Box2DDebugRenderer b2dr;
+
 
     public ClientGameStage() {
         super();
+        b2dr=new Box2DDebugRenderer();
         camera = new OrthographicCamera(1280f, 720f);
         camera.position.x = 640f;
         camera.position.y = 360f;
@@ -28,7 +32,6 @@ public class ClientGameStage extends Stage {
         gameLevel = new GameLevel(this);
         otherPlayers = new HashMap<Integer, ClientPlayerCharacter>();
         sortedPlayers = new TreeMap<Integer, ClientPlayerCharacter>();
-
     }
 
     @Override
@@ -52,6 +55,7 @@ public class ClientGameStage extends Stage {
     @Override
     public void draw() {
         gameLevel.render();
+        b2dr.render(GameWorld.world,camera.combined.cpy().scale(100,100,1));
         super.draw();
     }
 

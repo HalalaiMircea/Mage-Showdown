@@ -9,12 +9,10 @@ public class Laser extends Ammo implements AnimatedActorInterface{
 
     private final float duration;
 
-    //need to remember the rotation and set it every frame the laser exists
-    private float rotation;
-
     public Laser(Stage stage, Vector2 position, float rotation, int id, int ownerId){
         super(stage,new Vector2(0f,0f),position,new Vector2(220,31),1f,rotation,id,ownerId,2f);
-        this.rotation=rotation+180f;
+        //setRotation(rotation);
+        //body.setTransform(GameWorld.convertPixelsToWorld(new Vector2(getX()-getWidth()/2,getY())),rotation*(float)Math.PI/180);
         duration=.25f;
         addAnimation(1,7,.25f,"idle",ClientAssetLoader.fireLaserSpritesheet);
     }
@@ -26,7 +24,6 @@ public class Laser extends Ammo implements AnimatedActorInterface{
             setExpired(true);
         }
 
-        setRotation(rotation);
         pickFrame();
     }
 

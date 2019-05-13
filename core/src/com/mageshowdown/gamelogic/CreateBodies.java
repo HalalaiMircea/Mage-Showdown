@@ -9,14 +9,15 @@ public class CreateBodies {
 
         BodyDef bd=new BodyDef();
         bd.type=bodyType;
+        bd.angle=rotation*(float)Math.PI/180;
         //box2d takes the coordinates of the world, so we have to scale the pixels
         Vector2 convPosition=GameWorld.convertPixelsToWorld(position);
         Vector2 convSize=GameWorld.convertPixelsToWorld(size);
-        //in box2d the position of a body is its center, so we have to offset the sprite position by half its size
-        bd.position.set(new Vector2(convPosition.x+(convSize.x/2),convPosition.y+(convSize.y/2)));
+        //since we use vertices to create our polygon the origin of the body is the lower left corner
+        bd.position.set(new Vector2(convPosition.x,convPosition.y));
 
         body=GameWorld.world.createBody(bd);
-        Shape shape = createPolygonShape(size,rotation);
+        Shape shape = createPolygonShape(convSize);
         body.createFixture(createFixtureDef(shape,density,friction,restitution));
         shape.dispose();
 
@@ -31,10 +32,11 @@ public class CreateBodies {
         return cs;
     }
 
-    private static PolygonShape createPolygonShape(Vector2 size, float rotation){
+    private static PolygonShape createPolygonShape(Vector2 convSize){
         PolygonShape ps=new PolygonShape();
-        Vector2 convSize=GameWorld.convertPixelsToWorld(size);
-        ps.setAsBox(convSize.x/2f,convSize.y/2f,new Vector2(0,0),rotation);
+        //in order to be able to change the origin without headaches we use vertices instead of setAsBox()
+        Vector2 vertices[]=new Vector2[]{new Vector2(0,0),new Vector2(convSize.x,0),new Vector2(convSize.x,convSize.y),new Vector2(0,convSize.y)};
+        ps.set(vertices);
 
         return ps;
     }

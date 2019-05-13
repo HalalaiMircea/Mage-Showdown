@@ -37,7 +37,7 @@ public class Weapon extends GameActor implements AnimatedActorInterface{
     private boolean recharge=false;
 
     public Weapon(Stage stage, boolean loadAnimation, AmmoType ammoType, float cd, int capacity, int projectileCost){
-        super(stage,new Vector2(0,0),new Vector2(64,66));
+        super(stage,new Vector2(0,0),new Vector2(64,66),0f);
         COOLDOWN_TIME=cd;
         MAXIMUM_CAPACITY=capacity;
         currentCapacity=MAXIMUM_CAPACITY;
@@ -102,13 +102,13 @@ public class Weapon extends GameActor implements AnimatedActorInterface{
     public void shoot(Vector2 direction, float rotation, int ownerId){
         if(currentCapacity>projectileCost){
             currentCapacity-=projectileCost;
-            Vector2 shootingOrigin=new Vector2((getX()+getWidth()/2),(getY()+getHeight()/2));
+
             switch(ammoType) {
                 case FREEZE_BULLETS:
-                    ammunition.add(new FreezeProjectile(getStage(), shootingOrigin, rotation, direction, ammunition.size(), ownerId));
+                    ammunition.add(new FreezeProjectile(getStage(), getShootingOrigin(), rotation, direction, ammunition.size(), ownerId));
                     break;
                 case LASER:
-                    ammunition.add(new Laser(getStage(), shootingOrigin, rotation, ammunition.size(), ownerId));
+                    ammunition.add(new Laser(getStage(), getShootingOrigin(), rotation, ammunition.size(), ownerId));
                     break;
             }
             recharge=false;
@@ -127,6 +127,10 @@ public class Weapon extends GameActor implements AnimatedActorInterface{
                 rechargeTimer=0f;
             }
         }
+    }
+
+    public Vector2 getShootingOrigin(){
+        return new Vector2((getX()+getWidth()/2),(getY()+getHeight()/2));
     }
 
     @Override

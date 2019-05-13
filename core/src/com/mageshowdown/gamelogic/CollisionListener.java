@@ -13,31 +13,28 @@ public class CollisionListener implements ContactListener {
 
     private ServerGameStage gameStage;
 
-    public CollisionListener(ServerGameStage gameStage){
-        this.gameStage=gameStage;
+    public CollisionListener(ServerGameStage gameStage) {
+        this.gameStage = gameStage;
     }
 
 
     @Override
     public void beginContact(Contact contact) {
-        Object obj1=contact.getFixtureA().getBody().getUserData(),
-                obj2=contact.getFixtureB().getBody().getUserData();
+        Object obj1 = contact.getFixtureA().getBody().getUserData(),
+                obj2 = contact.getFixtureB().getBody().getUserData();
 
-
-
-        if(obj1 instanceof Ammo && obj2 instanceof ServerPlayerCharacter) {
-            handlePlayerProjectileCollision((Ammo)obj1,(ServerPlayerCharacter)obj2);
-        }
-        else if (obj1 instanceof ServerPlayerCharacter && obj2 instanceof Ammo){
-            handlePlayerProjectileCollision((Ammo)obj2,(ServerPlayerCharacter)obj1);
+        if (obj1 instanceof Ammo && obj2 instanceof ServerPlayerCharacter) {
+            handlePlayerProjectileCollision((Ammo) obj1, (ServerPlayerCharacter) obj2);
+        } else if (obj1 instanceof ServerPlayerCharacter && obj2 instanceof Ammo) {
+            handlePlayerProjectileCollision((Ammo) obj2, (ServerPlayerCharacter) obj1);
         }
     }
 
-    private void handlePlayerProjectileCollision(Ammo projectile, ServerPlayerCharacter player){
-      //a player cant damage itself so we check if the projectile's owner id is the same as the player's it hit
-        if(player.getId()!=projectile.getOwnerId()){
+    private void handlePlayerProjectileCollision(Ammo projectile, ServerPlayerCharacter player) {
+        //a player cant damage itself so we check if the projectile's owner id is the same as the player's it hit
+        if (player.getId() != projectile.getOwnerId()) {
             //Network.ProjectileCollided pc=new Network.ProjectileCollided();
-            Network.PlayerDead packet=new Network.PlayerDead();
+            Network.PlayerDead packet = new Network.PlayerDead();
             player.damageBy(projectile.getDamageValue(), projectile);
             projectile.setCollided(true);
 /*
@@ -46,21 +43,20 @@ public class CollisionListener implements ContactListener {
             pc.playerHitId=player.getId();
   */
             //if the player died from the hit
-            if(player.getHealth()<0){
+            if (player.getHealth() < 0) {
                 gameStage.getPlayerById(projectile.ownerId).addKill();
-                packet.id=player.getId();
-                packet.respawnPos=GameServer.getInstance().generateSpawnPoint(packet.id);
+                packet.id = player.getId();
+                packet.respawnPos = GameServer.getInstance().generateSpawnPoint(packet.id);
                 player.respawn(packet.respawnPos);
                 gameStage.getPlayerById(projectile.ownerId).raiseScore(1);
                 GameServer.getInstance().sendToAllTCP(packet);
             }
-           // GameServer.getInstance().sendToAllTCP(pc);
+            // GameServer.getInstance().sendToAllTCP(pc);
         }
     }
 
     @Override
     public void endContact(Contact contact) {
-
     }
 
     @Override

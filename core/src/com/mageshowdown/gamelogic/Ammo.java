@@ -3,6 +3,7 @@ package com.mageshowdown.gamelogic;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mageshowdown.gameclient.ClientAssetLoader;
 
@@ -16,8 +17,8 @@ public abstract class Ammo extends DynamicGameActor {
 
     private float damageValue;
 
-    protected Ammo(Stage stage, Vector2 velocity, Vector2 position, Vector2 size, Texture spriteSheet, float spriteScaling, float rotation, int id, int ownerId, float damageValue){
-        super(stage,position, size, spriteSheet,spriteScaling);
+    protected Ammo(Stage stage, Vector2 velocity, Vector2 position, Vector2 size, Texture texture, float spriteScaling, float rotation, int id, int ownerId, float damageValue){
+        super(stage,position, size, rotation, texture, spriteScaling);
         createBody(rotation,BodyDef.BodyType.DynamicBody);
 
         this.damageValue=damageValue;
@@ -29,16 +30,14 @@ public abstract class Ammo extends DynamicGameActor {
         //we dont want the projectile to react to any collisions or be affected by gravity so we make it a sensor
         body.getFixtureList().get(0).setSensor(true);
         body.setGravityScale(0f);
-        sprite.setRotation(rotation);
-        sprite.setOrigin(getWidth()/2,getHeight()/2);
         this.velocity=velocity;
         stage.addActor(this);
     }
 
     protected Ammo(Stage stage, Vector2 velocity, Vector2 position, Vector2 size, float spriteScaling, float rotation, int id, int ownerId, float damageValue){
-        super(stage,position, size, spriteScaling);
+        super(stage,position, size, rotation,spriteScaling);
         createBody(rotation,BodyDef.BodyType.DynamicBody);
-
+        System.out.println(size);
         this.damageValue=damageValue;
         this.id=id;
         this.ownerId=ownerId;
@@ -61,8 +60,25 @@ public abstract class Ammo extends DynamicGameActor {
     @Override
     public void act(float delta) {
         super.act(delta);
-
+        //System.out.println(GameWorld.convertWorldToPixels(body.getPosition())+" "+body.getFixtureList().get(0).getShape().getRadius());
         //every frame we check if the projectile is out of bounds
+        if(getRotation()>80f)
+        {
+            if(sprite!=null)
+                sprite.setFlip(false,true);
+            if(currFrame!=null)
+                if(!currFrame.isFlipY()){
+                    currFrame.flip(false,true);
+                }
+        }else{
+            if(sprite!=null)
+                sprite.setFlip(false,false);
+            if(currFrame!=null)
+                if(currFrame.isFlipY())
+                    currFrame.flip(false,false);
+        }
+        System.out.println(getRotation());
+
         if(body!=null){
             Vector2 convPosition=GameWorld.convertWorldToPixels(body.getPosition());
             if(convPosition.x > 1280 || convPosition.x<0 || convPosition.y>720 || convPosition.y<0)
@@ -70,6 +86,8 @@ public abstract class Ammo extends DynamicGameActor {
                 outOfBounds=true;
             }
         }
+
+        //System.out.println("Body at: "+GameWorld.convertWorldToPixels(body.getPosition()) +" rotation:"+(body.getAngle() * 180 / (float) Math.PI)+"and actor at:"+this.getX()+" "+this.getY()+" rotation: "+getRotation());
     }
 
 

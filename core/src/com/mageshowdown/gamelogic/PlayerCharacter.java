@@ -9,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 public abstract class PlayerCharacter extends DynamicGameActor{
     protected Stage gameStage;
 
-    protected float MAXIMUM_ENERGY_SHIELD=25;
+    protected float MAXIMUM_ENERGY_SHIELD=5;
     protected float MAXIMUM_HEALTH=15;
 
     protected Weapon frostWeapon;
@@ -28,7 +28,7 @@ public abstract class PlayerCharacter extends DynamicGameActor{
     protected int kills=0;
 
     protected PlayerCharacter(Stage stage, Vector2 position, boolean loadWeaponAnimation){
-        super(stage,position, new Vector2(22,32),1.5f);
+        super(stage,position, new Vector2(22,32),0f,1.5f);
 
         createBody(BodyDef.BodyType.DynamicBody);
         gameStage=stage;
@@ -74,10 +74,11 @@ public abstract class PlayerCharacter extends DynamicGameActor{
     public void switchMyWeapons(){
         currWeapon.remove();
 
-        if(currWeapon.equals(frostWeapon))
-            currWeapon=fireWeapon;
-        else currWeapon=frostWeapon;
-
+        if(currWeapon.equals(frostWeapon)) {
+            currWeapon = fireWeapon;
+        }else {
+            currWeapon = frostWeapon;
+        }
         gameStage.addActor(currWeapon);
 
     }
