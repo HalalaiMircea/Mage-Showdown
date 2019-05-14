@@ -13,11 +13,10 @@ import java.util.ListIterator;
 
 
 public class Weapon extends GameActor implements AnimatedActorInterface{
-    public static enum AmmoType{
+    public enum AmmoType{
         FREEZE_BULLETS,
         LASER
     }
-
 
     private AmmoType ammoType;
     private ArrayList<Ammo> ammunition;
@@ -58,7 +57,6 @@ public class Weapon extends GameActor implements AnimatedActorInterface{
         }
     }
 
-
     public void updatePosition(Vector2 position){
         Vector2 offset=new Vector2(-15f,35f);
         setPosition(position.x+offset.x,position.y+offset.y);
@@ -97,7 +95,6 @@ public class Weapon extends GameActor implements AnimatedActorInterface{
             }
         }
     }
-
 
     public void shoot(Vector2 direction, float rotation, int ownerId){
         if(currentCapacity>projectileCost){

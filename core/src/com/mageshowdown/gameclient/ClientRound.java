@@ -22,7 +22,7 @@ public class ClientRound extends Round {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
-        font.draw(batch, Float.toString(timePassed), Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+        //font.draw(batch, Float.toString(timePassed), Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
         if (finished) {
             roundOverSprite.draw(batch);
             font.draw(batch, Float.toString(timePassedRoundFinished), Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);

@@ -1,11 +1,13 @@
 package com.mageshowdown.gamelogic;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
+import com.mageshowdown.gameclient.ClientAssetLoader;
 import com.mageshowdown.gameclient.ClientGameStage;
 import com.mageshowdown.gameclient.ClientPlayerCharacter;
 import com.mageshowdown.gameclient.ClientRound;
@@ -55,7 +57,6 @@ public class ScoreboardStage extends Stage {
     }
 
     private ScoreboardStage() {
-        //super(MenuScreen.getMainMenuStage().getViewport(), GameScreen.getGameStage().getBatch());
         super(MenuScreen.getMainMenuStage().getViewport());
 
         psl = new PlayerStatsList();
@@ -64,9 +65,10 @@ public class ScoreboardStage extends Stage {
         root.setColor(0, 0, 0, 0.8f);
         root.setSize(WIDTH, HEIGHT);
         root.setPosition(Gdx.graphics.getWidth() / 2 - WIDTH / 2, Gdx.graphics.getHeight() / 2 - HEIGHT / 2);
-        //root.debug();
+        root.debug();
 
-        timeLeftLabel = new Label("", uiSkin);
+        Label.LabelStyle timeLeftStyle = new Label.LabelStyle(ClientAssetLoader.bigSizeFont, Color.WHITE);
+        timeLeftLabel = new Label("", timeLeftStyle);
 
         root.top();
         root.add(timeLeftLabel).expandX().colspan(3);
@@ -92,7 +94,7 @@ public class ScoreboardStage extends Stage {
     public void act() {
         super.act();
 
-        timeLeftLabel.setText("TIME LEFT: " + (int) (round.ROUND_LENGTH - round.timePassed));
+        timeLeftLabel.setText("TIME LEFT " + (int) (round.ROUND_LENGTH - round.timePassed));
         psl.update();
     }
 }

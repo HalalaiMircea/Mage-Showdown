@@ -6,6 +6,7 @@ import com.mageshowdown.gamelogic.GameScreen;
 import com.mageshowdown.gamelogic.GameWorld;
 import com.mageshowdown.gamelogic.MenuScreen;
 import com.mageshowdown.packets.Network;
+import com.mageshowdown.utils.PrefsKeys;
 
 public class MageShowdownClient extends Game {
 
@@ -36,7 +37,7 @@ public class MageShowdownClient extends Game {
     }
 
     public void clientStart(String ipAddress) {
-        myClient.setUserName(ClientAssetLoader.prefs.getString("playerName"));
+        myClient.setUserName(ClientAssetLoader.prefs.getString(PrefsKeys.PLAYERNAME));
         myClient.start();
 
         myClient.connect(5000, ipAddress, Network.TCP_PORT, Network.UDP_PORT);

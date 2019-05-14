@@ -47,6 +47,8 @@ public class GameScreen implements Screen {
                     ClientRound.getInstance().act(Gdx.graphics.getDeltaTime());
                 gameRunningInput();
                 gameStage.draw();
+                GameHUDStage.getInstance().act();
+                GameHUDStage.getInstance().draw();
                 break;
             case GAME_PAUSED:
                 gameStage.act();
@@ -84,7 +86,6 @@ public class GameScreen implements Screen {
         return escMenuStage;
     }
 
-    //setter to access gameState member variable from MenuScreen class
     public static void setGameState(GameState gameState) {
         GameScreen.gameState = gameState;
     }
@@ -95,7 +96,6 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
-
     }
 
     @Override
@@ -106,17 +106,14 @@ public class GameScreen implements Screen {
 
     @Override
     public void pause() {
-
     }
 
     @Override
     public void resume() {
-
     }
 
     @Override
     public void hide() {
-
     }
 
     @Override
@@ -125,6 +122,7 @@ public class GameScreen implements Screen {
         escMenuStage.dispose();
         gameOptionsStage.dispose();
         ScoreboardStage.getInstance().dispose();
+        GameHUDStage.getInstance().dispose();
         INSTANCE.dispose();
     }
 

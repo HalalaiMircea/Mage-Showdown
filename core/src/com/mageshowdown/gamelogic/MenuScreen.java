@@ -31,7 +31,6 @@ public class MenuScreen implements Screen {
         mainMenuStage = new Stage();
         menuOptionsStage = new OptionsStage(mainMenuStage.getViewport(), mainMenuStage.getBatch(),
                 ClientAssetLoader.menuBackground);
-        System.out.println("MENU SCREEN WAS SET");
 
         prepareMainMenuStage();
 
@@ -68,17 +67,14 @@ public class MenuScreen implements Screen {
 
     @Override
     public void pause() {
-
     }
 
     @Override
     public void resume() {
-
     }
 
     @Override
     public void hide() {
-
     }
 
     @Override
@@ -124,7 +120,7 @@ public class MenuScreen implements Screen {
         //Order sensitive addition and positioning of widgets into table
         //
         foreground.defaults().padBottom(20);
-        foreground.add(connectButton);
+        foreground.add(connectButton).fill();
         foreground.add(addressField);
         foreground.row();
         foreground.add(optionsButton).colspan(2).width(200);

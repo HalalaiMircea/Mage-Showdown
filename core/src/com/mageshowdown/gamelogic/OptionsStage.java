@@ -117,7 +117,7 @@ public class OptionsStage extends Stage {
             modeSelectBox.setSelected("Windowed");
 
         refreshSelectBox.setItems(refreshArray);
-        if (Integer.valueOf(prefs.getInteger(PrefsKeys.REFRESHRATE)) != null)
+        if (prefs.contains(PrefsKeys.REFRESHRATE))
             refreshSelectBox.setSelected(prefs.getInteger(PrefsKeys.REFRESHRATE));
         else {
             refreshSelectBox.setSelected(60);
@@ -140,6 +140,8 @@ public class OptionsStage extends Stage {
                         }
                 } else Gdx.graphics.setWindowedMode(Integer.parseInt(str[0]), Integer.parseInt(str[1]));
 
+                Gdx.graphics.setVSync(vsyncCheckBox.isChecked());
+
                 prefs.putInteger(PrefsKeys.WIDTH, Integer.parseInt(str[0]));
                 prefs.putInteger(PrefsKeys.HEIGHT, Integer.parseInt(str[1]));
                 prefs.putInteger(PrefsKeys.REFRESHRATE, refreshSelectBox.getSelected());
@@ -147,10 +149,7 @@ public class OptionsStage extends Stage {
                     prefs.putBoolean(PrefsKeys.FULLSCREEN, true);
                 else if (modeSelectBox.getSelected().equals("Windowed"))
                     prefs.putBoolean(PrefsKeys.FULLSCREEN, false);
-
                 prefs.putString(PrefsKeys.PLAYERNAME, playerNameField.getText());
-
-                Gdx.graphics.setVSync(vsyncCheckBox.isChecked());
                 prefs.putBoolean(PrefsKeys.VSYNC, vsyncCheckBox.isChecked());
                 prefs.flush();
             }

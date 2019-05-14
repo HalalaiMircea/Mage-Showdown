@@ -24,7 +24,7 @@ public class ClientGameStage extends Stage {
 
     public ClientGameStage() {
         super();
-        b2dr=new Box2DDebugRenderer();
+        b2dr = new Box2DDebugRenderer();
         camera = new OrthographicCamera(1280f, 720f);
         camera.position.x = 640f;
         camera.position.y = 360f;
@@ -55,7 +55,7 @@ public class ClientGameStage extends Stage {
     @Override
     public void draw() {
         gameLevel.render();
-        b2dr.render(GameWorld.world,camera.combined.cpy().scale(100,100,1));
+        b2dr.render(GameWorld.world, camera.combined.cpy().scale(100, 100, 1));
         super.draw();
     }
 
@@ -71,8 +71,11 @@ public class ClientGameStage extends Stage {
         return otherPlayers;
     }
 
+    public TreeMap<Integer, ClientPlayerCharacter> getSortedPlayers() {
+        return sortedPlayers;
+    }
+
     public void removePlayerCharacter(int connectionId) {
-        //Remove other players from the sorted set
         sortedPlayers.remove(connectionId);
         System.out.println("Map after player removal: " + sortedPlayers);
         otherPlayers.get(connectionId).destroyActor();
@@ -86,7 +89,6 @@ public class ClientGameStage extends Stage {
 
     public void spawnMyPlayerCharacter(Vector2 position, String userName) {
         playerCharacter = new ClientPlayerCharacter(this, position, userName, true);
-        //Adding player to the sorted set for scoreboard
         sortedPlayers.put(playerCharacter.getID(), playerCharacter);
         System.out.println("Map with my player: " + sortedPlayers);
 
@@ -105,9 +107,5 @@ public class ClientGameStage extends Stage {
 
     public GameLevel getGameLevel() {
         return gameLevel;
-    }
-
-    public TreeMap<Integer, ClientPlayerCharacter> getSortedPlayers() {
-        return sortedPlayers;
     }
 }

@@ -6,36 +6,36 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 
-public abstract class PlayerCharacter extends DynamicGameActor{
-    protected Stage gameStage;
+public abstract class PlayerCharacter extends DynamicGameActor {
+    protected final float MAXIMUM_ENERGY_SHIELD = 5f;
+    protected final float MAXIMUM_HEALTH = 15f;
+    protected final float FREEZE_DURATION = 2f;
 
-    protected float MAXIMUM_ENERGY_SHIELD=5;
-    protected float MAXIMUM_HEALTH=15;
+    protected Stage gameStage;
 
     protected Weapon frostWeapon;
     protected Weapon fireWeapon;
     protected Weapon currWeapon;
 
-    protected float energyShield=MAXIMUM_ENERGY_SHIELD;
-    protected float health=MAXIMUM_HEALTH;
-    protected boolean dmgImmune=false;
+    protected float energyShield = MAXIMUM_ENERGY_SHIELD;
+    protected float health = MAXIMUM_HEALTH;
 
-    protected final float FREEZE_DURATION=2f;
-    protected boolean frozen=false;
-    protected float frozenTimer=0f;
+    protected boolean dmgImmune = false;
+    protected boolean frozen = false;
+    protected float frozenTimer = 0f;
 
-    protected int score=0;
-    protected int kills=0;
+    protected int score = 0;
+    protected int kills = 0;
 
-    protected PlayerCharacter(Stage stage, Vector2 position, boolean loadWeaponAnimation){
-        super(stage,position, new Vector2(22,32),0f,1.5f);
+    protected PlayerCharacter(Stage stage, Vector2 position, boolean loadWeaponAnimation) {
+        super(stage, position, new Vector2(22, 32), 0f, 1.5f);
 
         createBody(BodyDef.BodyType.DynamicBody);
-        gameStage=stage;
+        gameStage = stage;
         body.setFixedRotation(true);
 
-        frostWeapon=new Weapon(stage,loadWeaponAnimation,Weapon.AmmoType.FREEZE_BULLETS,1.5f,25,2);
-        fireWeapon=new Weapon(stage,loadWeaponAnimation,Weapon.AmmoType.LASER,1.5f,25,1);
+        frostWeapon = new Weapon(stage, loadWeaponAnimation, Weapon.AmmoType.FREEZE_BULLETS, 1.5f, 25, 2);
+        fireWeapon = new Weapon(stage, loadWeaponAnimation, Weapon.AmmoType.LASER, 1.5f, 25, 1);
 
         frostWeapon.remove();
         fireWeapon.remove();
@@ -51,32 +51,32 @@ public abstract class PlayerCharacter extends DynamicGameActor{
         super.destroyActor();
     }
 
-    protected void updateWeaponPos(){
-        if(currWeapon !=null)
-            currWeapon.updatePosition(new Vector2(getX(),getY()));
+    protected void updateWeaponPos() {
+        if (currWeapon != null)
+            currWeapon.updatePosition(new Vector2(getX(), getY()));
     }
 
-    protected void updateFrozenState(){
-        if(frozen){
-            frozenTimer+=Gdx.graphics.getDeltaTime();
-            if(frozenTimer>FREEZE_DURATION){
-                frozen=false;
-                frozenTimer=0f;
+    protected void updateFrozenState() {
+        if (frozen) {
+            frozenTimer += Gdx.graphics.getDeltaTime();
+            if (frozenTimer > FREEZE_DURATION) {
+                frozen = false;
+                frozenTimer = 0f;
             }
         }
     }
 
-    protected void destroyWeapons(){
+    protected void destroyWeapons() {
         frostWeapon.destroyActor();
         fireWeapon.destroyActor();
     }
 
-    public void switchMyWeapons(){
+    public void switchMyWeapons() {
         currWeapon.remove();
 
-        if(currWeapon.equals(frostWeapon)) {
+        if (currWeapon.equals(frostWeapon)) {
             currWeapon = fireWeapon;
-        }else {
+        } else {
             currWeapon = frostWeapon;
         }
         gameStage.addActor(currWeapon);
