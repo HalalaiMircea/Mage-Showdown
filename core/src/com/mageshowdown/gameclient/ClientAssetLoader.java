@@ -10,11 +10,15 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class ClientAssetLoader {
+
+    //private static ClientAssetLoader ourInstance = new ClientAssetLoader();
+
+    //public AssetManager manager;
     public static Texture solidBlack;
     public static Skin uiSkin;
     public static Texture menuBackground;
     //fonts
-    public static BitmapFont font1;
+    //public static BitmapFont font1;
     public static BitmapFont normalSizeFont;
     public static BitmapFont bigSizeFont;
     //player animations
@@ -39,7 +43,42 @@ public class ClientAssetLoader {
     public static TiledMap purpleMap;
     private static FreeTypeFontGenerator retroFontGen;
 
+//    private ClientAssetLoader() {
+//        manager = new AssetManager();
+//        System.out.println("ASSET MANAGER INSTANTIATED");
+//    }
+
     public static void load() {
+//        manager.setLoader(Texture.class, new TextureLoader(new InternalFileHandleResolver()));
+//        manager.load("Player Animations/Friendly player/idleAnimationSpritesheet.png", Texture.class);
+//        manager.load("Player Animations/Friendly player/jumpingAnimationSpritesheet.png", Texture.class);
+//        manager.load("Player Animations/Friendly player/runningAnimationSpritesheet.png", Texture.class);
+//
+//        manager.load("Player Animations/Enemy player/enemyIdleAnimationSpritesheet.png", Texture.class);
+//        manager.load("Player Animations/Enemy player/enemyJumpingAnimationSpritesheet.png", Texture.class);
+//        manager.load("Player Animations/Enemy player/enemyRunningAnimationSpritesheet.png", Texture.class);
+//
+//        manager.load("Player Animations/Ammo/freezeProjectile.png", Texture.class);
+//        manager.load("Player Animations/Weapon/CrystalSpritesheet.png", Texture.class);
+//        manager.load("Player Animations/Ammo/fireLaserSpritesheet.png", Texture.class);
+//        manager.load("Player Animations/Weapon/sphereSpritesheet.png", Texture.class);
+//
+//        manager.load("energyShieldSpriteSheet.png", Texture.class);
+//        manager.load("frozenSpriteSheet.png", Texture.class);
+//
+//        manager.load("UIAssets/placeholder.jpg", Texture.class);
+//        manager.load("UIAssets/Black_1080p.png", Texture.class);
+//        manager.load("round over.png", Texture.class);
+//
+//        manager.load("UIAssets/uiskin.json", Skin.class);
+//
+//        generateFonts();
+//
+//        manager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
+//        manager.load("Maps/level1.tmx", TiledMap.class);
+//        manager.load("Maps/level2.tmx", TiledMap.class);
+//        manager.load("Maps/level3.tmx", TiledMap.class);
+//
         friendlyIdleSpritesheet = new Texture(Gdx.files.internal("Player Animations/Friendly player/idleAnimationSpritesheet.png"));
         friendlyJumpingSpritesheet = new Texture(Gdx.files.internal("Player Animations/Friendly player/jumpingAnimationSpritesheet.png"));
         friendlyRunningSpritesheet = new Texture(Gdx.files.internal("Player Animations/Friendly player/runningAnimationSpritesheet.png"));
@@ -68,7 +107,23 @@ public class ClientAssetLoader {
     }
 
     private static void generateFonts() {
-        font1 = new BitmapFont(Gdx.files.internal("UIAssets/default.fnt"));
+//        FileHandleResolver resolver = new InternalFileHandleResolver();
+//        manager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
+//        manager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(resolver));
+//
+//        FreetypeFontLoader.FreeTypeFontLoaderParameter parameter = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
+//        parameter.fontFileName = "UIAssets/joystix monospace.ttf";
+//        parameter.fontParameters.size = 12;
+//        manager.load("joystixNormal.ttf", BitmapFont.class, parameter);
+//
+//        FreetypeFontLoader.FreeTypeFontLoaderParameter bigParameter = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
+//        bigParameter.fontFileName = "UIAssets/joystix monospace.ttf";
+//        bigParameter.fontParameters.size = 24;
+//        bigParameter.fontParameters.shadowOffsetX = 2;
+//        bigParameter.fontParameters.shadowOffsetY = 2;
+//        manager.load("joystixBig.ttf", BitmapFont.class, bigParameter);
+
+        //font1 = new BitmapFont(Gdx.files.internal("UIAssets/default.fnt"));
 
         retroFontGen = new FreeTypeFontGenerator(Gdx.files.internal("UIAssets/joystix monospace.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -81,6 +136,32 @@ public class ClientAssetLoader {
         fontParameter.shadowOffsetY = 2;
         bigSizeFont = retroFontGen.generateFont(fontParameter);
     }
+
+//    public void setAssets() {
+//        friendlyIdleSpritesheet = manager.get("Player Animations/Friendly player/idleAnimationSpritesheet.png", Texture.class);
+//        friendlyJumpingSpritesheet = manager.get("Player Animations/Friendly player/jumpingAnimationSpritesheet.png", Texture.class);
+//        friendlyRunningSpritesheet = manager.get("Player Animations/Friendly player/runningAnimationSpritesheet.png", Texture.class);
+//
+//        enemyIdleSpritesheet = manager.get("Player Animations/Enemy player/enemyIdleAnimationSpritesheet.png", Texture.class);
+//        enemyJumpingSpritesheet = manager.get("Player Animations/Enemy player/enemyJumpingAnimationSpritesheet.png", Texture.class);
+//        enemyRunningSpritesheet = manager.get("Player Animations/Enemy player/enemyRunningAnimationSpritesheet.png", Texture.class);
+//
+//        freezeProjectileTexture = manager.get("Player Animations/Ammo/freezeProjectile.png", Texture.class);
+//        crystalSpritesheet = manager.get("Player Animations/Weapon/CrystalSpritesheet.png", Texture.class);
+//        fireLaserSpritesheet = manager.get("Player Animations/Ammo/fireLaserSpritesheet.png", Texture.class);
+//        sphereSpriteSheet = manager.get("Player Animations/Weapon/sphereSpritesheet.png", Texture.class);
+//
+//        energyShieldSpritesheet = manager.get("energyShieldSpriteSheet.png", Texture.class);
+//        frozenSpritesheet = manager.get("frozenSpriteSheet.png", Texture.class);
+//        menuBackground = manager.get("UIAssets/placeholder.jpg", Texture.class);
+//        solidBlack = manager.get("UIAssets/Black_1080p.png", Texture.class);
+//        roundOverScreen = manager.get("round over.png", Texture.class);
+//
+//        uiSkin = manager.get("UIAssets/uiskin.json", Skin.class);
+//
+//        bigSizeFont = manager.get("joystixBig.ttf", BitmapFont.class);
+//        normalSizeFont = manager.get("joystixNormal.ttf", BitmapFont.class);
+//    }
 
     public static void dispose() {
         uiSkin.dispose();
@@ -100,8 +181,8 @@ public class ClientAssetLoader {
         freezeProjectileTexture.dispose();
         fireLaserSpritesheet.dispose();
 
-        retroFontGen.dispose();
-        font1.dispose();
+        //retroFontGen.dispose();
+        //font1.dispose();
         normalSizeFont.dispose();
         bigSizeFont.dispose();
 
@@ -110,5 +191,10 @@ public class ClientAssetLoader {
         purpleMap.dispose();
         energyShieldSpritesheet.dispose();
         frozenSpritesheet.dispose();
+        //manager.dispose();
     }
+
+//    public static ClientAssetLoader getInstance() {
+//        return ourInstance;
+//    }
 }

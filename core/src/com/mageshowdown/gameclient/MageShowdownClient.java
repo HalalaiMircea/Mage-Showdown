@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.mageshowdown.gamelogic.GameScreen;
 import com.mageshowdown.gamelogic.GameWorld;
+import com.mageshowdown.gamelogic.LoadingScreen;
 import com.mageshowdown.gamelogic.MenuScreen;
 import com.mageshowdown.packets.Network;
 import com.mageshowdown.utils.PrefsKeys;
@@ -15,6 +16,7 @@ public class MageShowdownClient extends Game {
     private GameClient myClient = GameClient.getInstance();
 
     private MageShowdownClient() {
+
     }
 
     @Override
@@ -34,6 +36,7 @@ public class MageShowdownClient extends Game {
     @Override
     public void dispose() {
         ClientAssetLoader.dispose();
+        //ClientAssetLoader.getInstance().manager.dispose();
     }
 
     public void clientStart(String ipAddress) {

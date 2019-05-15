@@ -7,9 +7,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 
 
 public abstract class PlayerCharacter extends DynamicGameActor {
-    protected final float MAXIMUM_ENERGY_SHIELD = 5f;
-    protected final float MAXIMUM_HEALTH = 15f;
-    protected final float FREEZE_DURATION = 2f;
+    protected static final float MAXIMUM_ENERGY_SHIELD = 5f;
+    protected static final float MAXIMUM_HEALTH = 15f;
+    protected static final float FREEZE_DURATION = 2f;
 
     protected Stage gameStage;
 
@@ -93,6 +93,14 @@ public abstract class PlayerCharacter extends DynamicGameActor {
 
     public void setScore(int score) {
         this.score = score;
+    }
+
+    public static float getMaxShield() {
+        return MAXIMUM_ENERGY_SHIELD;
+    }
+
+    public static float getMaxHealth() {
+        return MAXIMUM_HEALTH;
     }
 
     public float getEnergyShield() {

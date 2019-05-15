@@ -11,11 +11,11 @@ public class ClientRound extends Round {
     private static final ClientRound INSTANCE = new ClientRound();
 
     private Sprite roundOverSprite;
-    private BitmapFont font;
+    //private BitmapFont font;
 
     private ClientRound() {
         super();
-        font = ClientAssetLoader.font1;
+        //font = ClientAssetLoader.font1;
         roundOverSprite = new Sprite(ClientAssetLoader.roundOverScreen);
     }
 
@@ -23,10 +23,10 @@ public class ClientRound extends Round {
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
         //font.draw(batch, Float.toString(timePassed), Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
-        if (finished) {
-            roundOverSprite.draw(batch);
-            font.draw(batch, Float.toString(timePassedRoundFinished), Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
-        }
+//        if (finished) {
+//            roundOverSprite.draw(batch);
+//            font.draw(batch, Float.toString(timePassedRoundFinished), Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+//        }
     }
 
     public static ClientRound getInstance() {
