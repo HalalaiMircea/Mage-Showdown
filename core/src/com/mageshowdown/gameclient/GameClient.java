@@ -45,6 +45,7 @@ public class GameClient extends Client{
         kryo.register(Network.MoveKeyDown.class);
         kryo.register(Network.KeyUp.class);
         kryo.register(Network.ShootProjectile.class);
+        kryo.register(Network.PlantBomb.class);
         kryo.register(Network.ProjectileCollided.class);
         kryo.register(Network.LoginRequest.class);
         kryo.register(Network.NewPlayerSpawned.class);

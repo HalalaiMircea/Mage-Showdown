@@ -26,26 +26,26 @@ public abstract class GameActor extends Actor {
     protected boolean canClearPos=false;
 
 
-    protected GameActor(Stage stage, Vector2 position, Vector2 size, float rotation, float spriteScaling){
-        setScale(spriteScaling);
+    protected GameActor(Stage stage, Vector2 position, Vector2 size, float rotation, Vector2 sizeScaling){
+        setScale(sizeScaling.x,sizeScaling.y);
         setPosition(position.x,position.y);
         setSize(size.x,size.y);
         setOrigin(0,0);
         setRotation(rotation);
         stage.addActor(this);
-        debug();
+        //debug();
         animations=new HashMap<String, Animation<TextureRegion>>();
     }
     protected GameActor(Stage stage,Vector2 position, Vector2 size, float rotation){
-        this(stage,position,size,rotation,1f);
+        this(stage,position,size,rotation,new Vector2(1,1));
     }
 
-    protected GameActor(Stage stage,Vector2 position, Vector2 size, float rotation, Texture texture, float spriteScaling){
-        this(stage,position, size,rotation,spriteScaling+(size.x/texture.getWidth()-1));
+    protected GameActor(Stage stage,Vector2 position, Vector2 size, float rotation, Texture texture, Vector2 sizeScaling){
+        this(stage,position, size,rotation,new Vector2(sizeScaling.x+(size.x/texture.getWidth()-1),sizeScaling.y+(size.y/texture.getHeight()-1)));
 
         sprite=new Sprite(texture);
         sprite.setPosition(getX(),getY());
-        sprite.setScale(spriteScaling);
+        sprite.setScale(sizeScaling.x,sizeScaling.y);
         sprite.setSize(getWidth(),getHeight());
         sprite.setOrigin(getOriginX(),getOriginY());
         sprite.setRotation(getRotation());

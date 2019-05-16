@@ -3,23 +3,25 @@ package com.mageshowdown.gamelogic;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.mageshowdown.gameclient.ClientAssetLoader;
 
 public abstract class Ammo extends DynamicGameActor {
 
     protected boolean collided=false;
     protected boolean outOfBounds=false;
     protected boolean expired=false;
+    protected boolean activated=false;
     protected int id;
     protected int ownerId;
 
-    private float damageValue;
+    private final float damageValue;
 
-    protected Ammo(Stage stage, Vector2 velocity, Vector2 position, Vector2 size, Texture texture, float spriteScaling, float rotation, int id, int ownerId, float damageValue){
-        super(stage,position, size, rotation, texture, spriteScaling);
+
+    protected Ammo(Stage stage, Vector2 velocity, Vector2 position, Vector2 size, Texture texture, Vector2 sizeScaling, float rotation, int id, int ownerId, float damageValue){
+        super(stage,position, size, rotation, texture, sizeScaling);
+        System.out.println("attempting to create body for ammo");
         createBody(rotation,BodyDef.BodyType.DynamicBody);
+        System.out.println("success");
 
         this.damageValue=damageValue;
         //the id is used to identify the projectile when it needs to be destroyed
@@ -34,10 +36,11 @@ public abstract class Ammo extends DynamicGameActor {
         stage.addActor(this);
     }
 
-    protected Ammo(Stage stage, Vector2 velocity, Vector2 position, Vector2 size, float spriteScaling, float rotation, int id, int ownerId, float damageValue){
-        super(stage,position, size, rotation,spriteScaling);
+    protected Ammo(Stage stage, Vector2 velocity, Vector2 position, Vector2 size, Vector2 sizeScaling, float rotation, int id, int ownerId, float damageValue){
+        super(stage,position, size, rotation,sizeScaling);
         createBody(rotation,BodyDef.BodyType.DynamicBody);
         System.out.println(size);
+
         this.damageValue=damageValue;
         this.id=id;
         this.ownerId=ownerId;
@@ -77,7 +80,6 @@ public abstract class Ammo extends DynamicGameActor {
                 if(currFrame.isFlipY())
                     currFrame.flip(false,false);
         }
-        System.out.println(getRotation());
 
         if(body!=null){
             Vector2 convPosition=GameWorld.convertWorldToPixels(body.getPosition());
@@ -125,6 +127,10 @@ public abstract class Ammo extends DynamicGameActor {
 
     public float getDamageValue() {
         return damageValue;
+    }
+
+    public boolean isActivated() {
+        return activated;
     }
 
     @Override

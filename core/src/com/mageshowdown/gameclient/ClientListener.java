@@ -31,6 +31,7 @@ public class ClientListener extends Listener {
         handleCurrentMap(connection, object);
         handlePlayerDead(connection, object);
         handleSwitchWeapons(connection, object);
+        handlePlantBomb(connection,object);
     }
 
     private void handleLoginServerRequest(Connection connection, Object object) {
@@ -80,12 +81,12 @@ public class ClientListener extends Listener {
             packet.pos = GameWorld.convertWorldToPixels(packet.pos);
             ClientRound.getInstance().setTimePassed(packet.roundTimePassed);
             if (connection.getID() == packet.id && GameScreen.getGameStage().getPlayerCharacter() == null) {
-                GameScreen.getGameStage().spawnMyPlayerCharacter(packet.pos, packet.userName);
+                GameScreen.getGameStage().spawnMyPlayerCharacter(packet);
                 GameScreen.getGameStage().getPlayerCharacter().setMyPlayer(true);
                 GameScreen.getGameStage().getPlayerCharacter().setID(packet.id);
             } else {
 
-                GameScreen.getGameStage().spawnOtherPlayer(packet.id, packet.pos, packet.userName);
+                GameScreen.getGameStage().spawnOtherPlayer(packet);
             }
         }
     }
@@ -95,6 +96,14 @@ public class ClientListener extends Listener {
             Network.ShootProjectile packet = (Network.ShootProjectile) object;
 
             GameScreen.getGameStage().getOtherPlayers().get(packet.id).getCurrWeapon().shoot(packet.dir, packet.rot, packet.id);
+        }
+    }
+
+    private void handlePlantBomb(Connection connection, Object object){
+        if(object instanceof Network.PlantBomb){
+            Network.PlantBomb packet=(Network.PlantBomb)object;
+
+            GameScreen.getGameStage().getOtherPlayers().get(packet.id).getCurrWeapon().plantBomb(packet.pos,packet.id);
         }
     }
 

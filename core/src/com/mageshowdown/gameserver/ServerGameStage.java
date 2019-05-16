@@ -54,8 +54,8 @@ public class ServerGameStage extends Stage {
         }
     }
 
-    public void addPlayerCharacter(int connectionId, Vector2 pos){
-        playerCharacters.put(connectionId,new ServerPlayerCharacter(this,pos,connectionId));
+    public void addPlayerCharacter(Network.NewPlayerSpawned packet){
+        playerCharacters.put(packet.id,new ServerPlayerCharacter(this,packet.pos,packet.weaponEquipped,packet.id));
     }
 
     public ServerPlayerCharacter getPlayerById(int connectionId){

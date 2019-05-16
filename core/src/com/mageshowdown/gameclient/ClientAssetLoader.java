@@ -30,6 +30,10 @@ public class ClientAssetLoader {
     public static Texture enemyRunningSpritesheet;
     public static Texture crystalSpritesheet;
     public static Texture freezeProjectileTexture;
+    public static Texture freezeBombSpritesheet;
+    public static Texture armFreezeBombSpritesheet;
+    public static Texture armFireBombSpritesheet;
+    public static Texture fireBombSpritesheet;
     public static Texture sphereSpriteSheet;
     public static Texture fireLaserSpritesheet;
     public static Texture energyShieldSpritesheet;
@@ -88,12 +92,16 @@ public class ClientAssetLoader {
         enemyRunningSpritesheet = new Texture(Gdx.files.internal("Player Animations/Enemy player/enemyRunningAnimationSpritesheet.png"));
 
         freezeProjectileTexture = new Texture("Player Animations/Ammo/freezeProjectile.png");
+        armFreezeBombSpritesheet=new Texture(Gdx.files.internal("Player Animations/Effect/armFreezeBombSpritesheet.png"));
+        freezeBombSpritesheet=new Texture(Gdx.files.internal("Player Animations/Effect/freezeBombSpritesheet.png"));
         crystalSpritesheet = new Texture("Player Animations/Weapon/CrystalSpritesheet.png");
         fireLaserSpritesheet = new Texture(Gdx.files.internal("Player Animations/Ammo/fireLaserSpritesheet.png"));
+        armFireBombSpritesheet=new Texture(Gdx.files.internal("Player Animations/Effect/armFireBombSpritesheet.png"));
+        fireBombSpritesheet=new Texture(Gdx.files.internal("Player Animations/Effect/fireBombSpritesheet.png"));
         sphereSpriteSheet = new Texture(Gdx.files.internal("Player Animations/Weapon/sphereSpritesheet.png"));
 
         energyShieldSpritesheet = new Texture(Gdx.files.internal("energyShieldSpriteSheet.png"));
-        frozenSpritesheet = new Texture(Gdx.files.internal("frozenSpriteSheet.png"));
+        frozenSpritesheet = new Texture(Gdx.files.internal("Player Animations/Effect/frozenSpritesheet.png"));
         uiSkin = new Skin(Gdx.files.internal("UIAssets/uiskin.json"));
         menuBackground = new Texture(Gdx.files.internal("UIAssets/placeholder.jpg"));
         solidBlack = new Texture(Gdx.files.internal("UIAssets/Black_1080p.png"));

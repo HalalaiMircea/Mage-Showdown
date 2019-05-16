@@ -1,14 +1,18 @@
 package com.mageshowdown.gameclient;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mageshowdown.gamelogic.AnimatedActorInterface;
 import com.mageshowdown.gamelogic.GameWorld;
 import com.mageshowdown.gamelogic.PlayerCharacter;
+import com.mageshowdown.packets.Network;
 import com.mageshowdown.packets.Network.KeyUp;
 import com.mageshowdown.packets.Network.MoveKeyDown;
 import com.mageshowdown.packets.Network.ShootProjectile;
@@ -17,7 +21,7 @@ import com.mageshowdown.packets.Network.SwitchWeapons;
 import java.util.Comparator;
 
 public class ClientPlayerCharacter extends PlayerCharacter
-        implements AnimatedActorInterface, Comparator<ClientPlayerCharacter> {
+        implements AnimatedActorInterface, Comparator<ClientPlayerCharacter>, InputProcessor {
 
     private GameClient myClient = GameClient.getInstance();
 
@@ -29,12 +33,13 @@ public class ClientPlayerCharacter extends PlayerCharacter
     private boolean jump = false;
     private boolean isMyPlayer = false;
     private boolean shoot = false;
+    private boolean plantBomb=false;
     private boolean switchWeapons = false;
     private String userName;
     private int ID;
 
-    public ClientPlayerCharacter(ClientGameStage stage, Vector2 position, String userName, boolean isMyPlayer) {
-        super(stage, position, true);
+    public ClientPlayerCharacter(ClientGameStage stage, Vector2 position, int weaponEquipped, String userName, boolean isMyPlayer) {
+        super(stage, position, weaponEquipped,true);
         this.isMyPlayer = isMyPlayer;
 
         if (isMyPlayer) {
@@ -48,58 +53,14 @@ public class ClientPlayerCharacter extends PlayerCharacter
         }
 
         addAnimation(5, 4, 2f, "energy shield", ClientAssetLoader.energyShieldSpritesheet);
-        addAnimation(5, 6, 2f, "frozen", ClientAssetLoader.frozenSpritesheet);
+        addAnimation(5, 7, 2f, "frozen", ClientAssetLoader.frozenSpritesheet);
         this.userName = userName;
-
-        addListener(new InputListener() {
-
-            @Override
-            public boolean keyDown(InputEvent event, int keycode) {
-                if (keycode == Input.Keys.D) {
-                    moveRight = true;
-                } else if (keycode == Input.Keys.A) {
-                    moveLeft = true;
-                }
-                if (keycode == Input.Keys.W) {
-                    jump = true;
-                }
-                if (keycode == Input.Keys.Q) {
-                    shoot = true;
-                }
-                if (keycode == Input.Buttons.LEFT) {
-                    shoot = true;
-                }
-                if (keycode == Input.Keys.R) {
-                    switchWeapons = true;
-                }
-
-                return true;
-            }
-
-            @Override
-            public boolean keyUp(InputEvent event, int keycode) {
-                //if we stop moving we send a packet informing the server that we want to synchronize
-                KeyUp ku = new KeyUp();
-                ku.keycode = keycode;
-                if (keycode == Input.Keys.A) {
-                    moveLeft = false;
-                    myClient.sendTCP(ku);
-                } else if (keycode == Input.Keys.D) {
-                    moveRight = false;
-                    myClient.sendTCP(ku);
-                } else if (keycode == Input.Keys.W) {
-                    jump = false;
-                    myClient.sendTCP(ku);
-                }
-                return true;
-            }
-
-        });
 
     }
 
     @Override
     public void act(float delta) {
+
         sendInputPackets();
         pickFrame();
         calcState();
@@ -172,6 +133,8 @@ public class ClientPlayerCharacter extends PlayerCharacter
         }
         if (shoot) {
             shootMyWeapon();
+        }else if(plantBomb) {
+            plantMyBomb();
         } else if (switchWeapons) {
             switchMyWeapons();
             myClient.sendTCP(new SwitchWeapons());
@@ -235,17 +198,28 @@ public class ClientPlayerCharacter extends PlayerCharacter
     }
 
     private void shootMyWeapon() {
-        ShootProjectile sp = new ShootProjectile();
+        ShootProjectile packet = new ShootProjectile();
         float rotation = GameWorld.getMouseVectorAngle(currWeapon.getShootingOrigin());
         Vector2 direction = GameWorld.getNormalizedMouseVector(currWeapon.getShootingOrigin());
 
-        sp.id = myClient.getID();
-        sp.rot = rotation;
-        sp.dir = direction;
-        myClient.sendTCP(sp);
+        packet.id = myClient.getID();
+        packet.rot = rotation;
+        packet.dir = direction;
+        myClient.sendTCP(packet);
         currWeapon.shoot(direction, rotation, myClient.getID());
 
         shoot = false;
+    }
+
+    private void plantMyBomb(){
+        Network.PlantBomb packet=new Network.PlantBomb();
+
+        packet.id=myClient.getID();
+        packet.pos=GameWorld.getMousePos(new Vector2(95, 95));
+        myClient.sendTCP(packet);
+        currWeapon.plantBomb(packet.pos,myClient.getID());
+
+        plantBomb=false;
     }
 
     @Override
@@ -276,14 +250,74 @@ public class ClientPlayerCharacter extends PlayerCharacter
         return userName + " " + kills + " " + score;
     }
 
-//    @Override
-//    public int compareTo(ClientPlayerCharacter o) {
-//        if (this.score < o.score)
-//            return -1;
-//        else if (this.score == o.score)
-//            return 0;
-//        else return 1;
-//    }
+    @Override
+    public boolean keyDown(int keycode) {
+        if (keycode == Input.Keys.D) {
+            moveRight = true;
+        } else if (keycode == Input.Keys.A) {
+            moveLeft = true;
+        }
+        if (keycode == Input.Keys.W) {
+            jump = true;
+        }
+        if (keycode == Input.Keys.Q) {
+            switchWeapons = true;
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        //if we stop moving we send a packet informing the server that we want to synchronize
+        KeyUp ku = new KeyUp();
+        ku.keycode = keycode;
+        if (keycode == Input.Keys.A) {
+            moveLeft = false;
+            myClient.sendTCP(ku);
+        } else if (keycode == Input.Keys.D) {
+            moveRight = false;
+            myClient.sendTCP(ku);
+        } else if (keycode == Input.Keys.W) {
+            jump = false;
+            myClient.sendTCP(ku);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        if(button== Input.Buttons.LEFT)
+            shoot=true;
+        else if(button==Input.Buttons.RIGHT)
+            plantBomb=true;
+        return true;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        return true;
+    }
+
+    @Override
+    public boolean scrolled(int amount) {
+        return false;
+    }
 
     public void setMyPlayer(boolean myPlayer) {
         isMyPlayer = myPlayer;

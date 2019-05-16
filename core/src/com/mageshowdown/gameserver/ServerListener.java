@@ -30,6 +30,7 @@ public class ServerListener extends Listener {
         handleMoveKeyDown(connection,object);
         handleShootProjectile(connection,object);
         handleSwitchWeapons(connection,object);
+        handlePlantBomb(connection,object);
     }
 
     @Override
@@ -59,7 +60,8 @@ public class ServerListener extends Listener {
             toBeSent.id=connection.getID();
             toBeSent.pos=GameWorld.convertWorldToPixels(myServer.generateSpawnPoint(connection.getID()));
             toBeSent.roundTimePassed=ServerRound.getInstance().getTimePassed();
-            gameStage.addPlayerCharacter(connection.getID(),toBeSent.pos);
+            toBeSent.weaponEquipped=1;//players always start with the freeze weapon equipped
+            gameStage.addPlayerCharacter(toBeSent);
 
             myServer.sendToAllTCP(toBeSent);
 
@@ -77,6 +79,7 @@ public class ServerListener extends Listener {
                     toBeSent.userName=myServer.getUserNameById(con.getID());
                     toBeSent.id=con.getID();
                     toBeSent.pos= GameWorld.convertPixelsToWorld(gameStage.getPlayerById(con.getID()).getBody().getPosition());
+                    toBeSent.weaponEquipped=gameStage.getPlayerById(con.getID()).getWeaponEquipped();
 
                     myServer.sendToTCP(connection.getID(),toBeSent);
                 }
@@ -104,6 +107,14 @@ public class ServerListener extends Listener {
             Network.ShootProjectile packet=(Network.ShootProjectile)object;
 
             gameStage.getPlayerById(connection.getID()).shootProjectile(packet);
+        }
+    }
+
+    private void handlePlantBomb(Connection connection, Object object){
+        if(object instanceof Network.PlantBomb){
+            Network.PlantBomb packet=(Network.PlantBomb)object;
+
+            gameStage.getPlayerById(connection.getID()).plantBomb(packet);
         }
     }
 

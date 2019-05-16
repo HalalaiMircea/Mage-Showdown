@@ -66,15 +66,15 @@ public abstract class DynamicGameActor extends GameActor {
     protected Vector2 queuedVel;
     protected boolean canClearVel=false;
 
-    protected DynamicGameActor(Stage stage, Vector2 position, Vector2 size, float rotation, float spriteScaling){
-        super(stage,position,size, rotation, spriteScaling);
+    protected DynamicGameActor(Stage stage, Vector2 position, Vector2 size, float rotation, Vector2 sizeScaling){
+        super(stage,position,size, rotation, sizeScaling);
         velocity=new Vector2(0,0);
         horizontalState=HorizontalState.STANDING;
         verticalState=VerticalState.FLYING;
     }
 
-    protected DynamicGameActor(Stage stage,Vector2 position, Vector2 size, float rotation, Texture texture, float spriteScaling){
-        super(stage,position,size,rotation, texture, spriteScaling);
+    protected DynamicGameActor(Stage stage,Vector2 position, Vector2 size, float rotation, Texture texture, Vector2 sizeScaling){
+        super(stage,position,size,rotation, texture, sizeScaling);
         velocity=new Vector2(0,0);
         horizontalState=HorizontalState.STANDING;
     }
@@ -83,8 +83,9 @@ public abstract class DynamicGameActor extends GameActor {
     public void act(float delta) {
         updateGameActor(delta);
 
-        if(body!=null && !GameWorld.world.isLocked())
-            body.setLinearVelocity(new Vector2(velocity.x,velocity.y));
+        if(body!=null && !GameWorld.world.isLocked()) {
+            body.setLinearVelocity(new Vector2(velocity.x, velocity.y));
+        }
     }
 
     @Override

@@ -7,13 +7,11 @@ import com.mageshowdown.gameclient.ClientAssetLoader;
 
 public class Laser extends Ammo implements AnimatedActorInterface{
 
-    private final float duration;
+    private static final float duration=.25f;
 
     public Laser(Stage stage, Vector2 position, float rotation, int id, int ownerId){
-        super(stage,new Vector2(0f,0f),position,new Vector2(220,31),1f,rotation,id,ownerId,2f);
-        //setRotation(rotation);
-        //body.setTransform(GameWorld.convertPixelsToWorld(new Vector2(getX()-getWidth()/2,getY())),rotation*(float)Math.PI/180);
-        duration=.25f;
+        super(stage,new Vector2(0f,0f),position,new Vector2(220,31),new Vector2(3f,1f),rotation,id,ownerId,2f);
+        activated=true;
         addAnimation(1,7,.25f,"idle",ClientAssetLoader.fireLaserSpritesheet);
     }
 

@@ -47,6 +47,11 @@ public class Network {
         public Vector2 dir;
     }
 
+    public static class PlantBomb{
+        public int id;
+        public Vector2 pos;
+    }
+
     public static class ProjectileCollided{
         public int projId;
         public int ownerId;
@@ -62,6 +67,7 @@ public class Network {
         public String userName;
         public Vector2 pos;
         public float roundTimePassed;
+        public int weaponEquipped;  //1 for freeze, 2 for fire
     }
 
     public static class PlayerDisconnected{

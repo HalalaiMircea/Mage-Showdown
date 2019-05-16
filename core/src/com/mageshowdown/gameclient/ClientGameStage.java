@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.mageshowdown.gamelogic.GameLevel;
 import com.mageshowdown.gamelogic.GameWorld;
+import com.mageshowdown.packets.Network;
 
 import java.util.HashMap;
 import java.util.TreeMap;
@@ -87,21 +88,22 @@ public class ClientGameStage extends Stage {
         playerCharacter.remove();
     }
 
-    public void spawnMyPlayerCharacter(Vector2 position, String userName) {
-        playerCharacter = new ClientPlayerCharacter(this, position, userName, true);
+    public void spawnMyPlayerCharacter(Network.NewPlayerSpawned packet) {
+        playerCharacter = new ClientPlayerCharacter(this, packet.pos, packet.weaponEquipped, packet.userName, true);
         sortedPlayers.put(playerCharacter.getID(), playerCharacter);
         System.out.println("Map with my player: " + sortedPlayers);
 
-        setKeyboardFocus(playerCharacter);
+        Gdx.input.setInputProcessor(playerCharacter);
+
         ClientRound.getInstance().start();
         addActor(ClientRound.getInstance());
     }
 
-    public void spawnOtherPlayer(int id, Vector2 position, String userName) {
-        ClientPlayerCharacter temp = new ClientPlayerCharacter(this, position, userName, false);
-        temp.setID(id);
-        otherPlayers.put(id, temp);
-        sortedPlayers.put(id, temp);
+    public void spawnOtherPlayer(Network.NewPlayerSpawned packet) {
+        ClientPlayerCharacter temp = new ClientPlayerCharacter(this, packet.pos, packet.weaponEquipped, packet.userName, false);
+        temp.setID(packet.id);
+        otherPlayers.put(packet.id, temp);
+        sortedPlayers.put(packet.id, temp);
         System.out.println("Map after new player spawned: " + sortedPlayers);
     }
 

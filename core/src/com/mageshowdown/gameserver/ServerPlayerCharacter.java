@@ -4,9 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.mageshowdown.gamelogic.Bomb;
 import com.mageshowdown.gamelogic.FreezeProjectile;
 import com.mageshowdown.gamelogic.PlayerCharacter;
-import com.mageshowdown.gamelogic.Ammo;
+import com.mageshowdown.gamelogic.Weapon;
 import com.mageshowdown.packets.Network;
 
 public class ServerPlayerCharacter extends PlayerCharacter {
@@ -26,8 +27,8 @@ public class ServerPlayerCharacter extends PlayerCharacter {
 
     private final float FREEZE_SLOWING_FACTOR=.5f;
 
-    public ServerPlayerCharacter(Stage stage, Vector2 pos, int id) {
-        super(stage,pos,false);
+    public ServerPlayerCharacter(Stage stage, Vector2 pos, int weaponEquipped, int id) {
+        super(stage,pos,weaponEquipped,false);
         this.id=id;
     }
 
@@ -124,7 +125,7 @@ public class ServerPlayerCharacter extends PlayerCharacter {
             }else health-=damageValue;
 
             //check what the character gets damaged by
-            if(object instanceof FreezeProjectile){
+            if(object instanceof FreezeProjectile || object instanceof Bomb && ((Bomb)(object)).getAmmoType()==Weapon.AmmoType.FREEZE){
                 dmgImmune = true;
                 frozen=true;
             }
@@ -133,6 +134,11 @@ public class ServerPlayerCharacter extends PlayerCharacter {
 
     public void shootProjectile(Network.ShootProjectile packet){
         currWeapon.shoot(packet.dir,packet.rot,packet.id);
+        GameServer.getInstance().sendToAllExceptTCP(packet.id,packet);
+    }
+
+    public void plantBomb(Network.PlantBomb packet){
+        currWeapon.plantBomb(packet.pos,packet.id);
         GameServer.getInstance().sendToAllExceptTCP(packet.id,packet);
     }
 

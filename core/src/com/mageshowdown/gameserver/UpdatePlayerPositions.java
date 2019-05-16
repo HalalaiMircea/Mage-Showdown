@@ -43,6 +43,6 @@ public class UpdatePlayerPositions extends Thread{
             }
         }
         if(sendPacket)
-            myServer.sendToAllTCP(loc);
+            myServer.sendToAllUDP(loc);
     }
 }

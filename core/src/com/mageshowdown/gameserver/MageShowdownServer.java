@@ -41,7 +41,7 @@ public class MageShowdownServer extends Game {
             timePassed=0f;
             myServer.setUpdatePositions(false);
         }else{
-            if(timePassed>=0.01f){
+            if(timePassed>=0.05f){
                 new UpdatePlayerPositions(gameStage);
                 timePassed=0f;
             }else{

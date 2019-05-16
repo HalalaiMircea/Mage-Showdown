@@ -13,7 +13,7 @@ public abstract class PlayerCharacter extends DynamicGameActor {
 
     protected Stage gameStage;
 
-    protected Weapon frostWeapon;
+    protected Weapon freezeWeapon;
     protected Weapon fireWeapon;
     protected Weapon currWeapon;
 
@@ -27,21 +27,23 @@ public abstract class PlayerCharacter extends DynamicGameActor {
     protected int score = 0;
     protected int kills = 0;
 
-    protected PlayerCharacter(Stage stage, Vector2 position, boolean loadWeaponAnimation) {
-        super(stage, position, new Vector2(22, 32), 0f, 1.5f);
+    protected PlayerCharacter(Stage stage, Vector2 position, int weaponEquipped,boolean loadWeaponAnimation) {
+        super(stage, position, new Vector2(22, 32), 0f, new Vector2(1.5f,1.5f));
 
         createBody(BodyDef.BodyType.DynamicBody);
         gameStage = stage;
         body.setFixedRotation(true);
 
-        frostWeapon = new Weapon(stage, loadWeaponAnimation, Weapon.AmmoType.FREEZE_BULLETS, 1.5f, 25, 2);
-        fireWeapon = new Weapon(stage, loadWeaponAnimation, Weapon.AmmoType.LASER, 1.5f, 25, 1);
+        freezeWeapon = new Weapon(stage, loadWeaponAnimation, Weapon.AmmoType.FREEZE, 1.5f, 25);
+        fireWeapon = new Weapon(stage, loadWeaponAnimation, Weapon.AmmoType.FIRE, 1.5f, 25);
 
-        frostWeapon.remove();
+        freezeWeapon.remove();
         fireWeapon.remove();
 
-        currWeapon = fireWeapon;
-        //currWeapon=frostWeapon;
+        if(weaponEquipped==1)
+            currWeapon = freezeWeapon;
+        else currWeapon=fireWeapon;
+
         gameStage.addActor(currWeapon);
     }
 
@@ -67,17 +69,17 @@ public abstract class PlayerCharacter extends DynamicGameActor {
     }
 
     protected void destroyWeapons() {
-        frostWeapon.destroyActor();
+        freezeWeapon.destroyActor();
         fireWeapon.destroyActor();
     }
 
     public void switchMyWeapons() {
         currWeapon.remove();
 
-        if (currWeapon.equals(frostWeapon)) {
+        if (currWeapon.equals(freezeWeapon)) {
             currWeapon = fireWeapon;
         } else {
-            currWeapon = frostWeapon;
+            currWeapon = freezeWeapon;
         }
         gameStage.addActor(currWeapon);
 
@@ -141,5 +143,11 @@ public abstract class PlayerCharacter extends DynamicGameActor {
 
     public void setKills(int kills) {
         this.kills = kills;
+    }
+
+    public int getWeaponEquipped(){
+        if(currWeapon.equals(freezeWeapon))
+            return 1;
+        else return 2;
     }
 }

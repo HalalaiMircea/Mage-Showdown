@@ -23,6 +23,7 @@ public class CollisionListener implements ContactListener {
         Object obj1 = contact.getFixtureA().getBody().getUserData(),
                 obj2 = contact.getFixtureB().getBody().getUserData();
 
+
         if (obj1 instanceof Ammo && obj2 instanceof ServerPlayerCharacter) {
             handlePlayerProjectileCollision((Ammo) obj1, (ServerPlayerCharacter) obj2);
         } else if (obj1 instanceof ServerPlayerCharacter && obj2 instanceof Ammo) {
@@ -30,28 +31,25 @@ public class CollisionListener implements ContactListener {
         }
     }
 
-    private void handlePlayerProjectileCollision(Ammo projectile, ServerPlayerCharacter player) {
-        //a player cant damage itself so we check if the projectile's owner id is the same as the player's it hit
-        if (player.getId() != projectile.getOwnerId()) {
+    private void handlePlayerProjectileCollision(Ammo ammo, ServerPlayerCharacter player) {
+        //a player cant damage itself so we check if the ammo's owner id is the same as the player's it hit
+        if (player.getId() != ammo.getOwnerId() && ammo.isActivated()) {
             //Network.ProjectileCollided pc=new Network.ProjectileCollided();
             Network.PlayerDead packet = new Network.PlayerDead();
-            player.damageBy(projectile.getDamageValue(), projectile);
-            projectile.setCollided(true);
-/*
-            pc.projId=projectile.getId();
-            pc.ownerId=projectile.getOwnerId();
-            pc.playerHitId=player.getId();
-  */
+            player.damageBy(ammo.getDamageValue(), ammo);
+            ammo.setCollided(true);
+
+            
             //if the player died from the hit
             if (player.getHealth() < 0) {
-                gameStage.getPlayerById(projectile.ownerId).addKill();
+                System.out.println("owner id:"+ammo.ownerId);
+                gameStage.getPlayerById(ammo.ownerId).addKill();
                 packet.id = player.getId();
                 packet.respawnPos = GameServer.getInstance().generateSpawnPoint(packet.id);
                 player.respawn(packet.respawnPos);
-                gameStage.getPlayerById(projectile.ownerId).raiseScore(1);
+                gameStage.getPlayerById(ammo.ownerId).raiseScore(1);
                 GameServer.getInstance().sendToAllTCP(packet);
             }
-            // GameServer.getInstance().sendToAllTCP(pc);
         }
     }
 
