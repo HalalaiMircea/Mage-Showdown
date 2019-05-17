@@ -29,8 +29,7 @@ public class MenuScreen implements Screen {
 
     private MenuScreen() {
         mainMenuStage = new Stage();
-        menuOptionsStage = new OptionsStage(mainMenuStage.getViewport(), mainMenuStage.getBatch(),
-                ClientAssetLoader.menuBackground);
+        menuOptionsStage = new OptionsStage(ClientAssetLoader.menuBackground);
 
         prepareMainMenuStage();
 
@@ -108,7 +107,7 @@ public class MenuScreen implements Screen {
 
         Table foreground = new Table();
         foreground.setFillParent(true);
-        foreground.debug();
+        //foreground.debug();
 
         //Widgets declarations
         TextButton connectButton = new TextButton("Connect to:", ClientAssetLoader.uiSkin);

@@ -1,23 +1,18 @@
 package com.mageshowdown.gamelogic;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.mageshowdown.gameclient.ClientAssetLoader;
 import com.mageshowdown.gameclient.ClientGameStage;
+
+import static com.mageshowdown.gameclient.ClientAssetLoader.hudSkin;
 
 public class GameHUDStage extends Stage {
     private static GameHUDStage ourInstance = new GameHUDStage();
 
-    private Label healthLabel;
-    private Label shieldLabel;
-    private Label ammoLabel;
-    private ProgressBar healthBar;
-    private ProgressBar shieldBar;
+    private ProgressBar healthOrb;
+    private ProgressBar shieldOrb;
 
-    //private ClientPlayerCharacter playerCharacter = GameScreen.getGameStage().getPlayerCharacter();
     private ClientGameStage gameStage = GameScreen.getGameStage();
 
     private GameHUDStage() {
@@ -25,16 +20,12 @@ public class GameHUDStage extends Stage {
         root.setFillParent(true);
         root.debug();
 
-        healthLabel = new Label("HEALTH", new Label.LabelStyle(ClientAssetLoader.bigSizeFont, Color.RED));
-        shieldLabel = new Label("SHIELD", new Label.LabelStyle(ClientAssetLoader.bigSizeFont, Color.BLUE));
-        ammoLabel = new Label("AMMO", new Label.LabelStyle(ClientAssetLoader.bigSizeFont, Color.YELLOW));
-        //healthBar = new ProgressBar(0, PlayerCharacter.getMaxHealth(), 1, false, ClientAssetLoader.uiSkin);
-        //shieldBar = new ProgressBar(0, PlayerCharacter.getMaxShield(), 1, false, ClientAssetLoader.uiSkin);
+        healthOrb = new ProgressBar(0, PlayerCharacter.getMaxHealth(), 1, true, hudSkin, "health-orb");
+        shieldOrb = new ProgressBar(0, PlayerCharacter.getMaxShield(), 1, true, hudSkin, "mana-orb");
 
         root.left().bottom();
-        root.add(healthLabel).padRight(20);
-        root.add(shieldLabel);
-        root.add(ammoLabel).expandX().right();
+        root.add(healthOrb).left().expandX();
+        root.add(shieldOrb).right().expandX();
 
         this.addActor(root);
     }
@@ -47,10 +38,8 @@ public class GameHUDStage extends Stage {
     public void act() {
         super.act();
         if (gameStage.getPlayerCharacter() != null) {
-            healthLabel.setText("HEALTH: " + (int) gameStage.getPlayerCharacter().getHealth());
-            shieldLabel.setText("SHIELD: " + (int) gameStage.getPlayerCharacter().getEnergyShield());
-            //healthBar.setValue(gameStage.getPlayerCharacter().getHealth());
-            //shieldBar.setValue(gameStage.getPlayerCharacter().getEnergyShield());
+            healthOrb.setValue(gameStage.getPlayerCharacter().getHealth());
+            shieldOrb.setValue(gameStage.getPlayerCharacter().getEnergyShield());
         }
     }
 

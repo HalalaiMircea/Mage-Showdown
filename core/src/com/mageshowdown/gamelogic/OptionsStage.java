@@ -34,8 +34,8 @@ public class OptionsStage extends Stage {
 
     private Graphics.DisplayMode[] displayModes;
 
-    public OptionsStage(Viewport viewport, Batch batch, Texture backgroundTexture) {
-        super(viewport, batch);
+    public OptionsStage(Texture backgroundTexture) {
+        //super(viewport, batch);
         this.backgroundTexture = backgroundTexture;
         displayModes = Gdx.graphics.getDisplayModes();
 

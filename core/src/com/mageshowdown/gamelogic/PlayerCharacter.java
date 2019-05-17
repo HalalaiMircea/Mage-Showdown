@@ -27,8 +27,8 @@ public abstract class PlayerCharacter extends DynamicGameActor {
     protected int score = 0;
     protected int kills = 0;
 
-    protected PlayerCharacter(Stage stage, Vector2 position, int weaponEquipped,boolean loadWeaponAnimation) {
-        super(stage, position, new Vector2(22, 32), 0f, new Vector2(1.5f,1.5f));
+    protected PlayerCharacter(Stage stage, Vector2 position, int weaponEquipped, boolean loadWeaponAnimation) {
+        super(stage, position, new Vector2(22, 32), 0f, new Vector2(1.5f, 1.5f));
 
         createBody(BodyDef.BodyType.DynamicBody);
         gameStage = stage;
@@ -40,9 +40,9 @@ public abstract class PlayerCharacter extends DynamicGameActor {
         freezeWeapon.remove();
         fireWeapon.remove();
 
-        if(weaponEquipped==1)
+        if (weaponEquipped == 1)
             currWeapon = freezeWeapon;
-        else currWeapon=fireWeapon;
+        else currWeapon = fireWeapon;
 
         gameStage.addActor(currWeapon);
     }
@@ -145,8 +145,8 @@ public abstract class PlayerCharacter extends DynamicGameActor {
         this.kills = kills;
     }
 
-    public int getWeaponEquipped(){
-        if(currWeapon.equals(freezeWeapon))
+    public int getWeaponEquipped() {
+        if (currWeapon.equals(freezeWeapon))
             return 1;
         else return 2;
     }

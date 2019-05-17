@@ -28,8 +28,7 @@ public class GameScreen implements Screen {
     private GameScreen() {
         gameStage = new ClientGameStage();
         escMenuStage = new Stage(MenuScreen.getMainMenuStage().getViewport(), gameStage.getBatch());
-        gameOptionsStage = new OptionsStage(MenuScreen.getMainMenuStage().getViewport(), gameStage.getBatch(),
-                ClientAssetLoader.solidBlack);
+        gameOptionsStage = new OptionsStage(ClientAssetLoader.solidBlack);
 
         prepareEscMenu();
     }
@@ -138,7 +137,7 @@ public class GameScreen implements Screen {
     private static void gamePausedInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) && gameState == GameState.GAME_PAUSED) {
             gameState = GameState.GAME_RUNNING;
-            Gdx.input.setInputProcessor(gameStage);
+            Gdx.input.setInputProcessor(gameStage.getPlayerCharacter());
         }
     }
 
@@ -150,7 +149,7 @@ public class GameScreen implements Screen {
     private static void prepareEscMenu() {
         Table menuTable = new Table();
         menuTable.setFillParent(true);
-        menuTable.debug();
+        //menuTable.debug();
         Table background = new Table();
         background.setFillParent(true);
 
@@ -174,7 +173,7 @@ public class GameScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 gameState = GameState.GAME_RUNNING;
-                Gdx.input.setInputProcessor(gameStage);
+                Gdx.input.setInputProcessor(gameStage.getPlayerCharacter());
             }
         });
 

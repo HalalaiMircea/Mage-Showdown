@@ -65,7 +65,7 @@ public class ScoreboardStage extends Stage {
         root.setColor(0, 0, 0, 0.8f);
         root.setSize(WIDTH, HEIGHT);
         root.setPosition(Gdx.graphics.getWidth() / 2 - WIDTH / 2, Gdx.graphics.getHeight() / 2 - HEIGHT / 2);
-        root.debug();
+        //root.debug();
 
         Label.LabelStyle timeLeftStyle = new Label.LabelStyle(ClientAssetLoader.bigSizeFont, Color.WHITE);
         timeLeftLabel = new Label("", timeLeftStyle);

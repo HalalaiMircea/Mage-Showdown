@@ -16,6 +16,7 @@ public class ClientAssetLoader {
     //public AssetManager manager;
     public static Texture solidBlack;
     public static Skin uiSkin;
+    public static Skin hudSkin;
     public static Texture menuBackground;
     //fonts
     //public static BitmapFont font1;
@@ -102,7 +103,10 @@ public class ClientAssetLoader {
 
         energyShieldSpritesheet = new Texture(Gdx.files.internal("energyShieldSpriteSheet.png"));
         frozenSpritesheet = new Texture(Gdx.files.internal("Player Animations/Effect/frozenSpritesheet.png"));
+
         uiSkin = new Skin(Gdx.files.internal("UIAssets/uiskin.json"));
+        hudSkin = new Skin(Gdx.files.internal("UIAssets/golden-ui-skin.json"));
+
         menuBackground = new Texture(Gdx.files.internal("UIAssets/placeholder.jpg"));
         solidBlack = new Texture(Gdx.files.internal("UIAssets/Black_1080p.png"));
         roundOverScreen = new Texture(Gdx.files.internal("round over.png"));
@@ -173,6 +177,7 @@ public class ClientAssetLoader {
 
     public static void dispose() {
         uiSkin.dispose();
+        hudSkin.dispose();
         menuBackground.dispose();
         solidBlack.dispose();
 
