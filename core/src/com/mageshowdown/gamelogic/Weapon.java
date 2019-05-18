@@ -65,13 +65,22 @@ public class Weapon extends GameActor implements AnimatedActorInterface {
                     addAnimation(6, 1, 1.5f, "idle", ClientAssetLoader.crystalSpritesheet);
                     break;
                 case FIRE:
-                    addAnimation(6, 2, 1.5f, "idle", ClientAssetLoader.sphereSpriteSheet);
+                    addAnimation(7, 1, 1f, "idle", ClientAssetLoader.flameSpritesheet);
                     break;
             }
     }
 
     public void updatePosition(Vector2 position) {
-        Vector2 offset = new Vector2(-15f, 35f);
+        Vector2 offset=new Vector2();
+
+        switch(ammoType){
+            case FREEZE:
+                offset= new Vector2(-15f, 35f);
+                break;
+            case FIRE:
+                offset= new Vector2(-15f,50f);
+                break;
+        }
         setPosition(position.x + offset.x, position.y + offset.y);
     }
 

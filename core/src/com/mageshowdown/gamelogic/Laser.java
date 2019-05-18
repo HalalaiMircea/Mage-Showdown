@@ -11,8 +11,9 @@ public class Laser extends Ammo implements AnimatedActorInterface{
     private static final float duration=.25f;
 
     public Laser(Stage stage, Vector2 position, float rotation, int id, int ownerId){
-        super(stage,new Vector2(0f,0f),position,new Vector2(220,31),new Vector2(3f,1f),rotation,id,ownerId,2f);
+        super(stage,new Vector2(0f,0f),position,new Vector2(220,31),new Vector2(1.5f,1f),rotation,id,ownerId,2f);
         createBody(rotation,BodyDef.BodyType.StaticBody);
+
         addAnimation(1,7,.25f,"idle",ClientAssetLoader.fireLaserSpritesheet);
     }
 

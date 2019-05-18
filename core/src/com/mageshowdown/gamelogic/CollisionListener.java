@@ -35,7 +35,7 @@ public class CollisionListener implements ContactListener {
         //a player cant damage itself so we check if the ammo's owner id is the same as the player's it hit
         if (player.getId() != ammo.getOwnerId()) {
             Network.PlayerDead packet = new Network.PlayerDead();
-            player.damageBy(ammo.getDamageValue(), ammo);
+            player.damageBy(ammo.getDAMAGE_VALUE(), ammo);
             ammo.setCollided(true);
 
             System.out.println(ammo.ownerId+" hit "+player.getId());

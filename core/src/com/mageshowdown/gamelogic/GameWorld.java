@@ -8,21 +8,26 @@ import com.badlogic.gdx.utils.Array;
 import com.mageshowdown.gameclient.GameClient;
 import com.mageshowdown.gameserver.GameServer;
 
+import javax.swing.*;
 import java.util.LinkedList;
+import java.util.concurrent.Callable;
 
 public class GameWorld {
     public static final World world;
     public static float resolutionScale;
+    //queues for body removals and creations that will happen after the world has stepped
     public static LinkedList<Body> bodiesToBeRemoved;
+    public static LinkedList<Callable> bodiesToBeCreated;
 
     /*
-     * box2d doesnt like deleting too many bodies in one go so we set a hard limit
+     * box2d apparently doesnt like deleting too many bodies in one go so we set a hard limit
      */
-    private final static int BODY_REMOVAL_LIMIT = 5;
+    private final static int BODY_REMOVAL_LIMIT = 15;
 
     static {
         world = new World(new Vector2(0, -9.8f), true);
         bodiesToBeRemoved = new LinkedList<Body>();
+        bodiesToBeCreated=new LinkedList<Callable>();
     }
 
     public static void setResolutionScale(float _resolutionScale) {
@@ -62,6 +67,25 @@ public class GameWorld {
 
     public static Vector2 convertWorldToPixels(Vector2 worldCoord) {
         return new Vector2(worldCoord.x * 100f, worldCoord.y * 100f);
+    }
+
+    public static void addToBodyCreationQueue(Callable<Void> bodyCreateCall){
+        bodiesToBeCreated.add(bodyCreateCall);
+    }
+
+    public static void clearBodyCreationQueue(){
+        while(!bodiesToBeCreated.isEmpty()){
+            try{
+                bodiesToBeCreated.remove().call();
+            }
+            catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void addToBodyRemovalQueue(Body body){
+        bodiesToBeRemoved.add(body);
     }
 
     public static void clearBodyRemovalQueue() {

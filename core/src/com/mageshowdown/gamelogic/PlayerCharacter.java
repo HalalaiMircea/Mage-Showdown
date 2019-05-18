@@ -5,6 +5,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
+import java.util.concurrent.Callable;
+
 
 public abstract class PlayerCharacter extends DynamicGameActor {
     protected static final float MAXIMUM_ENERGY_SHIELD = 5f;
@@ -32,7 +34,6 @@ public abstract class PlayerCharacter extends DynamicGameActor {
 
         createBody(BodyDef.BodyType.DynamicBody);
         gameStage = stage;
-        body.setFixedRotation(true);
 
         freezeWeapon = new Weapon(stage, loadWeaponAnimation, Weapon.AmmoType.FREEZE, 1.5f, 25);
         fireWeapon = new Weapon(stage, loadWeaponAnimation, Weapon.AmmoType.FIRE, 1.5f, 25);
@@ -45,6 +46,17 @@ public abstract class PlayerCharacter extends DynamicGameActor {
         else currWeapon = fireWeapon;
 
         gameStage.addActor(currWeapon);
+    }
+
+    @Override
+    public void act(float delta) {
+        super.act(delta);
+        setBodyFixedRotation();
+    }
+
+    protected void setBodyFixedRotation(){
+        if(body!=null && !body.isFixedRotation())
+            body.setFixedRotation(true);
     }
 
     @Override

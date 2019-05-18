@@ -44,6 +44,7 @@ public class ClientGameStage extends Stage {
          * otherwise the game will crash because the world is locked; here the positions and velocities of players' bodies are synchronized
          * and the bodies that have to be removed are removed
          */
+        GameWorld.clearBodyCreationQueue();
         GameWorld.clearBodyRemovalQueue();
         if (playerCharacter != null)
             playerCharacter.clearQueue();
@@ -55,7 +56,7 @@ public class ClientGameStage extends Stage {
     @Override
     public void draw() {
         gameLevel.render();
-        b2dr.render(GameWorld.world, camera.combined.cpy().scale(100, 100, 1));
+        //b2dr.render(GameWorld.world, camera.combined.cpy().scale(100, 100, 1));
         super.draw();
     }
 

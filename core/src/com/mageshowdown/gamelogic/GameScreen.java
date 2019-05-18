@@ -87,8 +87,7 @@ public class GameScreen implements Screen {
     public static void start() {
         gameStage = new ClientGameStage();
         escMenuStage = new Stage(MenuScreen.getMainMenuStage().getViewport(), gameStage.getBatch());
-        gameOptionsStage = new OptionsStage(MenuScreen.getMainMenuStage().getViewport(), gameStage.getBatch(),
-                ClientAssetLoader.solidBlack);
+        gameOptionsStage = new OptionsStage(ClientAssetLoader.solidBlack);
 
         prepareEscMenu();
     }

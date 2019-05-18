@@ -44,8 +44,8 @@ public class ServerGameStage extends Stage {
         super.act();
         getInput();
         GameWorld.world.step(Gdx.graphics.getDeltaTime(),6,2);
-        System.out.println(playerCharacters.size());
 
+        GameWorld.clearBodyCreationQueue();
         GameWorld.clearBodyRemovalQueue();
 
         for(ServerPlayerCharacter x:playerCharacters.values()){

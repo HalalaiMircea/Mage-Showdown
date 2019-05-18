@@ -30,6 +30,8 @@ www-test/
 *.iws
 /android/out/
 /core/assets/
+/.idea/
+/.idea
 com_crashlytics_export_strings.xml
 
 ## Eclipse

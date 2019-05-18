@@ -9,6 +9,13 @@ public class FreezeProjectile extends Ammo {
 
     public FreezeProjectile(Stage stage, Vector2 position, float rotation, Vector2 direction, int id, int ownerId){
         super(stage,new Vector2(3.5f*direction.x,3.5f*direction.y),position,new Vector2(46,31),ClientAssetLoader.freezeProjectileTexture,new Vector2(.75f,.75f),rotation,id,ownerId,3);
-        createBody(rotation,BodyDef.BodyType.DynamicBody);
+        createBody(getRotation(),BodyDef.BodyType.DynamicBody);
+    }
+
+    @Override
+    public void act(float delta) {
+        super.act(delta);
+        if(body!=null && !body.isFixedRotation())
+            body.setFixedRotation(true);
     }
 }

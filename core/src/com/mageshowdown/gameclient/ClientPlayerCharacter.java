@@ -56,7 +56,7 @@ public class ClientPlayerCharacter extends PlayerCharacter
 
     @Override
     public void act(float delta) {
-
+        setBodyFixedRotation();
         sendInputPackets();
         pickFrame();
         calcState();

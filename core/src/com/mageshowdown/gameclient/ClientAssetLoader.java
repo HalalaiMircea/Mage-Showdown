@@ -35,7 +35,7 @@ public class ClientAssetLoader {
     public static Texture armFreezeBombSpritesheet;
     public static Texture armFireBombSpritesheet;
     public static Texture fireBombSpritesheet;
-    public static Texture sphereSpriteSheet;
+    public static Texture flameSpritesheet;
     public static Texture fireLaserSpritesheet;
     public static Texture energyShieldSpritesheet;
     public static Texture frozenSpritesheet;
@@ -99,7 +99,7 @@ public class ClientAssetLoader {
         fireLaserSpritesheet = new Texture(Gdx.files.internal("Player Animations/Ammo/fireLaserSpritesheet.png"));
         armFireBombSpritesheet=new Texture(Gdx.files.internal("Player Animations/Effect/armFireBombSpritesheet.png"));
         fireBombSpritesheet=new Texture(Gdx.files.internal("Player Animations/Effect/fireBombSpritesheet.png"));
-        sphereSpriteSheet = new Texture(Gdx.files.internal("Player Animations/Weapon/sphereSpritesheet.png"));
+        flameSpritesheet = new Texture(Gdx.files.internal("Player Animations/Weapon/flameSpritesheet.png"));
 
         energyShieldSpritesheet = new Texture(Gdx.files.internal("energyShieldSpriteSheet.png"));
         frozenSpritesheet = new Texture(Gdx.files.internal("Player Animations/Effect/frozenSpritesheet.png"));
@@ -161,7 +161,7 @@ public class ClientAssetLoader {
 //        freezeProjectileTexture = manager.get("Player Animations/Ammo/freezeProjectile.png", Texture.class);
 //        crystalSpritesheet = manager.get("Player Animations/Weapon/CrystalSpritesheet.png", Texture.class);
 //        fireLaserSpritesheet = manager.get("Player Animations/Ammo/fireLaserSpritesheet.png", Texture.class);
-//        sphereSpriteSheet = manager.get("Player Animations/Weapon/sphereSpritesheet.png", Texture.class);
+//        flameSpritesheet = manager.get("Player Animations/Weapon/sphereSpritesheet.png", Texture.class);
 //
 //        energyShieldSpritesheet = manager.get("energyShieldSpriteSheet.png", Texture.class);
 //        frozenSpritesheet = manager.get("frozenSpriteSheet.png", Texture.class);
@@ -190,7 +190,7 @@ public class ClientAssetLoader {
         enemyRunningSpritesheet.dispose();
 
         crystalSpritesheet.dispose();
-        sphereSpriteSheet.dispose();
+        flameSpritesheet.dispose();
         freezeProjectileTexture.dispose();
         fireLaserSpritesheet.dispose();
 

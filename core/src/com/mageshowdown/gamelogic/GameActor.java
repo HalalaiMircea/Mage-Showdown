@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.*;
 
 
 import java.util.HashMap;
+import java.util.concurrent.Callable;
 
 public abstract class GameActor extends Actor {
 
@@ -124,11 +125,28 @@ public abstract class GameActor extends Actor {
     }
 
     protected void createBody(float rotation,BodyDef.BodyType bodyType){
-        createBody(.6f,0f,0f,rotation,bodyType);
+        //createBody(.6f,0f,0f,rotation,bodyType);
+        final float localRotation=rotation;
+        final BodyDef.BodyType localBodyType=bodyType;
+        GameWorld.addToBodyCreationQueue(new Callable<Void>() {
+            @Override
+            public Void call() throws Exception {
+                createBody(.6f,0f,0f,localRotation,localBodyType);
+                return null;
+            }
+        });
     }
 
     protected void createBody(BodyDef.BodyType bodyType){
-        createBody(.6f,0f,0f,0f,bodyType);
+        //createBody(.6f,0f,0f,0f,bodyType);
+        final BodyDef.BodyType localBodyType=bodyType;
+        GameWorld.addToBodyCreationQueue(new Callable<Void>() {
+            @Override
+            public Void call() throws Exception {
+                createBody(.6f,0f,0f,0,localBodyType);
+                return null;
+            }
+        });
     }
 
     public Body getBody() {
@@ -138,7 +156,7 @@ public abstract class GameActor extends Actor {
     @Override
     public boolean remove() {
         if(body!=null)
-            GameWorld.bodiesToBeRemoved.add(body);
+            GameWorld.addToBodyRemovalQueue(body);
         return super.remove();
     }
 }

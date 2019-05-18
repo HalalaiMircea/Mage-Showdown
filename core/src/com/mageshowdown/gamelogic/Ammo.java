@@ -2,7 +2,6 @@ package com.mageshowdown.gamelogic;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 public abstract class Ammo extends DynamicGameActor {
@@ -13,13 +12,12 @@ public abstract class Ammo extends DynamicGameActor {
     protected int id;
     protected int ownerId;
 
-    private final float damageValue;
-
+    private final float DAMAGE_VALUE;
 
     protected Ammo(Stage stage, Vector2 velocity, Vector2 position, Vector2 size, Texture texture, Vector2 sizeScaling, float rotation, int id, int ownerId, float damageValue) {
         super(stage, position, size, rotation, texture, sizeScaling);
 
-        this.damageValue = damageValue;
+        this.DAMAGE_VALUE = damageValue;
         //the id is used to identify the projectile when it needs to be destroyed
         this.id = id;
         //the owner id is the id of the player that shot the bullet
@@ -31,7 +29,7 @@ public abstract class Ammo extends DynamicGameActor {
     protected Ammo(Stage stage, Vector2 velocity, Vector2 position, Vector2 size, Vector2 sizeScaling, float rotation, int id, int ownerId, float damageValue) {
         super(stage, position, size, rotation, sizeScaling);
 
-        this.damageValue = damageValue;
+        this.DAMAGE_VALUE = damageValue;
         this.id = id;
         this.ownerId = ownerId;
 
@@ -51,6 +49,9 @@ public abstract class Ammo extends DynamicGameActor {
     @Override
     public void act(float delta) {
         super.act(delta);
+
+        if(body!=null && !body.getFixtureList().get(0).isSensor())
+            makeBodySensor();
 
         //every frame we check if the projectile is out of bounds
         if (getRotation() > 80f) {
@@ -77,21 +78,10 @@ public abstract class Ammo extends DynamicGameActor {
     }
 
 
+    //we dont want the projectile to react to any collisions or be affected by gravity so we make it a sensor
     protected void makeBodySensor() {
-        //we dont want the projectile to react to any collisions or be affected by gravity so we make it a sensor
         body.getFixtureList().get(0).setSensor(true);
         body.setGravityScale(0f);
-    }
-
-    @Override
-    protected void createBody(BodyDef.BodyType bodyType) {
-        this.createBody(0,bodyType);
-    }
-
-    @Override
-    protected void createBody(float rotation, BodyDef.BodyType bodyType) {
-        super.createBody(rotation, bodyType);
-        makeBodySensor();
     }
 
     public void setCollided(boolean collided) {
@@ -127,8 +117,8 @@ public abstract class Ammo extends DynamicGameActor {
         return ownerId;
     }
 
-    public float getDamageValue() {
-        return damageValue;
+    public float getDAMAGE_VALUE() {
+        return DAMAGE_VALUE;
     }
 
     @Override

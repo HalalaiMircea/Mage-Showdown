@@ -37,6 +37,7 @@ public class ServerPlayerCharacter extends PlayerCharacter {
         updateDmgImmuneState();
         updateFrozenState();
         updateShieldState();
+        updateWeaponPos();
 
         switch (moveDirection){
             case Input.Keys.A:
@@ -57,20 +58,21 @@ public class ServerPlayerCharacter extends PlayerCharacter {
                 velocity.x=0;
                 break;
         }
-
-        if(frozen)
-            velocity.x*=FREEZE_SLOWING_FACTOR;
-
         if(body!=null){
             if(body.getLinearVelocity().y!=0){
                 velocity.y=body.getLinearVelocity().y;
             }
         }
 
-        if(currWeapon !=null)
-            currWeapon.updatePosition(new Vector2(getX(),getY()));
         super.act(delta);
         moveDirection=-1;
+    }
+
+    @Override
+    protected void updateFrozenState() {
+        super.updateFrozenState();
+        if(frozen)
+            velocity.x*=FREEZE_SLOWING_FACTOR;
     }
 
     private void updateDmgImmuneState(){
