@@ -27,7 +27,6 @@ public class GameScreen implements Screen {
     private static GameState gameState;
 
     private GameScreen() {
-
     }
 
     @Override
@@ -101,6 +100,7 @@ public class GameScreen implements Screen {
     @Override
     public void resize(int width, int height) {
         gameStage.getViewport().update(width, height, true);
+        escMenuStage.getViewport().update(width, height, true);
         gameOptionsStage.getViewport().update(width, height, true);
     }
 
@@ -138,7 +138,7 @@ public class GameScreen implements Screen {
     private static void gamePausedInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) && gameState == GameState.GAME_PAUSED) {
             gameState = GameState.GAME_RUNNING;
-            Gdx.input.setInputProcessor(gameStage);
+            Gdx.input.setInputProcessor(gameStage.getPlayerCharacter());
         }
     }
 
@@ -150,7 +150,7 @@ public class GameScreen implements Screen {
     private static void prepareEscMenu() {
         Table menuTable = new Table();
         menuTable.setFillParent(true);
-        menuTable.debug();
+        //menuTable.debug();
         Table background = new Table();
         background.setFillParent(true);
 
@@ -174,7 +174,7 @@ public class GameScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 gameState = GameState.GAME_RUNNING;
-                Gdx.input.setInputProcessor(gameStage);
+                Gdx.input.setInputProcessor(gameStage.getPlayerCharacter());
             }
         });
 

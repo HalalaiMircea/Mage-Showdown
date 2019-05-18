@@ -29,13 +29,13 @@ public class ClientPlayerCharacter extends PlayerCharacter
     private boolean jump = false;
     private boolean isMyPlayer = false;
     private boolean shoot = false;
-    private boolean plantBomb=false;
+    private boolean plantBomb = false;
     private boolean switchWeapons = false;
     private String userName;
     private int id;
 
     public ClientPlayerCharacter(ClientGameStage stage, Vector2 position, int weaponEquipped, String userName, boolean isMyPlayer) {
-        super(stage, position, weaponEquipped,true);
+        super(stage, position, weaponEquipped, true);
         this.isMyPlayer = isMyPlayer;
 
         if (isMyPlayer) {
@@ -129,7 +129,7 @@ public class ClientPlayerCharacter extends PlayerCharacter
         }
         if (shoot) {
             shootMyWeapon();
-        }else if(plantBomb) {
+        } else if (plantBomb) {
             plantMyBomb();
         } else if (switchWeapons) {
             switchMyWeapons();
@@ -207,15 +207,15 @@ public class ClientPlayerCharacter extends PlayerCharacter
         shoot = false;
     }
 
-    private void plantMyBomb(){
-        Network.PlantBomb packet=new Network.PlantBomb();
+    private void plantMyBomb() {
+        Network.PlantBomb packet = new Network.PlantBomb();
 
-        packet.id=myClient.getID();
-        packet.pos=GameWorld.getMousePos(new Vector2(95, 95));
+        packet.id = myClient.getID();
+        packet.pos = GameWorld.getMousePos(new Vector2(95, 95));
         myClient.sendTCP(packet);
-        currWeapon.plantBomb(packet.pos,myClient.getID());
+        currWeapon.plantBomb(packet.pos, myClient.getID());
 
-        plantBomb=false;
+        plantBomb = false;
     }
 
     @Override
@@ -288,10 +288,10 @@ public class ClientPlayerCharacter extends PlayerCharacter
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        if(button== Input.Buttons.LEFT)
-            shoot=true;
-        else if(button==Input.Buttons.RIGHT)
-            plantBomb=true;
+        if (button == Input.Buttons.LEFT)
+            shoot = true;
+        else if (button == Input.Buttons.RIGHT)
+            plantBomb = true;
         return true;
     }
 
