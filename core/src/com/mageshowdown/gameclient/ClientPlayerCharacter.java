@@ -62,6 +62,7 @@ public class ClientPlayerCharacter extends PlayerCharacter
         calcState();
         updateWeaponPos();
         updateFrozenState();
+        updateAmmoState();
 
         updateGameActor(delta);
     }

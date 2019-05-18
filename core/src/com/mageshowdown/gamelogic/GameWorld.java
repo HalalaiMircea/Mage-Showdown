@@ -15,14 +15,13 @@ import java.util.concurrent.Callable;
 public class GameWorld {
     public static final World world;
     public static float resolutionScale;
-    //queues for body removals and creations that will happen after the world has stepped
+    /* queues for body removals and creations that will happen after the world has stepped
+     * because each actor may want to create a specific type of body, for body creation i use
+     * a queue of callables and in the call method of these
+     * i put the specific createBody() call of a particular actor
+     */
     public static LinkedList<Body> bodiesToBeRemoved;
     public static LinkedList<Callable> bodiesToBeCreated;
-
-    /*
-     * box2d apparently doesnt like deleting too many bodies in one go so we set a hard limit
-     */
-    private final static int BODY_REMOVAL_LIMIT = 15;
 
     static {
         world = new World(new Vector2(0, -9.8f), true);
@@ -90,18 +89,12 @@ public class GameWorld {
 
     public static void clearBodyRemovalQueue() {
         Array<Body> existingBodies = new Array<Body>();
-        int count = 0;
-        while (!bodiesToBeRemoved.isEmpty() && count < BODY_REMOVAL_LIMIT) {
+        while (!bodiesToBeRemoved.isEmpty()) {
             world.getBodies(existingBodies);
-            //we make sure the body exists before we delete it; if it does we just pop the queue
+            //we make sure the body exists before we delete it; if it doesn't we just pop the queue
             if (existingBodies.contains(bodiesToBeRemoved.peek(), false)) {
-                if (!world.isLocked()) {
-                    System.out.println("attempting to delete body");
-                    Body body = bodiesToBeRemoved.remove();
-                    world.destroyBody(body);
-                    System.out.println("succesfuly deleted");
-                } else return;
-                count++;
+                Body body = bodiesToBeRemoved.remove();
+                world.destroyBody(body);
             } else {
                 bodiesToBeRemoved.remove();
             }

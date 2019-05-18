@@ -125,7 +125,6 @@ public abstract class GameActor extends Actor {
     }
 
     protected void createBody(float rotation,BodyDef.BodyType bodyType){
-        //createBody(.6f,0f,0f,rotation,bodyType);
         final float localRotation=rotation;
         final BodyDef.BodyType localBodyType=bodyType;
         GameWorld.addToBodyCreationQueue(new Callable<Void>() {
@@ -138,7 +137,6 @@ public abstract class GameActor extends Actor {
     }
 
     protected void createBody(BodyDef.BodyType bodyType){
-        //createBody(.6f,0f,0f,0f,bodyType);
         final BodyDef.BodyType localBodyType=bodyType;
         GameWorld.addToBodyCreationQueue(new Callable<Void>() {
             @Override

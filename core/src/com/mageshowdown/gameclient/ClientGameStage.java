@@ -9,7 +9,6 @@ import com.mageshowdown.gamelogic.GameLevel;
 import com.mageshowdown.gamelogic.GameWorld;
 import com.mageshowdown.packets.Network;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeMap;
 

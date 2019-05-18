@@ -92,7 +92,7 @@ public class ClientAssetLoader {
         enemyJumpingSpritesheet = new Texture(Gdx.files.internal("Player Animations/Enemy player/enemyJumpingAnimationSpritesheet.png"));
         enemyRunningSpritesheet = new Texture(Gdx.files.internal("Player Animations/Enemy player/enemyRunningAnimationSpritesheet.png"));
 
-        freezeProjectileTexture = new Texture("Player Animations/Ammo/freezeProjectile.png");
+        freezeProjectileTexture = new Texture(Gdx.files.internal("Player Animations/Ammo/freezeProjectile.png"));
         armFreezeBombSpritesheet=new Texture(Gdx.files.internal("Player Animations/Effect/armFreezeBombSpritesheet.png"));
         freezeBombSpritesheet=new Texture(Gdx.files.internal("Player Animations/Effect/freezeBombSpritesheet.png"));
         crystalSpritesheet = new Texture("Player Animations/Weapon/CrystalSpritesheet.png");
@@ -101,7 +101,7 @@ public class ClientAssetLoader {
         fireBombSpritesheet=new Texture(Gdx.files.internal("Player Animations/Effect/fireBombSpritesheet.png"));
         flameSpritesheet = new Texture(Gdx.files.internal("Player Animations/Weapon/flameSpritesheet.png"));
 
-        energyShieldSpritesheet = new Texture(Gdx.files.internal("energyShieldSpriteSheet.png"));
+        energyShieldSpritesheet = new Texture(Gdx.files.internal("Player Animations/Effect/energyShieldSpriteSheet.png"));
         frozenSpritesheet = new Texture(Gdx.files.internal("Player Animations/Effect/frozenSpritesheet.png"));
 
         uiSkin = new Skin(Gdx.files.internal("UIAssets/uiskin.json"));
@@ -109,7 +109,7 @@ public class ClientAssetLoader {
 
         menuBackground = new Texture(Gdx.files.internal("UIAssets/placeholder.jpg"));
         solidBlack = new Texture(Gdx.files.internal("UIAssets/Black_1080p.png"));
-        roundOverScreen = new Texture(Gdx.files.internal("round over.png"));
+        roundOverScreen = new Texture(Gdx.files.internal("UIAssets/round over.png"));
 
         generateFonts();
 

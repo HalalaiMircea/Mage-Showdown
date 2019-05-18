@@ -87,14 +87,14 @@ public class Weapon extends GameActor implements AnimatedActorInterface {
     @Override
     public void act(float delta) {
         super.act(delta);
-        destroyEliminatedAmmo();
+        //destroyEliminatedAmmo();
         rechargeWeapon();
 
         if (loadAnimation)
             pickFrame();
     }
 
-    private void destroyEliminatedAmmo() {
+    public void destroyEliminatedAmmo() {
         /*
          * if it has collided or out of the screen remove ammo from the arraylist and the stage so theres no reference to it left
          */
@@ -198,24 +198,10 @@ public class Weapon extends GameActor implements AnimatedActorInterface {
         equipped=true;
     }
 
+    //when we unequip the weapon we want the ammo from the previous one to remain
+    //so we only remove the weapon itself from the stage
     public void unequipWeapon(){
         equipped=false;
-        //when we unequip a weapon we create a new thread from which we delete whatever ammo is leftover if its the case
-        new Thread(){
-            {
-                start();
-            }
-            @Override
-            public void run() {
-                super.run();
-                //in case the weapon gets equipped or all the ammunition is destroyed, the thread stops
-                while(ammunition.size()>0 && !equipped) {
-                    destroyEliminatedAmmo();
-                }
-            }
-        };
-        //when we unequip the weapon we want the ammo from the previous one to remain
-        //so we only remove the weapon itself from the stage
         super.remove();
     }
 

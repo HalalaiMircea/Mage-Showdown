@@ -51,6 +51,8 @@ public abstract class PlayerCharacter extends DynamicGameActor {
     @Override
     public void act(float delta) {
         super.act(delta);
+
+        updateAmmoState();
         setBodyFixedRotation();
     }
 
@@ -69,6 +71,11 @@ public abstract class PlayerCharacter extends DynamicGameActor {
     protected void updateWeaponPos() {
         if (currWeapon != null)
             currWeapon.updatePosition(new Vector2(getX(), getY()));
+    }
+
+    protected void updateAmmoState(){
+        freezeWeapon.destroyEliminatedAmmo();
+        fireWeapon.destroyEliminatedAmmo();
     }
 
     protected void updateFrozenState() {
