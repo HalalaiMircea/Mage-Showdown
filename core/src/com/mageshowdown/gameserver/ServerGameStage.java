@@ -43,9 +43,8 @@ public class ServerGameStage extends Stage {
     public void act() {
         super.act();
         getInput();
-
-
         GameWorld.world.step(Gdx.graphics.getDeltaTime(),6,2);
+        System.out.println(playerCharacters.size());
 
         GameWorld.clearBodyRemovalQueue();
 
@@ -63,7 +62,7 @@ public class ServerGameStage extends Stage {
     }
 
     public void removePlayerCharacter(int connectionId){
-        playerCharacters.get(connectionId).destroyActor();
+        playerCharacters.get(connectionId).remove();
         playerCharacters.remove(connectionId);
     }
 

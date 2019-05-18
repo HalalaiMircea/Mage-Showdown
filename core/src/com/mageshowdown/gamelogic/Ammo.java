@@ -7,54 +7,42 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 
 public abstract class Ammo extends DynamicGameActor {
 
-    protected boolean collided=false;
-    protected boolean outOfBounds=false;
-    protected boolean expired=false;
-    protected boolean activated=false;
+    protected boolean collided = false;
+    protected boolean outOfBounds = false;
+    protected boolean expired = false;
     protected int id;
     protected int ownerId;
 
     private final float damageValue;
 
 
-    protected Ammo(Stage stage, Vector2 velocity, Vector2 position, Vector2 size, Texture texture, Vector2 sizeScaling, float rotation, int id, int ownerId, float damageValue){
-        super(stage,position, size, rotation, texture, sizeScaling);
-        System.out.println("attempting to create body for ammo");
-        createBody(rotation,BodyDef.BodyType.DynamicBody);
-        System.out.println("success");
+    protected Ammo(Stage stage, Vector2 velocity, Vector2 position, Vector2 size, Texture texture, Vector2 sizeScaling, float rotation, int id, int ownerId, float damageValue) {
+        super(stage, position, size, rotation, texture, sizeScaling);
 
-        this.damageValue=damageValue;
+        this.damageValue = damageValue;
         //the id is used to identify the projectile when it needs to be destroyed
-        this.id=id;
+        this.id = id;
         //the owner id is the id of the player that shot the bullet
-        this.ownerId=ownerId;
-
-        //we dont want the projectile to react to any collisions or be affected by gravity so we make it a sensor
-        body.getFixtureList().get(0).setSensor(true);
-        body.setGravityScale(0f);
-        this.velocity=velocity;
+        this.ownerId = ownerId;
+        this.velocity = velocity;
         stage.addActor(this);
     }
 
-    protected Ammo(Stage stage, Vector2 velocity, Vector2 position, Vector2 size, Vector2 sizeScaling, float rotation, int id, int ownerId, float damageValue){
-        super(stage,position, size, rotation,sizeScaling);
-        createBody(rotation,BodyDef.BodyType.DynamicBody);
-        System.out.println(size);
+    protected Ammo(Stage stage, Vector2 velocity, Vector2 position, Vector2 size, Vector2 sizeScaling, float rotation, int id, int ownerId, float damageValue) {
+        super(stage, position, size, rotation, sizeScaling);
 
-        this.damageValue=damageValue;
-        this.id=id;
-        this.ownerId=ownerId;
+        this.damageValue = damageValue;
+        this.id = id;
+        this.ownerId = ownerId;
 
-        body.getFixtureList().get(0).setSensor(true);
-        body.setGravityScale(0f);
-        this.velocity=velocity;
+        this.velocity = velocity;
         stage.addActor(this);
     }
 
     //if two projectiles have the same position then we know its the same projectile
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof Ammo){
+        if (obj instanceof Ammo) {
             return ((Ammo) obj).getX() == getX() && ((Ammo) obj).getY() == getY();
         }
         return false;
@@ -63,47 +51,61 @@ public abstract class Ammo extends DynamicGameActor {
     @Override
     public void act(float delta) {
         super.act(delta);
-        //System.out.println(GameWorld.convertWorldToPixels(body.getPosition())+" "+body.getFixtureList().get(0).getShape().getRadius());
+
         //every frame we check if the projectile is out of bounds
-        if(getRotation()>80f)
-        {
-            if(sprite!=null)
-                sprite.setFlip(false,true);
-            if(currFrame!=null)
-                if(!currFrame.isFlipY()){
-                    currFrame.flip(false,true);
+        if (getRotation() > 80f) {
+            if (sprite != null)
+                sprite.setFlip(false, true);
+            if (currFrame != null)
+                if (!currFrame.isFlipY()) {
+                    currFrame.flip(false, true);
                 }
-        }else{
-            if(sprite!=null)
-                sprite.setFlip(false,false);
-            if(currFrame!=null)
-                if(currFrame.isFlipY())
-                    currFrame.flip(false,false);
+        } else {
+            if (sprite != null)
+                sprite.setFlip(false, false);
+            if (currFrame != null)
+                if (currFrame.isFlipY())
+                    currFrame.flip(false, false);
         }
 
-        if(body!=null){
-            Vector2 convPosition=GameWorld.convertWorldToPixels(body.getPosition());
-            if(convPosition.x > 1280 || convPosition.x<0 || convPosition.y>720 || convPosition.y<0)
-            {
-                outOfBounds=true;
+        if (body != null) {
+            Vector2 convPosition = GameWorld.convertWorldToPixels(body.getPosition());
+            if (convPosition.x > 1280 || convPosition.x < 0 || convPosition.y > 720 || convPosition.y < 0) {
+                setOutOfBounds(true);
             }
         }
-
-        //System.out.println("Body at: "+GameWorld.convertWorldToPixels(body.getPosition()) +" rotation:"+(body.getAngle() * 180 / (float) Math.PI)+"and actor at:"+this.getX()+" "+this.getY()+" rotation: "+getRotation());
     }
 
+
+    protected void makeBodySensor() {
+        //we dont want the projectile to react to any collisions or be affected by gravity so we make it a sensor
+        body.getFixtureList().get(0).setSensor(true);
+        body.setGravityScale(0f);
+    }
+
+    @Override
+    protected void createBody(BodyDef.BodyType bodyType) {
+        this.createBody(0,bodyType);
+    }
+
+    @Override
+    protected void createBody(float rotation, BodyDef.BodyType bodyType) {
+        super.createBody(rotation, bodyType);
+        makeBodySensor();
+    }
 
     public void setCollided(boolean collided) {
         this.collided = collided;
     }
 
-    public void setOutOfBounds(boolean outOfBounds){
-        this.outOfBounds=outOfBounds;
+    public void setOutOfBounds(boolean outOfBounds) {
+        this.outOfBounds = outOfBounds;
     }
 
     public void setExpired(boolean expired) {
         this.expired = expired;
     }
+
 
     public boolean hasCollided() {
         return collided;
@@ -129,12 +131,8 @@ public abstract class Ammo extends DynamicGameActor {
         return damageValue;
     }
 
-    public boolean isActivated() {
-        return activated;
-    }
-
     @Override
     public String toString() {
-        return new Vector2(getX(),getY()).toString();
+        return new Vector2(getX(), getY()).toString();
     }
 }

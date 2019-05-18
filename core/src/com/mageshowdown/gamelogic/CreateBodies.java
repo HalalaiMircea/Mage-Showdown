@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
 public class CreateBodies {
+
     public static Body createRectangleBody(Vector2 position, Vector2 size, BodyDef.BodyType bodyType, float density, float friction, float restitution, float rotation){
         Body body;
 
@@ -24,22 +25,11 @@ public class CreateBodies {
         return body;
     }
 
-
-    private static CircleShape createCircleShape(float radius){
-        CircleShape cs=new CircleShape();
-        cs.setRadius(radius);
-
-        return cs;
-    }
-
     private static PolygonShape createPolygonShape(Vector2 convSize){
         PolygonShape ps=new PolygonShape();
         //in order to be able to change the origin without headaches we use vertices instead of setAsBox()
         Vector2 vertices[]=new Vector2[]{new Vector2(0,convSize.y),new Vector2(0,0),new Vector2(convSize.x,0),new Vector2(convSize.x,convSize.y)};
-        //System.out.println("attempting to create body from:");
-        //for(Vector2 x:vertices){
-        //    System.out.print(" "+x);
-        //}
+
         ps.set(vertices);
 
         return ps;

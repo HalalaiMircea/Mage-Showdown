@@ -33,17 +33,18 @@ public class CollisionListener implements ContactListener {
 
     private void handlePlayerProjectileCollision(Ammo ammo, ServerPlayerCharacter player) {
         //a player cant damage itself so we check if the ammo's owner id is the same as the player's it hit
-        if (player.getId() != ammo.getOwnerId() && ammo.isActivated()) {
-            //Network.ProjectileCollided pc=new Network.ProjectileCollided();
+        if (player.getId() != ammo.getOwnerId()) {
             Network.PlayerDead packet = new Network.PlayerDead();
             player.damageBy(ammo.getDamageValue(), ammo);
             ammo.setCollided(true);
 
-            
+            System.out.println(ammo.ownerId+" hit "+player.getId());
+
             //if the player died from the hit
             if (player.getHealth() < 0) {
-                System.out.println("owner id:"+ammo.ownerId);
-                gameStage.getPlayerById(ammo.ownerId).addKill();
+                //the player might have disconnected by the time the ammo hit something
+                if(gameStage.getPlayerById(ammo.ownerId)!=null)
+                    gameStage.getPlayerById(ammo.ownerId).addKill();
                 packet.id = player.getId();
                 packet.respawnPos = GameServer.getInstance().generateSpawnPoint(packet.id);
                 player.respawn(packet.respawnPos);

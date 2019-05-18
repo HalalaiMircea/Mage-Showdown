@@ -34,23 +34,12 @@ public class GameLevel {
     }
 
     public void changeLevel() {
-        System.out.println("level changed");
 
         changedLevel = true;
         renderer.setMap(map);
         //first empty the hitboxes and spawn points of the previous map
-        ListIterator<MapObjectHitbox> iter = platforms.listIterator();
-        while (iter.hasNext()) {
-            MapObjectHitbox x = iter.next();
-            x.destroyActor();
-            iter.remove();
-        }
-        ListIterator<Vector2> spawnIter = spawnPoints.listIterator();
-        while (spawnIter.hasNext()) {
-            spawnIter.next();
-            spawnIter.remove();
-        }
-
+        clearHitboxes();
+        clearSpawnPoints();
 
         /*
          * we have to be careful when creating the maps for the layer with hitboxes to be the first one
@@ -74,6 +63,7 @@ public class GameLevel {
     }
 
     public void render() {
+        //if the level was just changed
         if (changedLevel) {
             cam.update();
             renderer.setView(cam);
@@ -83,7 +73,6 @@ public class GameLevel {
 
     public void setMap(int nr) {
         mapNr = nr;
-        System.out.println("map set");
         switch (mapNr) {
             case 1:
                 map = ClientAssetLoader.map1;
@@ -94,6 +83,23 @@ public class GameLevel {
             case 3:
                 map = ClientAssetLoader.purpleMap;
                 break;
+        }
+    }
+
+    public void clearHitboxes(){
+        ListIterator<MapObjectHitbox> iter = platforms.listIterator();
+        while (iter.hasNext()) {
+            MapObjectHitbox hitbox = iter.next();
+            hitbox.remove();
+            iter.remove();
+        }
+    }
+
+    private void clearSpawnPoints(){
+        ListIterator<Vector2> spawnIter = spawnPoints.listIterator();
+        while (spawnIter.hasNext()) {
+            spawnIter.next();
+            spawnIter.remove();
         }
     }
 

@@ -2,7 +2,6 @@ package com.mageshowdown.gameclient;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
@@ -10,6 +9,7 @@ import com.mageshowdown.gamelogic.GameLevel;
 import com.mageshowdown.gamelogic.GameWorld;
 import com.mageshowdown.packets.Network;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeMap;
 
@@ -39,7 +39,6 @@ public class ClientGameStage extends Stage {
     public void act() {
         super.act();
         GameWorld.world.step(Gdx.graphics.getDeltaTime(), 6, 2);
-
         /*
          * anything that affects the bodies inside a world has to be done after a world has stepped
          * otherwise the game will crash because the world is locked; here the positions and velocities of players' bodies are synchronized
@@ -77,20 +76,20 @@ public class ClientGameStage extends Stage {
     }
 
     public void removePlayerCharacter(int connectionId) {
-        sortedPlayers.remove(connectionId);
-        System.out.println("Map after player removal: " + sortedPlayers);
-        otherPlayers.get(connectionId).destroyActor();
-        otherPlayers.remove(connectionId);
+        if(otherPlayers.get(connectionId)!=null){
+            sortedPlayers.remove(connectionId);
+            otherPlayers.get(connectionId).remove();
+            otherPlayers.remove(connectionId);
+        }
     }
 
     public void removeMyCharacter() {
-        playerCharacter.destroyActor();
         playerCharacter.remove();
     }
 
     public void spawnMyPlayerCharacter(Network.NewPlayerSpawned packet) {
         playerCharacter = new ClientPlayerCharacter(this, packet.pos, packet.weaponEquipped, packet.userName, true);
-        sortedPlayers.put(playerCharacter.getID(), playerCharacter);
+        sortedPlayers.put(playerCharacter.getId(), playerCharacter);
         System.out.println("Map with my player: " + sortedPlayers);
 
         Gdx.input.setInputProcessor(playerCharacter);
@@ -101,10 +100,22 @@ public class ClientGameStage extends Stage {
 
     public void spawnOtherPlayer(Network.NewPlayerSpawned packet) {
         ClientPlayerCharacter temp = new ClientPlayerCharacter(this, packet.pos, packet.weaponEquipped, packet.userName, false);
-        temp.setID(packet.id);
+        temp.setId(packet.id);
         otherPlayers.put(packet.id, temp);
         sortedPlayers.put(packet.id, temp);
-        System.out.println("Map after new player spawned: " + sortedPlayers);
+    }
+
+    @Override
+    public void clear() {
+        super.clear();
+        removeMyCharacter();
+        for(Integer key:getOtherPlayers().keySet()){
+            removePlayerCharacter(key);
+        }
+        gameLevel.clearHitboxes();
+        while(GameWorld.world.getBodyCount()>0){
+            GameWorld.clearBodyRemovalQueue();
+        }
     }
 
     public GameLevel getGameLevel() {

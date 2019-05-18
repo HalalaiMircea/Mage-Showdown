@@ -2,9 +2,7 @@ package com.mageshowdown.gameclient;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.mageshowdown.gamelogic.GameScreen;
 import com.mageshowdown.gamelogic.GameWorld;
-import com.mageshowdown.gamelogic.LoadingScreen;
 import com.mageshowdown.gamelogic.MenuScreen;
 import com.mageshowdown.packets.Network;
 import com.mageshowdown.utils.PrefsKeys;
@@ -44,7 +42,7 @@ public class MageShowdownClient extends Game {
         myClient.start();
 
         myClient.connect(5000, ipAddress, Network.TCP_PORT, Network.UDP_PORT);
-        myClient.addListener(new ClientListener(GameScreen.getInstance()));
+        myClient.addListener(new ClientListener());
     }
 
     public static MageShowdownClient getInstance() {

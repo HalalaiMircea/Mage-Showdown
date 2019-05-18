@@ -48,10 +48,11 @@ public abstract class PlayerCharacter extends DynamicGameActor {
     }
 
     @Override
-    public void destroyActor() {
+    public boolean remove() {
         destroyWeapons();
-        super.destroyActor();
+        return super.remove();
     }
+
 
     protected void updateWeaponPos() {
         if (currWeapon != null)
@@ -69,20 +70,19 @@ public abstract class PlayerCharacter extends DynamicGameActor {
     }
 
     protected void destroyWeapons() {
-        freezeWeapon.destroyActor();
-        fireWeapon.destroyActor();
+        freezeWeapon.remove();
+        fireWeapon.remove();
     }
 
     public void switchMyWeapons() {
-        currWeapon.remove();
+        currWeapon.unequipWeapon();
 
         if (currWeapon.equals(freezeWeapon)) {
             currWeapon = fireWeapon;
         } else {
             currWeapon = freezeWeapon;
         }
-        gameStage.addActor(currWeapon);
-
+        currWeapon.equipWeapon();
     }
 
     public Weapon getCurrWeapon() {

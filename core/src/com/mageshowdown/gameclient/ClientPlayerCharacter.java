@@ -1,14 +1,10 @@
 package com.mageshowdown.gameclient;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mageshowdown.gamelogic.AnimatedActorInterface;
 import com.mageshowdown.gamelogic.GameWorld;
 import com.mageshowdown.gamelogic.PlayerCharacter;
@@ -36,7 +32,7 @@ public class ClientPlayerCharacter extends PlayerCharacter
     private boolean plantBomb=false;
     private boolean switchWeapons = false;
     private String userName;
-    private int ID;
+    private int id;
 
     public ClientPlayerCharacter(ClientGameStage stage, Vector2 position, int weaponEquipped, String userName, boolean isMyPlayer) {
         super(stage, position, weaponEquipped,true);
@@ -224,7 +220,7 @@ public class ClientPlayerCharacter extends PlayerCharacter
 
     @Override
     public int hashCode() {
-        return ID;
+        return id;
     }
 
     @Override
@@ -240,7 +236,7 @@ public class ClientPlayerCharacter extends PlayerCharacter
     public boolean equals(Object obj) {
         if (obj instanceof ClientPlayerCharacter) {
             ClientPlayerCharacter temp = (ClientPlayerCharacter) obj;
-            return temp.ID == this.ID;
+            return temp.id == this.id;
         }
         return false;
     }
@@ -331,11 +327,11 @@ public class ClientPlayerCharacter extends PlayerCharacter
         this.userName = userName;
     }
 
-    public int getID() {
-        return ID;
+    public int getId() {
+        return id;
     }
 
-    public void setID(int ID) {
-        this.ID = ID;
+    public void setId(int id) {
+        this.id = id;
     }
 }

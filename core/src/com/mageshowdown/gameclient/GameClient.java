@@ -13,16 +13,12 @@ public class GameClient extends Client{
     private static GameClient instance =new GameClient();
 
     private String userName;
-    private int score;
+    //indicates if the client is logged into the server
+    private boolean logged=false;
 
     private GameClient() {
         super();
         registerClasses();
-    }
-
-    @Override
-    public void start() {
-        super.start();
     }
 
     @Override
@@ -55,6 +51,16 @@ public class GameClient extends Client{
         kryo.register(Network.SwitchWeapons.class);
     }
 
+    @Override
+    public void start() {
+        super.start();
+    }
+
+    @Override
+    public void stop() {
+        super.stop();
+        logged=false;
+    }
 
     public String getUserName() {
         return userName;
@@ -62,6 +68,14 @@ public class GameClient extends Client{
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public void setLogged(boolean logged) {
+        this.logged = logged;
+    }
+
+    public boolean isLogged() {
+        return logged;
     }
 
     public static GameClient getInstance() {

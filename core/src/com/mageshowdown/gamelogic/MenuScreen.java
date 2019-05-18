@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mageshowdown.gameclient.ClientAssetLoader;
 import com.mageshowdown.gameclient.MageShowdownClient;
+import com.mageshowdown.gameserver.GameServer;
 
 public class MenuScreen implements Screen {
 
@@ -137,11 +138,15 @@ public class MenuScreen implements Screen {
         connectButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent even, float x, float y) {
-                MageShowdownClient.getInstance().setScreen(GameScreen.getInstance());
-                GameScreen.start();
-                GameScreen.setGameState(GameScreen.GameState.GAME_RUNNING);
-                String ipAddress = addressField.getText();
-                MageShowdownClient.getInstance().clientStart(ipAddress);
+                if(GameWorld.world.getBodyCount()==0){
+                    GameScreen.getInstance().start();
+                    MageShowdownClient.getInstance().setScreen(GameScreen.getInstance());
+                    GameScreen.getInstance().setGameState(GameScreen.GameState.GAME_RUNNING);
+                    String ipAddress = addressField.getText();
+                    MageShowdownClient.getInstance().clientStart(ipAddress);
+                }else{
+                    System.out.println(GameWorld.world.getBodyCount());
+                }
             }
         });
 

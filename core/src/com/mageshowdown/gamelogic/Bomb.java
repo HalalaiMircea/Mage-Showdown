@@ -11,15 +11,12 @@ public class Bomb extends Ammo implements AnimatedActorInterface{
 
     private final float duration;
     private Weapon.AmmoType ammoType;
+    //each bomb has an "arming time", after which it explodes and it damages whoever is in range
     private float explosionTime=0f;
-
-    boolean activated=false;
+    private boolean exploded=false;
 
     public Bomb(Stage stage, Vector2 position, float rotation, int id, int ownerId, Weapon.AmmoType ammoType){
         super(stage,new Vector2(0,0),position,new Vector2(190,190),new Vector2(.8f,.8f),rotation,id,ownerId,9);
-
-        //we'll have to generate the body only when the explosion reaches a certain point
-        GameWorld.bodiesToBeRemoved.add(body);
 
         this.ammoType=ammoType;
         switch(ammoType) {
@@ -43,19 +40,18 @@ public class Bomb extends Ammo implements AnimatedActorInterface{
     public void act(float delta) {
         super.act(delta);
         pickFrame();
-        if(activated){
+        if(exploded){
             explosionTime+= Gdx.graphics.getDeltaTime();
         }
         if(explosionTime>duration/2f)
         {
             setExpired(true);
         }
-        if(passedTime>duration/2f && !activated)
+        if(passedTime>duration/2f && !exploded)
         {
+            exploded=true;
+            //we enable collision with the bomb only after it actually explodes by only then creating the actual body
             createBody(BodyDef.BodyType.StaticBody);
-            body.getFixtureList().get(0).setSensor(true);
-            body.setGravityScale(0f);
-            activated=true;
         }
     }
 
@@ -67,17 +63,13 @@ public class Bomb extends Ammo implements AnimatedActorInterface{
 
     @Override
     public void pickFrame() {
-        if(!activated){
+        if(!exploded){
             if(animations.get("arm")!=null)
                 currFrame=animations.get("arm").getKeyFrame(passedTime,false);
         }else{
             if(animations.get("explosion")!=null)
                 currFrame=animations.get("explosion").getKeyFrame(explosionTime,false);
         }
-    }
-
-    public boolean isActivated() {
-        return activated;
     }
 
     public Weapon.AmmoType getAmmoType() {

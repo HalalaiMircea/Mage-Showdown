@@ -1,5 +1,6 @@
 package com.mageshowdown.gamelogic;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -26,12 +27,7 @@ public class GameScreen implements Screen {
     private static GameState gameState;
 
     private GameScreen() {
-        gameStage = new ClientGameStage();
-        escMenuStage = new Stage(MenuScreen.getMainMenuStage().getViewport(), gameStage.getBatch());
-        gameOptionsStage = new OptionsStage(MenuScreen.getMainMenuStage().getViewport(), gameStage.getBatch(),
-                ClientAssetLoader.solidBlack);
 
-        prepareEscMenu();
     }
 
     @Override
@@ -71,7 +67,6 @@ public class GameScreen implements Screen {
                 scoreboardInput();
                 break;
         }
-
     }
 
     public static GameScreen getInstance() {
@@ -91,7 +86,12 @@ public class GameScreen implements Screen {
     }
 
     public static void start() {
-        gameStage.start();
+        gameStage = new ClientGameStage();
+        escMenuStage = new Stage(MenuScreen.getMainMenuStage().getViewport(), gameStage.getBatch());
+        gameOptionsStage = new OptionsStage(MenuScreen.getMainMenuStage().getViewport(), gameStage.getBatch(),
+                ClientAssetLoader.solidBlack);
+
+        prepareEscMenu();
     }
 
     @Override
@@ -190,12 +190,9 @@ public class GameScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 MageShowdownClient.getInstance().setScreen(MenuScreen.getInstance());
-
-                for (int id : gameStage.getOtherPlayers().keySet())
-                    gameStage.removePlayerCharacter(id);
-                gameStage.removeMyCharacter();
                 GameClient.getInstance().stop();
                 ClientRound.getInstance().stop();
+                gameStage.clear();
 
                 Gdx.input.setInputProcessor(MenuScreen.getMainMenuStage());
             }

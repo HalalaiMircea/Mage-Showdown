@@ -111,7 +111,6 @@ public class ServerPlayerCharacter extends PlayerCharacter {
 
     public void damageBy(float damageValue, Object object) {
         if (!dmgImmune) {
-            System.out.println("damaged");
             //everytime youre hit the cooldown for shield regen resets
             regenShield=false;
             shieldRegenTimer=0f;

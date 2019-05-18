@@ -21,6 +21,7 @@ public class ServerListener extends Listener {
 
     @Override
     public void connected(Connection connection) {
+        System.out.println(connection.getID()+" connected!");
         myServer.sendToTCP(connection.getID(),new Network.LoginRequest());
     }
 
@@ -54,13 +55,17 @@ public class ServerListener extends Listener {
             */
             Network.LoginRequest packet=(Network.LoginRequest)object;
 
+            if(myServer.getUserNameById(connection.getID())!=null)
+                return;
+
             myServer.addUser(connection.getID(),packet.user);
             Network.NewPlayerSpawned toBeSent=new Network.NewPlayerSpawned();
             toBeSent.userName=packet.user;
             toBeSent.id=connection.getID();
             toBeSent.pos=GameWorld.convertWorldToPixels(myServer.generateSpawnPoint(connection.getID()));
             toBeSent.roundTimePassed=ServerRound.getInstance().getTimePassed();
-            toBeSent.weaponEquipped=1;//players always start with the freeze weapon equipped
+            //players always start with the freeze weapon equipped
+            toBeSent.weaponEquipped=1;
             gameStage.addPlayerCharacter(toBeSent);
 
             myServer.sendToAllTCP(toBeSent);
@@ -73,7 +78,6 @@ public class ServerListener extends Listener {
             * for the player that just logged in we also need to send him packets
             * with who was already logged in
              */
-            System.out.println(myServer.getConnections().length);
             for(Connection con:myServer.getConnections()){
                 if(con.getID()!=connection.getID()){
                     toBeSent.userName=myServer.getUserNameById(con.getID());

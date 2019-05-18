@@ -17,8 +17,7 @@ public class GameHUDStage extends Stage {
     private ProgressBar healthBar;
     private ProgressBar shieldBar;
 
-    //private ClientPlayerCharacter playerCharacter = GameScreen.getGameStage().getPlayerCharacter();
-    private ClientGameStage gameStage = GameScreen.getGameStage();
+    private ClientGameStage gameStage = GameScreen.getInstance().getGameStage();
 
     private GameHUDStage() {
         Table root = new Table();
@@ -51,6 +50,8 @@ public class GameHUDStage extends Stage {
             shieldLabel.setText("SHIELD: " + (int) gameStage.getPlayerCharacter().getEnergyShield());
             //healthBar.setValue(gameStage.getPlayerCharacter().getHealth());
             //shieldBar.setValue(gameStage.getPlayerCharacter().getEnergyShield());
+        }else{
+            System.out.println("halp");
         }
     }
 

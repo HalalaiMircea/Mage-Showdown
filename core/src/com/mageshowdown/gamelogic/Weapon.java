@@ -23,6 +23,10 @@ public class Weapon extends GameActor implements AnimatedActorInterface {
     private ArrayList<Ammo> ammunition;
     private final static HashMap<String, Float> ammoCosts;
     private boolean loadAnimation;
+    //in equipped we hold wether or not this weapon is currently equipped by any players
+    private boolean equipped=false;
+    //we need the stage as an attribute to re-add the weapon to it when we equip it
+    private Stage gameStage;
 
     /*
      * weapons will work like an energy shield; their "ammo" capacity will constantly regenerate
@@ -46,6 +50,7 @@ public class Weapon extends GameActor implements AnimatedActorInterface {
 
     public Weapon(Stage stage, boolean loadAnimation, AmmoType ammoType, float cd, int capacity) {
         super(stage, new Vector2(0, 0), new Vector2(64, 66), 0f);
+        this.gameStage=stage;
         COOLDOWN_TIME = cd;
         MAXIMUM_CAPACITY = capacity;
         currentCapacity = MAXIMUM_CAPACITY;
@@ -73,28 +78,28 @@ public class Weapon extends GameActor implements AnimatedActorInterface {
     @Override
     public void act(float delta) {
         super.act(delta);
-        destroyEliminatedProjectiles();
+        destroyEliminatedAmmo();
         rechargeWeapon();
 
         if (loadAnimation)
             pickFrame();
     }
 
-    private void destroyEliminatedProjectiles() {
+    private void destroyEliminatedAmmo() {
         /*
-         * if it has collided or out of the screen remove projectile from the arraylist and the stage so theres no reference to it left
+         * if it has collided or out of the screen remove ammo from the arraylist and the stage so theres no reference to it left
          */
         ListIterator<Ammo> iter = ammunition.listIterator();
         while (iter.hasNext()) {
             Ammo x = iter.next();
             if (x.isOutOfBounds() || x.hasCollided() || x.isExpired()) {
-                x.destroyActor();
+                x.remove();
                 iter.remove();
             }
         }
     }
 
-    public void projectileHasCollided(int projId) {
+    public void ammoHasCollided(int projId) {
         for (Ammo x : ammunition) {
             if (x.getId() == projId) {
                 x.setCollided(true);
@@ -123,7 +128,6 @@ public class Weapon extends GameActor implements AnimatedActorInterface {
     }
 
     public void plantBomb(Vector2 position,int ownerId) {
-        System.out.println(getWidth()+" "+getHeight());
         switch (ammoType) {
             case FREEZE:
                 if (currentCapacity > ammoCosts.get("freeze bomb")) {
@@ -179,4 +183,42 @@ public class Weapon extends GameActor implements AnimatedActorInterface {
         }
     }
 
+
+    public void equipWeapon(){
+        gameStage.addActor(this);
+        equipped=true;
+    }
+
+    public void unequipWeapon(){
+        equipped=false;
+        //when we unequip a weapon we create a new thread from which we delete whatever ammo is leftover if its the case
+        new Thread(){
+            {
+                start();
+            }
+            @Override
+            public void run() {
+                super.run();
+                //in case the weapon gets equipped or all the ammunition is destroyed, the thread stops
+                while(ammunition.size()>0 && !equipped) {
+                    destroyEliminatedAmmo();
+                }
+            }
+        };
+        //when we unequip the weapon we want the ammo from the previous one to remain
+        //so we only remove the weapon itself from the stage
+        super.remove();
+    }
+
+
+    @Override
+    public boolean remove() {
+        ListIterator<Ammo> iter = ammunition.listIterator();
+        while (iter.hasNext()) {
+            Ammo x = iter.next();
+            x.remove();
+            iter.remove();
+        }
+        return super.remove();
+    }
 }

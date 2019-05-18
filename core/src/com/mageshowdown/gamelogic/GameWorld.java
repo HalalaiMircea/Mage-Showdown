@@ -67,15 +67,15 @@ public class GameWorld {
     public static void clearBodyRemovalQueue() {
         Array<Body> existingBodies = new Array<Body>();
         int count = 0;
-        while (bodiesToBeRemoved.size() > 0 && count < BODY_REMOVAL_LIMIT) {
+        while (!bodiesToBeRemoved.isEmpty() && count < BODY_REMOVAL_LIMIT) {
             world.getBodies(existingBodies);
             //we make sure the body exists before we delete it; if it does we just pop the queue
-            if (existingBodies.contains(bodiesToBeRemoved.peek(), true)) {
+            if (existingBodies.contains(bodiesToBeRemoved.peek(), false)) {
                 if (!world.isLocked()) {
+                    System.out.println("attempting to delete body");
                     Body body = bodiesToBeRemoved.remove();
-                    System.out.println("trying to destroy body at" + convertWorldToPixels(body.getPosition()));
                     world.destroyBody(body);
-                    System.out.println("destroyed the body");
+                    System.out.println("succesfuly deleted");
                 } else return;
                 count++;
             } else {

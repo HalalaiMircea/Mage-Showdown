@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 public abstract class DynamicGameActor extends GameActor {
-    public static enum VerticalState{
+    public enum VerticalState{
         GROUNDED(1),
         FLYING(2);
 
@@ -29,7 +29,7 @@ public abstract class DynamicGameActor extends GameActor {
             }
         }
     }
-    public static enum HorizontalState{
+    public enum HorizontalState{
         GOING_LEFT(1),
         GOING_RIGHT(2),
         STANDING(3);

@@ -9,9 +9,7 @@ public class MapObjectHitbox extends GameActor {
 
     public MapObjectHitbox(Stage stage, Vector2 position, Vector2 size){
         super(stage,position,size,0f);
-        System.out.println("attempting to create body for hitbox");
         createBody(BodyDef.BodyType.StaticBody);
-        System.out.println("success");
     }
 
     //we override the base draw method with an empty one as we dont want these hitboxes to be drawn
@@ -22,5 +20,10 @@ public class MapObjectHitbox extends GameActor {
     @Override
     public boolean equals(Object obj) {
         return body.getPosition().equals(((MapObjectHitbox) obj).getBody().getPosition());
+    }
+
+    @Override
+    public boolean remove() {
+        return super.remove();
     }
 }

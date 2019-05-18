@@ -2,6 +2,7 @@ package com.mageshowdown.gamelogic;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mageshowdown.gameclient.ClientAssetLoader;
 
@@ -11,7 +12,7 @@ public class Laser extends Ammo implements AnimatedActorInterface{
 
     public Laser(Stage stage, Vector2 position, float rotation, int id, int ownerId){
         super(stage,new Vector2(0f,0f),position,new Vector2(220,31),new Vector2(3f,1f),rotation,id,ownerId,2f);
-        activated=true;
+        createBody(rotation,BodyDef.BodyType.StaticBody);
         addAnimation(1,7,.25f,"idle",ClientAssetLoader.fireLaserSpritesheet);
     }
 
