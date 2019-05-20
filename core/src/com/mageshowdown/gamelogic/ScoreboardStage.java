@@ -71,6 +71,8 @@ public class ScoreboardStage extends Stage {
         timeLeftLabel = new Label("", timeLeftStyle);
 
         root.top();
+        root.add(new Label("TIME LEFT", timeLeftStyle)).expandX().colspan(3);
+        root.row();
         root.add(timeLeftLabel).expandX().colspan(3);
         root.row();
         root.defaults().pad(1, 1, 1, 1).center().fill();
@@ -94,7 +96,7 @@ public class ScoreboardStage extends Stage {
     public void act() {
         super.act();
 
-        timeLeftLabel.setText("TIME LEFT " + (int) (round.ROUND_LENGTH - round.timePassed));
+        timeLeftLabel.setText((int) (round.ROUND_LENGTH - round.timePassed));
         psl.update();
     }
 }

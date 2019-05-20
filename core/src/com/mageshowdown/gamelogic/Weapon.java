@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mageshowdown.gameclient.ClientAssetLoader;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ListIterator;
@@ -24,7 +23,7 @@ public class Weapon extends GameActor implements AnimatedActorInterface {
     private final static HashMap<String, Float> ammoCosts;
     private boolean loadAnimation;
     //in equipped we hold wether or not this weapon is currently equipped by any players
-    private boolean equipped=false;
+    private boolean equipped = false;
     //we need the stage as an attribute to re-add the weapon to it when we equip it
     private Stage gameStage;
 
@@ -35,7 +34,6 @@ public class Weapon extends GameActor implements AnimatedActorInterface {
     private final float COOLDOWN_TIME;
     private final float MAXIMUM_CAPACITY;
     private final float RECHARGE_RATE = 10f;   //recharge rate per second
-
     private float currentCapacity;
     private float rechargeTimer = 0f;
     private boolean recharge = false;
@@ -50,7 +48,7 @@ public class Weapon extends GameActor implements AnimatedActorInterface {
 
     public Weapon(Stage stage, boolean loadAnimation, AmmoType ammoType, float cd, int capacity) {
         super(stage, new Vector2(0, 0), new Vector2(64, 66), 0f);
-        this.gameStage=stage;
+        this.gameStage = stage;
         COOLDOWN_TIME = cd;
         MAXIMUM_CAPACITY = capacity;
         currentCapacity = MAXIMUM_CAPACITY;
@@ -71,14 +69,14 @@ public class Weapon extends GameActor implements AnimatedActorInterface {
     }
 
     public void updatePosition(Vector2 position) {
-        Vector2 offset=new Vector2();
+        Vector2 offset = new Vector2();
 
-        switch(ammoType){
+        switch (ammoType) {
             case FREEZE:
-                offset= new Vector2(-15f, 35f);
+                offset = new Vector2(-15f, 35f);
                 break;
             case FIRE:
-                offset= new Vector2(-15f,50f);
+                offset = new Vector2(-15f, 50f);
                 break;
         }
         setPosition(position.x + offset.x, position.y + offset.y);
@@ -136,7 +134,7 @@ public class Weapon extends GameActor implements AnimatedActorInterface {
         }
     }
 
-    public void plantBomb(Vector2 position,int ownerId) {
+    public void plantBomb(Vector2 position, int ownerId) {
         switch (ammoType) {
             case FREEZE:
                 if (currentCapacity > ammoCosts.get("freeze bomb")) {
@@ -193,15 +191,15 @@ public class Weapon extends GameActor implements AnimatedActorInterface {
     }
 
 
-    public void equipWeapon(){
+    public void equipWeapon() {
         gameStage.addActor(this);
-        equipped=true;
+        equipped = true;
     }
 
     //when we unequip the weapon we want the ammo from the previous one to remain
     //so we only remove the weapon itself from the stage
-    public void unequipWeapon(){
-        equipped=false;
+    public void unequipWeapon() {
+        equipped = false;
         super.remove();
     }
 
@@ -215,5 +213,13 @@ public class Weapon extends GameActor implements AnimatedActorInterface {
             iter.remove();
         }
         return super.remove();
+    }
+
+    public float getMaxCapacity() {
+        return MAXIMUM_CAPACITY;
+    }
+
+    public float getCurrentCapacity() {
+        return currentCapacity;
     }
 }

@@ -1,6 +1,5 @@
 package com.mageshowdown.gamelogic;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -22,11 +21,21 @@ public class GameScreen implements Screen {
     private static final GameScreen INSTANCE = new GameScreen();
 
     private static ClientGameStage gameStage;
+    private static GameHUDStage hudStage;
     private static OptionsStage gameOptionsStage;
     private static Stage escMenuStage;
     private static GameState gameState;
 
     private GameScreen() {
+    }
+
+    public static void start() {
+        gameStage = new ClientGameStage();
+        hudStage = new GameHUDStage();
+        escMenuStage = new Stage(MenuScreen.getMainMenuStage().getViewport(), gameStage.getBatch());
+        gameOptionsStage = new OptionsStage(ClientAssetLoader.solidBlack);
+
+        prepareEscMenu();
     }
 
     @Override
@@ -42,8 +51,8 @@ public class GameScreen implements Screen {
                     ClientRound.getInstance().act(Gdx.graphics.getDeltaTime());
                 gameRunningInput();
                 gameStage.draw();
-                GameHUDStage.getInstance().act();
-                GameHUDStage.getInstance().draw();
+                hudStage.act();
+                hudStage.draw();
                 break;
             case GAME_PAUSED:
                 gameStage.act();
@@ -84,14 +93,6 @@ public class GameScreen implements Screen {
         GameScreen.gameState = gameState;
     }
 
-    public static void start() {
-        gameStage = new ClientGameStage();
-        escMenuStage = new Stage(MenuScreen.getMainMenuStage().getViewport(), gameStage.getBatch());
-        gameOptionsStage = new OptionsStage(ClientAssetLoader.solidBlack);
-
-        prepareEscMenu();
-    }
-
     @Override
     public void show() {
     }
@@ -121,7 +122,7 @@ public class GameScreen implements Screen {
         escMenuStage.dispose();
         gameOptionsStage.dispose();
         ScoreboardStage.getInstance().dispose();
-        GameHUDStage.getInstance().dispose();
+        hudStage.dispose();
         INSTANCE.dispose();
     }
 

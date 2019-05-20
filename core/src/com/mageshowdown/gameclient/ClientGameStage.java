@@ -90,7 +90,7 @@ public class ClientGameStage extends Stage {
     public void spawnMyPlayerCharacter(Network.NewPlayerSpawned packet) {
         playerCharacter = new ClientPlayerCharacter(this, packet.pos, packet.weaponEquipped, packet.userName, true);
         sortedPlayers.put(playerCharacter.getId(), playerCharacter);
-        System.out.println("Map with my player: " + sortedPlayers);
+        //System.out.println("Map with my player: " + sortedPlayers);
 
         Gdx.input.setInputProcessor(playerCharacter);
 

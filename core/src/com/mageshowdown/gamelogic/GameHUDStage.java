@@ -13,25 +13,27 @@ import com.mageshowdown.gameclient.ClientGameStage;
 import static com.mageshowdown.gameclient.ClientAssetLoader.hudSkin;
 
 public class GameHUDStage extends Stage {
-    private static GameHUDStage ourInstance = new GameHUDStage();
+    //private static GameHUDStage ourInstance = new GameHUDStage();
 
     private ProgressBar healthOrb;
     private ProgressBar shieldBar;
+    private ProgressBar ammoBar;
     private Label healthText;
     private Label shieldText;
+    private Label ammoText;
 
-    private ClientGameStage gameStage = GameScreen.getInstance().getGameStage();
+    private ClientGameStage gameStage = GameScreen.getGameStage();
 
-    private GameHUDStage() {
+    public GameHUDStage() {
         Table root = new Table();
         root.setFillParent(true);
         //root.debug();
 
         Label.LabelStyle resourceTextStyle = new Label.LabelStyle(ClientAssetLoader.bigSizeFont, Color.WHITE);
         TiledDrawable tiledDrawable = hudSkin.getTiledDrawable("health-orb-fill");
-        tiledDrawable.setMinHeight(0.0f);
+        tiledDrawable.setMinHeight(0f);
         hudSkin.get("health-orb", ProgressBar.ProgressBarStyle.class).knobBefore = tiledDrawable;
-        healthOrb = new ProgressBar(0f, PlayerCharacter.getMaxHealth(), 0.5f, true, hudSkin, "health-orb");
+        healthOrb = new ProgressBar(0f, PlayerCharacter.getMaxHealth(), 1f, true, hudSkin, "health-orb");
         healthOrb.setAnimateDuration(0.1f);
         healthText = new Label("", resourceTextStyle);
         Stack healthStack = new Stack();
@@ -39,25 +41,36 @@ public class GameHUDStage extends Stage {
         healthStack.add(healthText);
 
         tiledDrawable = hudSkin.getTiledDrawable("progress-bar-mana-v");
-        tiledDrawable.setMinHeight(0.0f);
+        tiledDrawable.setMinHeight(0f);
         hudSkin.get("mana-vertical", ProgressBar.ProgressBarStyle.class).knobBefore = tiledDrawable;
-        shieldBar = new ProgressBar(0f, PlayerCharacter.getMaxShield(), 0.5f, true, hudSkin, "mana-vertical");
+        shieldBar = new ProgressBar(0f, PlayerCharacter.getMaxShield(), 1f, true, hudSkin, "mana-vertical");
         shieldBar.setAnimateDuration(0.1f);
         shieldText = new Label("", resourceTextStyle);
         Stack shieldStack = new Stack();
         shieldStack.add(shieldBar);
         shieldStack.add(shieldText);
 
+        tiledDrawable = hudSkin.getTiledDrawable("progress-bar-mana");
+        tiledDrawable.setMinWidth(0f);
+        hudSkin.get("mana", ProgressBar.ProgressBarStyle.class).knobBefore = tiledDrawable;
+        ammoBar = new ProgressBar(0, 25, 1f, false, hudSkin, "mana");
+        ammoBar.setAnimateDuration(0.1f);
+        ammoText = new Label("", resourceTextStyle);
+        Stack ammoStack = new Stack();
+        ammoStack.add(ammoBar);
+        ammoStack.add(ammoText);
+
         root.left().bottom();
         root.add(healthStack).width(201).height(164).left();
         root.add(shieldStack).height(175).padLeft(20).left().expandX();
+        root.add(ammoStack).width(175);
 
         this.addActor(root);
     }
 
-    public static GameHUDStage getInstance() {
-        return ourInstance;
-    }
+//    public static GameHUDStage getInstance() {
+//        return ourInstance;
+//    }
 
     @Override
     public void act() {
@@ -65,13 +78,15 @@ public class GameHUDStage extends Stage {
         if (gameStage.getPlayerCharacter() != null) {
             healthOrb.setValue(gameStage.getPlayerCharacter().getHealth());
             healthText.setText("    " + (int) gameStage.getPlayerCharacter().getHealth());
+
             shieldBar.setValue(gameStage.getPlayerCharacter().getEnergyShield());
             shieldText.setText(" " + (int) gameStage.getPlayerCharacter().getEnergyShield());
-        }
-    }
 
-    @Override
-    public void draw() {
-        super.draw();
+            float maxCapacity = gameStage.getPlayerCharacter().getCurrWeapon().getMaxCapacity();
+            float currCapacity = gameStage.getPlayerCharacter().getCurrWeapon().getCurrentCapacity();
+            ammoBar.setRange(0f, maxCapacity);
+            ammoBar.setValue((int) currCapacity);
+            ammoText.setText("  " + (int) currCapacity + "/" + (int) maxCapacity);
+        }
     }
 }
