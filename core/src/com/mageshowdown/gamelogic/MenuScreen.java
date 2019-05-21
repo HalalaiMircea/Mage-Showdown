@@ -115,22 +115,23 @@ public class MenuScreen implements Screen {
         foreground.setFillParent(true);
         //foreground.debug();
 
-        //Widgets declarations
-        TextButton connectButton = new TextButton("Connect to:", ClientAssetLoader.uiSkin);
-        TextButton optionsButton = new TextButton("Options", ClientAssetLoader.uiSkin);
-        TextButton quitButton = new TextButton("Quit to Desktop", ClientAssetLoader.uiSkin);
-        final TextField addressField = new TextField("127.0.0.1", ClientAssetLoader.uiSkin);
 
+        //Widgets declarations
+        TextButton connectButton = new TextButton("Connect", ClientAssetLoader.uiSkin);
+        TextButton optionsButton = new TextButton("Options...", ClientAssetLoader.uiSkin);
+        TextButton quitButton = new TextButton("Quit Game", ClientAssetLoader.uiSkin);
+        final TextField addressField = new TextField("127.0.0.1", ClientAssetLoader.uiSkin);
         //
         //Order sensitive addition and positioning of widgets into table
-        //
-        foreground.defaults().padBottom(20);
-        foreground.add(connectButton).fill();
+        //(1280x720)->290w 60h cells 25pad right left 20 top bottom
+        foreground.defaults().space(20, 25, 20, 25).width(290).height(60);
+        foreground.add(connectButton);
         foreground.add(addressField);
         foreground.row();
-        foreground.add(optionsButton).colspan(2).width(200);
+        foreground.defaults().width(605).colspan(2);
+        foreground.add(optionsButton);
         foreground.row();
-        foreground.add(quitButton).colspan(2).width(200);
+        foreground.add(quitButton);
 
         connectButton.addListener(new ClickListener() {
             @Override

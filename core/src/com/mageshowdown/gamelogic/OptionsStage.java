@@ -3,13 +3,13 @@ package com.mageshowdown.gamelogic;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mageshowdown.gameclient.ClientAssetLoader;
 import com.mageshowdown.gameclient.MageShowdownClient;
 import com.mageshowdown.utils.PrefsKeys;
@@ -30,7 +30,7 @@ public class OptionsStage extends Stage {
     private SelectBox<String> resSelectBox;
     private SelectBox<String> modeSelectBox;
     private SelectBox<Integer> refreshSelectBox;
-    private CheckBox vsyncCheckBox;
+    private TextButton vsyncCheckBox;
 
     private Graphics.DisplayMode[] displayModes;
 
@@ -59,21 +59,22 @@ public class OptionsStage extends Stage {
         foreground.setFillParent(true);
         //foreground.debug();
 
-        Label resLabel = new Label("Resolution", uiSkin);
-        Label displayModeLabel = new Label("Display Mode", uiSkin);
-        Label refreshLabel = new Label("Refresh Rate", uiSkin);
+        Label resLabel = new Label("Resolution", uiSkin, "menu-label");
+        Label displayModeLabel = new Label("Display Mode", uiSkin, "menu-label");
+        Label refreshLabel = new Label("Refresh Rate", uiSkin, "menu-label");
         resSelectBox = new SelectBox<String>(uiSkin);
         modeSelectBox = new SelectBox<String>(uiSkin);
         refreshSelectBox = new SelectBox<Integer>(uiSkin);
-        vsyncCheckBox = new CheckBox("Vertical Sync", uiSkin);
+        vsyncCheckBox = new TextButton("Vertical Sync: ", uiSkin);
 
-        Label playerNameLabel = new Label("Player name", uiSkin);
+        Label playerNameLabel = new Label("Player name", uiSkin, "menu-label");
         playerNameField = new TextField(prefs.getString(PrefsKeys.PLAYERNAME), uiSkin);
         playerNameField.setMessageText("Enter your name...");
         backButton = new TextButton("Back", uiSkin);
         applyButton = new TextButton("Apply", uiSkin);
 
-        foreground.defaults().padBottom(20).padRight(10);
+        //(1280x720)->290w 60h cells 25pad right left 20 top bottom
+        foreground.defaults().space(20, 25, 20, 25).width(290).height(60);
         foreground.add(resLabel, resSelectBox);
         foreground.row();
         foreground.add(refreshLabel, refreshSelectBox);
@@ -82,7 +83,7 @@ public class OptionsStage extends Stage {
         foreground.row();
         foreground.add(playerNameLabel, playerNameField);
         foreground.row();
-        foreground.add(vsyncCheckBox).colspan(2);
+        foreground.add(vsyncCheckBox).colspan(2).width(605);
         foreground.row();
         foreground.add(backButton, applyButton);
     }
@@ -123,7 +124,12 @@ public class OptionsStage extends Stage {
             refreshSelectBox.setSelected(60);
             prefs.putInteger(PrefsKeys.REFRESHRATE, refreshSelectBox.getSelected());
         }
+        if (prefs.getBoolean(PrefsKeys.VSYNC))
+            vsyncCheckBox.setText("Vertical Sync: ON");
+        else
+            vsyncCheckBox.setText("Vertical Sync: OFF");
         vsyncCheckBox.setChecked(prefs.getBoolean(PrefsKeys.VSYNC));
+
     }
 
     private void handleWidgetEvents() {
@@ -157,6 +163,15 @@ public class OptionsStage extends Stage {
                 GameWorld.updateResolutionScale();
             }
         });
+        vsyncCheckBox.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if(vsyncCheckBox.isChecked())
+                    vsyncCheckBox.setText("Vertical Sync: ON");
+                else
+                    vsyncCheckBox.setText("Vertical Sync: OFF");
+            }
+        });
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -165,8 +180,8 @@ public class OptionsStage extends Stage {
                     Gdx.input.setInputProcessor(MenuScreen.getMainMenuStage());
                 }
                 if (MageShowdownClient.getInstance().getScreen().equals(GameScreen.getInstance())) {
-                    GameScreen.getInstance().setGameState(GameScreen.GameState.GAME_PAUSED);
-                    Gdx.input.setInputProcessor(GameScreen.getInstance().getEscMenuStage());
+                    GameScreen.setGameState(GameScreen.GameState.GAME_PAUSED);
+                    Gdx.input.setInputProcessor(GameScreen.getEscMenuStage());
                 }
             }
         });

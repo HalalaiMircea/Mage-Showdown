@@ -22,7 +22,7 @@ public class ScoreboardStage extends Stage {
 
     private final int WIDTH = 800;
     private final int HEIGHT = 400;
-    private ClientGameStage gameStage = GameScreen.getInstance().getGameStage();
+    private ClientGameStage gameStage = GameScreen.getGameStage();
     private ClientRound round = ClientRound.getInstance();
     private Label timeLeftLabel;
     private PlayerStatsList psl;

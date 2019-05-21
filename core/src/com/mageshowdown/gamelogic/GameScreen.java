@@ -156,18 +156,19 @@ public class GameScreen implements Screen {
 
         TextButton resumeButton = new TextButton("Resume Game", ClientAssetLoader.uiSkin);
         TextButton optionsButton = new TextButton("Options", ClientAssetLoader.uiSkin);
-        TextButton quitButton = new TextButton("Quit to Desktop", ClientAssetLoader.uiSkin);
+        TextButton quitButton = new TextButton("Quit Game", ClientAssetLoader.uiSkin);
         TextButton disconnectButton = new TextButton("Disconnect", ClientAssetLoader.uiSkin);
         Image semiTL = new Image(ClientAssetLoader.solidBlack);
         semiTL.setColor(0, 0, 0, 0.8f);
 
-        menuTable.add(resumeButton).padBottom(20);
+        //(1280x720)->290w 60h cells 25pad right left 20 top bottom
+        menuTable.defaults().space(20, 25, 20, 25).width(605).height(60).colspan(2);
+        menuTable.add(resumeButton);
         menuTable.row();
-        menuTable.add(optionsButton).padBottom(20);
+        menuTable.add(optionsButton);
         menuTable.row();
-        menuTable.add(disconnectButton).padBottom(20);
-        menuTable.row();
-        menuTable.add(quitButton);
+        menuTable.defaults().width(290).colspan(1);
+        menuTable.add(disconnectButton, quitButton);
         background.add(semiTL);
 
         resumeButton.addListener(new ClickListener() {

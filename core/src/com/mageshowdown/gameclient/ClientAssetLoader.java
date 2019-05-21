@@ -2,12 +2,13 @@ package com.mageshowdown.gameclient;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 
 public class ClientAssetLoader {
 
@@ -93,12 +94,12 @@ public class ClientAssetLoader {
         enemyRunningSpritesheet = new Texture(Gdx.files.internal("Player Animations/Enemy player/enemyRunningAnimationSpritesheet.png"));
 
         freezeProjectileTexture = new Texture(Gdx.files.internal("Player Animations/Ammo/freezeProjectile.png"));
-        armFreezeBombSpritesheet=new Texture(Gdx.files.internal("Player Animations/Effect/armFreezeBombSpritesheet.png"));
-        freezeBombSpritesheet=new Texture(Gdx.files.internal("Player Animations/Effect/freezeBombSpritesheet.png"));
+        armFreezeBombSpritesheet = new Texture(Gdx.files.internal("Player Animations/Effect/armFreezeBombSpritesheet.png"));
+        freezeBombSpritesheet = new Texture(Gdx.files.internal("Player Animations/Effect/freezeBombSpritesheet.png"));
         crystalSpritesheet = new Texture("Player Animations/Weapon/CrystalSpritesheet.png");
         fireLaserSpritesheet = new Texture(Gdx.files.internal("Player Animations/Ammo/fireLaserSpritesheet.png"));
-        armFireBombSpritesheet=new Texture(Gdx.files.internal("Player Animations/Effect/armFireBombSpritesheet.png"));
-        fireBombSpritesheet=new Texture(Gdx.files.internal("Player Animations/Effect/fireBombSpritesheet.png"));
+        armFireBombSpritesheet = new Texture(Gdx.files.internal("Player Animations/Effect/armFireBombSpritesheet.png"));
+        fireBombSpritesheet = new Texture(Gdx.files.internal("Player Animations/Effect/fireBombSpritesheet.png"));
         flameSpritesheet = new Texture(Gdx.files.internal("Player Animations/Weapon/flameSpritesheet.png"));
 
         energyShieldSpritesheet = new Texture(Gdx.files.internal("Player Animations/Effect/energyShieldSpriteSheet.png"));
@@ -144,9 +145,17 @@ public class ClientAssetLoader {
         normalSizeFont = retroFontGen.generateFont(fontParameter);
 
         fontParameter.size = 24;
-        fontParameter.shadowOffsetX = 2;
-        fontParameter.shadowOffsetY = 2;
+        fontParameter.shadowColor = Color.DARK_GRAY;
+        fontParameter.shadowOffsetX = 3;
+        fontParameter.shadowOffsetY = 3;
         bigSizeFont = retroFontGen.generateFont(fontParameter);
+
+        uiSkin.get("default", TextButton.TextButtonStyle.class).font = bigSizeFont;
+        uiSkin.get("default", TextField.TextFieldStyle.class).font = bigSizeFont;
+        uiSkin.get("default", SelectBox.SelectBoxStyle.class).font =
+                uiSkin.get("default", SelectBox.SelectBoxStyle.class).listStyle.font = bigSizeFont;
+        uiSkin.add("menu-label", new Label.LabelStyle(bigSizeFont, Color.WHITE), Label.LabelStyle.class);
+
     }
 
 //    public void setAssets() {
