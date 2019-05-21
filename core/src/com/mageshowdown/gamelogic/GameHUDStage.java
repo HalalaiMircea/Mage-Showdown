@@ -13,8 +13,6 @@ import com.mageshowdown.gameclient.ClientGameStage;
 import static com.mageshowdown.gameclient.ClientAssetLoader.hudSkin;
 
 public class GameHUDStage extends Stage {
-    //private static GameHUDStage ourInstance = new GameHUDStage();
-
     private ProgressBar healthOrb;
     private ProgressBar shieldBar;
     private ProgressBar ammoBar;
@@ -67,10 +65,6 @@ public class GameHUDStage extends Stage {
 
         this.addActor(root);
     }
-
-//    public static GameHUDStage getInstance() {
-//        return ourInstance;
-//    }
 
     @Override
     public void act() {

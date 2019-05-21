@@ -8,13 +8,13 @@ import com.mageshowdown.packets.Network;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class GameClient extends Client{
+public class GameClient extends Client {
 
-    private static GameClient instance =new GameClient();
+    private static GameClient instance = new GameClient();
 
     private String userName;
     //indicates if the client is logged into the server
-    private boolean logged=false;
+    private boolean logged = false;
 
     private GameClient() {
         super();
@@ -22,15 +22,11 @@ public class GameClient extends Client{
     }
 
     @Override
-    public void connect(int timeout, String host, int tcpPort, int udpPort){
-        try{
-            super.connect(timeout, host, tcpPort, udpPort);
-        }catch(IOException e){
-            System.out.println("Couldnt connect to the server");
-        }
+    public void connect(int timeout, String host, int tcpPort, int udpPort) throws IOException {
+        super.connect(timeout, host, tcpPort, udpPort);
     }
 
-    private void registerClasses(){
+    private void registerClasses() {
         Kryo kryo = getKryo();
         kryo.register(Network.OneCharacterState.class);
         kryo.register(Network.CharacterStates.class);
@@ -59,7 +55,7 @@ public class GameClient extends Client{
     @Override
     public void stop() {
         super.stop();
-        logged=false;
+        logged = false;
     }
 
     public String getUserName() {

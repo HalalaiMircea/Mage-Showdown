@@ -76,7 +76,7 @@ public class ClientGameStage extends Stage {
     }
 
     public void removePlayerCharacter(int connectionId) {
-        if(otherPlayers.get(connectionId)!=null){
+        if (otherPlayers.get(connectionId) != null) {
             sortedPlayers.remove(connectionId);
             otherPlayers.get(connectionId).remove();
             otherPlayers.remove(connectionId);
@@ -109,11 +109,11 @@ public class ClientGameStage extends Stage {
     public void clear() {
         super.clear();
         removeMyCharacter();
-        for(Integer key:getOtherPlayers().keySet()){
+        for (Integer key : getOtherPlayers().keySet()) {
             removePlayerCharacter(key);
         }
         gameLevel.clearHitboxes();
-        while(GameWorld.world.getBodyCount()>0){
+        while (GameWorld.world.getBodyCount() > 0) {
             GameWorld.clearBodyRemovalQueue();
         }
     }
