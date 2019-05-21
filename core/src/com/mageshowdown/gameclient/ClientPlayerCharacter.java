@@ -27,7 +27,7 @@ public class ClientPlayerCharacter extends PlayerCharacter
     private boolean moveLeft = false;
     private boolean moveRight = false;
     private boolean jump = false;
-    private boolean isMyPlayer = false;
+    private boolean isMyPlayer;
     private boolean shoot = false;
     private boolean plantBomb = false;
     private boolean switchWeapons = false;
@@ -70,7 +70,7 @@ public class ClientPlayerCharacter extends PlayerCharacter
     @Override
     public void draw(Batch batch, float parentAlpha) {
         if (dmgImmune)
-            batch.setColor(batch.getColor().r, batch.getColor().g, batch.getColor().b, 55);
+            batch.setColor(batch.getColor().r, batch.getColor().g, batch.getColor().b, 0);
         if (currFrame != null)
             batch.draw(currFrame, getX(), getY(), getWidth() * getScaleX(), getHeight() * getScaleY());
         if (energyShield > 0 && currShieldFrame != null)
@@ -83,11 +83,10 @@ public class ClientPlayerCharacter extends PlayerCharacter
 
     @Override
     public void pickFrame() {
-        boolean looping = true;
-        if (animations.get("energy shield") != null)
-            currShieldFrame = animations.get("energy shield").getKeyFrame(passedTime, looping);
-        if (frozen && animations.get("frozen") != null)
-            currFrozenFrame = animations.get("frozen").getKeyFrame(frozenTimer, looping);
+        if (animations.containsKey("energy shield"))
+            currShieldFrame = animations.get("energy shield").getKeyFrame(passedTime, true);
+        if (frozen && animations.containsKey("frozen"))
+            currFrozenFrame = animations.get("frozen").getKeyFrame(frozenTimer, true);
 
         /*
          * if the character is grounded, we have to see if hes moving left or right or standing and change the animation accordingly
@@ -96,23 +95,15 @@ public class ClientPlayerCharacter extends PlayerCharacter
          */
         switch (verticalState) {
             case GROUNDED:
-                switch (horizontalState) {
-                    case STANDING:
-                        if (animations.get("idle") != null)
-                            currFrame = animations.get("idle").getKeyFrame(passedTime, looping);
-                        break;
-                    default:
-                        if (animations.get("running") != null)
-                            currFrame = animations.get("running").getKeyFrame(passedTime, looping);
-                        break;
-                }
+                if(animations.containsKey(horizontalState.toString()))
+                    currFrame=animations.get(horizontalState.toString()).getKeyFrame(passedTime,true);
                 break;
             case FLYING:
-                looping = false;
-                if (animations.get("jumping") != null)
-                    currFrame = animations.get("jumping").getKeyFrame(passedTime, looping);
+                if(animations.containsKey(verticalState.toString()))
+                    currFrame = animations.get(verticalState.toString()).getKeyFrame(passedTime, false);
                 break;
         }
+
     }
 
     private void sendInputPackets() {
@@ -158,7 +149,6 @@ public class ClientPlayerCharacter extends PlayerCharacter
                 horizontalState = HorizontalState.STANDING;
             }
 
-
             if (body.getLinearVelocity().y != 0) {
                 velocity.y = body.getLinearVelocity().y;
             }
@@ -178,16 +168,12 @@ public class ClientPlayerCharacter extends PlayerCharacter
                     //only the client's own character flips in the direction of the mouse
                     if (isMyPlayer) {
                         if (GameWorld.getMousePos().x < getX()) {
-                            if (!currFrame.isFlipX()) {
-                                currFrame.flip(true, false);
-                            }
+                            currFrame.flip(!currFrame.isFlipX(),false);
                         } else {
-                            if (currFrame.isFlipX())
-                                currFrame.flip(true, false);
+                            currFrame.flip(currFrame.isFlipX(),false);
                         }
                     } else {
-                        if (currFrame.isFlipX())
-                            currFrame.flip(true, false);
+                        currFrame.flip(currFrame.isFlipX(),false);
                     }
                     break;
             }

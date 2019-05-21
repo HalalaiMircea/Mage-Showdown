@@ -74,8 +74,10 @@ public abstract class PlayerCharacter extends DynamicGameActor {
     }
 
     protected void updateAmmoState(){
-        freezeWeapon.destroyEliminatedAmmo();
-        fireWeapon.destroyEliminatedAmmo();
+        if(freezeWeapon!=null)
+            freezeWeapon.destroyEliminatedAmmo();
+        if(fireWeapon!=null)
+            fireWeapon.destroyEliminatedAmmo();
     }
 
     protected void updateFrozenState() {

@@ -20,17 +20,21 @@ public class GameWorld {
      * a queue of callables and in the call method of these
      * i put the specific createBody() call of a particular actor
      */
-    public static LinkedList<Body> bodiesToBeRemoved;
-    public static LinkedList<Callable> bodiesToBeCreated;
+    private static LinkedList<Body> bodiesToBeRemoved;
+    private static LinkedList<Callable> bodiesToBeCreated;
 
     static {
         world = new World(new Vector2(0, -9.8f), true);
         bodiesToBeRemoved = new LinkedList<Body>();
-        bodiesToBeCreated=new LinkedList<Callable>();
+        bodiesToBeCreated = new LinkedList<Callable>();
     }
 
-    public static void setResolutionScale(float _resolutionScale) {
-        resolutionScale = _resolutionScale;
+    /*
+    * since the size of the world remains static, we need to know how much smaller/bigger it is than the resolution
+    * in order to find the correct position of the mouse
+     */
+    public static void updateResolutionScale() {
+        resolutionScale = Gdx.graphics.getWidth() / 1280f;
     }
 
     public static float getMouseVectorAngle(Vector2 startPoint) {
@@ -68,22 +72,21 @@ public class GameWorld {
         return new Vector2(worldCoord.x * 100f, worldCoord.y * 100f);
     }
 
-    public static void addToBodyCreationQueue(Callable<Void> bodyCreateCall){
+    public static void addToBodyCreationQueue(Callable<Void> bodyCreateCall) {
         bodiesToBeCreated.add(bodyCreateCall);
     }
 
-    public static void clearBodyCreationQueue(){
-        while(!bodiesToBeCreated.isEmpty()){
-            try{
+    public static void clearBodyCreationQueue() {
+        while (!bodiesToBeCreated.isEmpty()) {
+            try {
                 bodiesToBeCreated.remove().call();
-            }
-            catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public static void addToBodyRemovalQueue(Body body){
+    public static void addToBodyRemovalQueue(Body body) {
         bodiesToBeRemoved.add(body);
     }
 

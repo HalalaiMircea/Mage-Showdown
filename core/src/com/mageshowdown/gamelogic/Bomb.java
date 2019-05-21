@@ -64,10 +64,10 @@ public class Bomb extends Ammo implements AnimatedActorInterface{
     @Override
     public void pickFrame() {
         if(!exploded){
-            if(animations.get("arm")!=null)
+            if(animations.containsKey("arm"))
                 currFrame=animations.get("arm").getKeyFrame(passedTime,false);
         }else{
-            if(animations.get("explosion")!=null)
+            if(animations.containsKey("explosion"))
                 currFrame=animations.get("explosion").getKeyFrame(explosionTime,false);
         }
     }

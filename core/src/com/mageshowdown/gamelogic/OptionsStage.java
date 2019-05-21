@@ -152,6 +152,9 @@ public class OptionsStage extends Stage {
                 prefs.putString(PrefsKeys.PLAYERNAME, playerNameField.getText());
                 prefs.putBoolean(PrefsKeys.VSYNC, vsyncCheckBox.isChecked());
                 prefs.flush();
+
+                //when we apply new graphics settings the resolution may have changed so we update the resolution scale
+                GameWorld.updateResolutionScale();
             }
         });
         backButton.addListener(new ClickListener() {

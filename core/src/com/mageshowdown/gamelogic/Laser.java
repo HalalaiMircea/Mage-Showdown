@@ -35,7 +35,7 @@ public class Laser extends Ammo implements AnimatedActorInterface{
 
     @Override
     public void pickFrame() {
-        if(animations.get("idle")!=null)
+        if(animations.containsKey("idle"))
             currFrame=animations.get("idle").getKeyFrame(passedTime,false);
     }
 }

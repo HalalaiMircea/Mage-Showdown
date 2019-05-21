@@ -5,54 +5,34 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 
 public abstract class DynamicGameActor extends GameActor {
     public enum VerticalState{
-        GROUNDED(1),
-        FLYING(2);
+        GROUNDED("idle"),
+        FLYING("jumping");
 
-        private int numValue;
+        private String name;
 
-        VerticalState(int numValue){
-            this.numValue=numValue;
+        VerticalState(String name){
+            this.name=name;
         }
 
-        public int getNumValue(){
-            return numValue;
-        }
-
-        public static VerticalState valueOf( int numValue){
-            switch(numValue){
-                case 1:
-                    return GROUNDED;
-                case 2:
-                    return FLYING;
-                default:
-                    return GROUNDED;
-            }
+        @Override
+        public String toString() {
+            return this.name;
         }
     }
     public enum HorizontalState{
-        GOING_LEFT(1),
-        GOING_RIGHT(2),
-        STANDING(3);
+        GOING_LEFT("running"),
+        GOING_RIGHT("running"),
+        STANDING("idle");
 
-        private int numValue;
+        private String name;
 
-        HorizontalState(int numValue){
-            this.numValue=numValue;
-        }
-        public int getNumValue(){
-            return numValue;
+        HorizontalState(String name){
+            this.name=name;
         }
 
-        public static HorizontalState valueOf(int numValue){
-            switch(numValue){
-                case 1:
-                    return GOING_LEFT;
-                case 2:
-                    return GOING_RIGHT;
-                default:
-                    return STANDING;
-
-            }
+        @Override
+        public String toString() {
+            return this.name;
         }
     }
 
