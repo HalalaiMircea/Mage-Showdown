@@ -1,12 +1,14 @@
 package com.mageshowdown.gamelogic;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mageshowdown.gameclient.ClientAssetLoader;
 import com.mageshowdown.gameclient.ClientGameStage;
 import com.mageshowdown.gameclient.ClientPlayerCharacter;
@@ -17,8 +19,6 @@ import java.util.Map;
 import static com.mageshowdown.gameclient.ClientAssetLoader.uiSkin;
 
 public class ScoreboardStage extends Stage {
-
-    private static ScoreboardStage ourInstance = new ScoreboardStage();
 
     private final int WIDTH = 800;
     private final int HEIGHT = 400;
@@ -56,20 +56,30 @@ public class ScoreboardStage extends Stage {
         }
     }
 
-    private ScoreboardStage() {
-        super(MenuScreen.getMainMenuStage().getViewport());
+    public ScoreboardStage() {
+        super();
+        init();
+    }
 
+    public ScoreboardStage(Viewport viewport) {
+        super(viewport);
+        init();
+    }
+
+    public ScoreboardStage(Viewport viewport, Batch batch) {
+        super(viewport, batch);
+        init();
+    }
+
+    private void init() {
         psl = new PlayerStatsList();
         Table root = new Table(uiSkin);
         root.setBackground("default-window");
         root.setColor(0, 0, 0, 0.8f);
-        root.setSize(WIDTH, HEIGHT);
-        root.setPosition(Gdx.graphics.getWidth() / 2 - WIDTH / 2, Gdx.graphics.getHeight() / 2 - HEIGHT / 2);
         //root.debug();
 
         Label.LabelStyle timeLeftStyle = new Label.LabelStyle(ClientAssetLoader.bigSizeFont, Color.WHITE);
         timeLeftLabel = new Label("", timeLeftStyle);
-
         root.top();
         root.add(new Label("TIME LEFT", timeLeftStyle)).expandX().colspan(3);
         root.row();
@@ -85,11 +95,11 @@ public class ScoreboardStage extends Stage {
         root.add(psl.killsListWidget);
         root.add(psl.scoreListWidget);
 
-        this.addActor(root);
-    }
+        Container<Table> wrapper = new Container<Table>(root);
+        wrapper.setFillParent(true);
+        wrapper.width(WIDTH).height(HEIGHT);
 
-    public static ScoreboardStage getInstance() {
-        return ourInstance;
+        this.addActor(wrapper);
     }
 
     @Override

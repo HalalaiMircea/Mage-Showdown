@@ -4,12 +4,17 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mageshowdown.gameclient.*;
 
 public class GameScreen implements Screen {
@@ -21,19 +26,24 @@ public class GameScreen implements Screen {
     private static final GameScreen INSTANCE = new GameScreen();
 
     private static ClientGameStage gameStage;
-    private static GameHUDStage hudStage;
-    private static OptionsStage gameOptionsStage;
+    private static Stage hudStage;
+    private static Stage gameOptionsStage;
     private static Stage escMenuStage;
+    private static Stage scoreboardStage;
     private static GameState gameState;
 
     private GameScreen() {
     }
 
     public static void start() {
+        Viewport viewport = new ScreenViewport(new OrthographicCamera(1280f, 720f));
+        Batch batch = new SpriteBatch();
+
         gameStage = new ClientGameStage();
-        hudStage = new GameHUDStage();
-        escMenuStage = new Stage(MenuScreen.getMainMenuStage().getViewport(), gameStage.getBatch());
-        gameOptionsStage = new OptionsStage(ClientAssetLoader.solidBlack);
+        hudStage = new GameHUDStage(viewport, batch);
+        scoreboardStage = new ScoreboardStage(viewport, batch);
+        escMenuStage = new Stage(viewport, batch);
+        gameOptionsStage = new OptionsStage(viewport, batch, ClientAssetLoader.solidBlack);
 
         prepareEscMenu();
     }
@@ -43,36 +53,31 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(255, 255, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        if (!ClientRound.getInstance().isFinished())
+            gameStage.act();
+        else
+            ClientRound.getInstance().act(Gdx.graphics.getDeltaTime());
+        gameStage.draw();
+
         switch (gameState) {
             case GAME_RUNNING:
-                if (!ClientRound.getInstance().isFinished())
-                    gameStage.act();
-                else
-                    ClientRound.getInstance().act(Gdx.graphics.getDeltaTime());
                 gameRunningInput();
-                gameStage.draw();
                 hudStage.act();
                 hudStage.draw();
                 break;
             case GAME_PAUSED:
-                gameStage.act();
-                escMenuStage.act();
-                gameStage.draw();
-                escMenuStage.draw();
                 gamePausedInput();
+                escMenuStage.act();
+                escMenuStage.draw();
                 break;
             case GAME_OPTIONS:
-                gameStage.act();
                 gameOptionsStage.act();
-                gameStage.draw();
                 gameOptionsStage.draw();
                 break;
             case SCOREBOARD:
-                gameStage.act();
-                gameStage.draw();
-                ScoreboardStage.getInstance().act();
-                ScoreboardStage.getInstance().draw();
                 scoreboardInput();
+                scoreboardStage.act();
+                scoreboardStage.draw();
                 break;
         }
     }
@@ -102,6 +107,7 @@ public class GameScreen implements Screen {
         gameStage.getViewport().update(width, height, true);
         escMenuStage.getViewport().update(width, height, true);
         gameOptionsStage.getViewport().update(width, height, true);
+        hudStage.getViewport().update(width, height, true);
     }
 
     @Override
@@ -121,7 +127,7 @@ public class GameScreen implements Screen {
         gameStage.dispose();
         escMenuStage.dispose();
         gameOptionsStage.dispose();
-        ScoreboardStage.getInstance().dispose();
+        scoreboardStage.dispose();
         hudStage.dispose();
         INSTANCE.dispose();
     }
@@ -203,7 +209,7 @@ public class GameScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 final Dialog dialog = new Dialog("", ClientAssetLoader.uiSkin);
-                dialog.text("Are you sure?");
+                dialog.text("Are you sure?", ClientAssetLoader.uiSkin.get("menu-label", Label.LabelStyle.class));
                 Button confirmBtn = new TextButton("Yes, quit the Game!", ClientAssetLoader.uiSkin);
                 Button cancelBtn = new TextButton("No, take me back!", ClientAssetLoader.uiSkin);
                 confirmBtn.addListener(new ChangeListener() {

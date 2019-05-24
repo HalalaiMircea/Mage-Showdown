@@ -3,13 +3,13 @@ package com.mageshowdown.gamelogic;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mageshowdown.gameclient.ClientAssetLoader;
 import com.mageshowdown.gameclient.MageShowdownClient;
 import com.mageshowdown.utils.PrefsKeys;
@@ -35,7 +35,21 @@ public class OptionsStage extends Stage {
     private Graphics.DisplayMode[] displayModes;
 
     public OptionsStage(Texture backgroundTexture) {
-        //super(viewport, batch);
+        super();
+        init(backgroundTexture);
+    }
+
+    public OptionsStage(Viewport viewport, Texture backgroundTexture) {
+        super(viewport);
+        init(backgroundTexture);
+    }
+
+    public OptionsStage(Viewport viewport, Batch batch, Texture backgroundTexture) {
+        super(viewport, batch);
+        init(backgroundTexture);
+    }
+
+    private void init(Texture backgroundTexture) {
         this.backgroundTexture = backgroundTexture;
         displayModes = Gdx.graphics.getDisplayModes();
 
@@ -163,10 +177,10 @@ public class OptionsStage extends Stage {
                 GameWorld.updateResolutionScale();
             }
         });
-        vsyncCheckBox.addListener(new ClickListener(){
+        vsyncCheckBox.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if(vsyncCheckBox.isChecked())
+                if (vsyncCheckBox.isChecked())
                     vsyncCheckBox.setText("Vertical Sync: ON");
                 else
                     vsyncCheckBox.setText("Vertical Sync: OFF");

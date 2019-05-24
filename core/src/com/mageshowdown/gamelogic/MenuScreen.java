@@ -3,12 +3,16 @@ package com.mageshowdown.gamelogic;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mageshowdown.gameclient.ClientAssetLoader;
 import com.mageshowdown.gameclient.ClientListener;
 import com.mageshowdown.gameclient.GameClient;
@@ -28,14 +32,19 @@ public class MenuScreen implements Screen {
     //Singleton instantiation
     private static final MenuScreen INSTANCE = new MenuScreen();
 
+    private static Viewport viewport;
+
     private static Stage mainMenuStage;
-    private static OptionsStage menuOptionsStage;
+    private static Stage menuOptionsStage;
     private static StagePhase stagePhase;
     private GameClient myClient = GameClient.getInstance();
 
     private MenuScreen() {
-        mainMenuStage = new Stage();
-        menuOptionsStage = new OptionsStage(ClientAssetLoader.menuBackground);
+        viewport = new ScreenViewport(new OrthographicCamera(1280f, 720f));
+        SpriteBatch batch = new SpriteBatch();
+
+        mainMenuStage = new Stage(viewport, batch);
+        menuOptionsStage = new OptionsStage(viewport, batch, ClientAssetLoader.menuBackground);
 
         prepareMainMenuStage();
 
@@ -66,8 +75,7 @@ public class MenuScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        mainMenuStage.getViewport().update(width, height, true);
-        menuOptionsStage.getViewport().update(width, height, true);
+        viewport.update(width, height, true);
     }
 
     @Override
@@ -97,10 +105,6 @@ public class MenuScreen implements Screen {
         return mainMenuStage;
     }
 
-    public static OptionsStage getMenuOptionsStage() {
-        return menuOptionsStage;
-    }
-
     public static void setStagePhase(StagePhase stagePhase) {
         MenuScreen.stagePhase = stagePhase;
     }
@@ -110,11 +114,9 @@ public class MenuScreen implements Screen {
         background.add(new Image(ClientAssetLoader.menuBackground));
         background.setFillParent(true);
 
-
         Table foreground = new Table();
         foreground.setFillParent(true);
         //foreground.debug();
-
 
         //Widgets declarations
         TextButton connectButton = new TextButton("Connect", ClientAssetLoader.uiSkin);
@@ -174,8 +176,8 @@ public class MenuScreen implements Screen {
             MageShowdownClient.getInstance().setScreen(GameScreen.getInstance());
         } catch (IOException e) {
             final Dialog dialog = new Dialog("", ClientAssetLoader.uiSkin);
-            dialog.text(e.toString());
-            Button backBtn = new TextButton("Back...", ClientAssetLoader.uiSkin);
+            dialog.text(e.toString(), ClientAssetLoader.uiSkin.get("menu-label", Label.LabelStyle.class));
+            Button backBtn = new TextButton("Back", ClientAssetLoader.uiSkin);
             backBtn.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
