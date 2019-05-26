@@ -28,7 +28,7 @@ public class CreateBodies {
     private static PolygonShape createPolygonShape(Vector2 convSize){
         PolygonShape ps=new PolygonShape();
         //in order to be able to change the origin without headaches we use vertices instead of setAsBox()
-        Vector2 vertices[]=new Vector2[]{new Vector2(0,convSize.y),new Vector2(0,0),new Vector2(convSize.x,0),new Vector2(convSize.x,convSize.y)};
+        Vector2[] vertices = new Vector2[]{new Vector2(0, convSize.y), new Vector2(0, 0), new Vector2(convSize.x, 0), new Vector2(convSize.x, convSize.y)};
 
         ps.set(vertices);
 

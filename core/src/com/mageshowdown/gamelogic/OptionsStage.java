@@ -134,10 +134,9 @@ public class OptionsStage extends Stage {
         refreshSelectBox.setItems(refreshArray);
         if (prefs.contains(PrefsKeys.REFRESHRATE))
             refreshSelectBox.setSelected(prefs.getInteger(PrefsKeys.REFRESHRATE));
-        else {
+        else
             refreshSelectBox.setSelected(60);
-            prefs.putInteger(PrefsKeys.REFRESHRATE, refreshSelectBox.getSelected());
-        }
+
         if (prefs.getBoolean(PrefsKeys.VSYNC))
             vsyncCheckBox.setText("Vertical Sync: ON");
         else

@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -36,7 +35,7 @@ public class GameScreen implements Screen {
     }
 
     public static void start() {
-        Viewport viewport = new ScreenViewport(new OrthographicCamera(1280f, 720f));
+        Viewport viewport = new ScreenViewport();
         Batch batch = new SpriteBatch();
 
         gameStage = new ClientGameStage();
@@ -161,7 +160,7 @@ public class GameScreen implements Screen {
         background.setFillParent(true);
 
         TextButton resumeButton = new TextButton("Resume Game", ClientAssetLoader.uiSkin);
-        TextButton optionsButton = new TextButton("Options", ClientAssetLoader.uiSkin);
+        TextButton optionsButton = new TextButton("Options...", ClientAssetLoader.uiSkin);
         TextButton quitButton = new TextButton("Quit Game", ClientAssetLoader.uiSkin);
         TextButton disconnectButton = new TextButton("Disconnect", ClientAssetLoader.uiSkin);
         Image semiTL = new Image(ClientAssetLoader.solidBlack);

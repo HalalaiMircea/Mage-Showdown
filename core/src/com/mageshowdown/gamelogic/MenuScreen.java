@@ -3,7 +3,6 @@ package com.mageshowdown.gamelogic;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -21,6 +20,8 @@ import com.mageshowdown.packets.Network;
 import com.mageshowdown.utils.PrefsKeys;
 
 import java.io.IOException;
+
+import static com.mageshowdown.gameclient.ClientAssetLoader.prefs;
 
 public class MenuScreen implements Screen {
 
@@ -40,7 +41,7 @@ public class MenuScreen implements Screen {
     private GameClient myClient = GameClient.getInstance();
 
     private MenuScreen() {
-        viewport = new ScreenViewport(new OrthographicCamera(1280f, 720f));
+        viewport = new ScreenViewport();
         SpriteBatch batch = new SpriteBatch();
 
         mainMenuStage = new Stage(viewport, batch);
@@ -118,13 +119,11 @@ public class MenuScreen implements Screen {
         foreground.setFillParent(true);
         //foreground.debug();
 
-        //Widgets declarations
         TextButton connectButton = new TextButton("Connect", ClientAssetLoader.uiSkin);
         TextButton optionsButton = new TextButton("Options...", ClientAssetLoader.uiSkin);
         TextButton quitButton = new TextButton("Quit Game", ClientAssetLoader.uiSkin);
-        final TextField addressField = new TextField("127.0.0.1", ClientAssetLoader.uiSkin);
-        //
-        //Order sensitive addition and positioning of widgets into table
+        final TextField addressField = new TextField(prefs.getString(PrefsKeys.LASTENTEREDIP), ClientAssetLoader.uiSkin);
+
         //(1280x720)->290w 60h cells 25pad right left 20 top bottom
         foreground.defaults().space(20, 25, 20, 25).width(290).height(60);
         foreground.add(connectButton);
@@ -140,6 +139,7 @@ public class MenuScreen implements Screen {
             public void clicked(InputEvent even, float x, float y) {
                 if (GameWorld.world.getBodyCount() == 0) {
                     String ipAddress = addressField.getText();
+                    prefs.putString(PrefsKeys.LASTENTEREDIP, ipAddress).flush();
                     clientStart(ipAddress);
                 } else
                     System.out.println(GameWorld.world.getBodyCount());
@@ -166,7 +166,7 @@ public class MenuScreen implements Screen {
     }
 
     private void clientStart(String ipAddress) {
-        myClient.setUserName(ClientAssetLoader.prefs.getString(PrefsKeys.PLAYERNAME));
+        myClient.setUserName(prefs.getString(PrefsKeys.PLAYERNAME));
         myClient.start();
 
         try {

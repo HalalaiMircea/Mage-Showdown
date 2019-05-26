@@ -41,7 +41,6 @@ public class GamePreferences implements Preferences {
         }
     }
 
-
     /**
      * Specific location for UserPrefs
      **/
@@ -205,6 +204,7 @@ public class GamePreferences implements Preferences {
         this.putBoolean(PrefsKeys.VSYNC, true);
         this.putBoolean(PrefsKeys.USEGL30, false);
         this.putBoolean(PrefsKeys.FULLSCREEN, false);
+        this.putString(PrefsKeys.LASTENTEREDIP, "127.0.0.1");
         //TO-DO: put defaults to load into preference xml
 
         this.flush();
