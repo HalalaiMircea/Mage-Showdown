@@ -16,6 +16,7 @@ public class ClientAssetLoader {
 
     //public AssetManager manager;
     public static Texture solidBlack;
+    public static Texture testTexture;
     public static Skin uiSkin;
     public static Skin hudSkin;
     public static Texture menuBackground;
@@ -111,6 +112,8 @@ public class ClientAssetLoader {
         menuBackground = new Texture(Gdx.files.internal("UIAssets/placeholder.jpg"));
         solidBlack = new Texture(Gdx.files.internal("UIAssets/Black_1080p.png"));
         roundOverScreen = new Texture(Gdx.files.internal("UIAssets/round over.png"));
+        testTexture = new Texture(Gdx.files.internal("UIAssets/testTexture.png"));
+        testTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Nearest);
 
         generateFonts();
 
@@ -185,11 +188,6 @@ public class ClientAssetLoader {
 //    }
 
     public static void dispose() {
-        uiSkin.dispose();
-        hudSkin.dispose();
-        menuBackground.dispose();
-        solidBlack.dispose();
-
         friendlyIdleSpritesheet.dispose();
         friendlyJumpingSpritesheet.dispose();
         friendlyRunningSpritesheet.dispose();
@@ -198,21 +196,33 @@ public class ClientAssetLoader {
         enemyJumpingSpritesheet.dispose();
         enemyRunningSpritesheet.dispose();
 
-        crystalSpritesheet.dispose();
-        flameSpritesheet.dispose();
         freezeProjectileTexture.dispose();
+        armFreezeBombSpritesheet.dispose();
+        freezeBombSpritesheet.dispose();
+        crystalSpritesheet.dispose();
         fireLaserSpritesheet.dispose();
+        armFireBombSpritesheet.dispose();
+        fireBombSpritesheet.dispose();
+        flameSpritesheet.dispose();
 
-        //retroFontGen.dispose();
-        //font1.dispose();
-        normalSizeFont.dispose();
-        bigSizeFont.dispose();
+        energyShieldSpritesheet.dispose();
+        frozenSpritesheet.dispose();
+
+        uiSkin.dispose();
+        hudSkin.dispose();
+
+        menuBackground.dispose();
+        solidBlack.dispose();
+        roundOverScreen.dispose();
+        testTexture.dispose();
 
         map1.dispose();
         dungeonMap.dispose();
         purpleMap.dispose();
-        energyShieldSpritesheet.dispose();
-        frozenSpritesheet.dispose();
+
+        normalSizeFont.dispose();
+        bigSizeFont.dispose();
+        retroFontGen.dispose();
         //manager.dispose();
     }
 

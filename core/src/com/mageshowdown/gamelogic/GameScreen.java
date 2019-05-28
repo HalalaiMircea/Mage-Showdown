@@ -18,67 +18,34 @@ import com.mageshowdown.gameclient.*;
 
 public class GameScreen implements Screen {
 
-    enum GameState {
-        GAME_RUNNING, GAME_PAUSED, GAME_OPTIONS, SCOREBOARD
-    }
-
     private static final GameScreen INSTANCE = new GameScreen();
+    private static Viewport viewport;
+    private static Batch batch;
 
     private static ClientGameStage gameStage;
-    private static Stage hudStage;
-    private static Stage gameOptionsStage;
+    private static GameHUDStage hudStage;
+    private static OptionsStage gameOptionsStage;
     private static Stage escMenuStage;
-    private static Stage scoreboardStage;
+    private static ScoreboardStage scoreboardStage;
+    private static RoundEndStage roundEndStage;
+
     private static GameState gameState;
 
     private GameScreen() {
     }
 
     public static void start() {
-        Viewport viewport = new ScreenViewport();
-        Batch batch = new SpriteBatch();
+        viewport = new ScreenViewport();
+        batch = new SpriteBatch();
 
         gameStage = new ClientGameStage();
         hudStage = new GameHUDStage(viewport, batch);
         scoreboardStage = new ScoreboardStage(viewport, batch);
         escMenuStage = new Stage(viewport, batch);
         gameOptionsStage = new OptionsStage(viewport, batch, ClientAssetLoader.solidBlack);
+        roundEndStage = new RoundEndStage(viewport, batch);
 
         prepareEscMenu();
-    }
-
-    @Override
-    public void render(float delta) {
-        Gdx.gl.glClearColor(255, 255, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        if (!ClientRound.getInstance().isFinished())
-            gameStage.act();
-        else
-            ClientRound.getInstance().act(Gdx.graphics.getDeltaTime());
-        gameStage.draw();
-
-        switch (gameState) {
-            case GAME_RUNNING:
-                gameRunningInput();
-                hudStage.act();
-                hudStage.draw();
-                break;
-            case GAME_PAUSED:
-                gamePausedInput();
-                escMenuStage.act();
-                escMenuStage.draw();
-                break;
-            case GAME_OPTIONS:
-                gameOptionsStage.act();
-                gameOptionsStage.draw();
-                break;
-            case SCOREBOARD:
-                scoreboardInput();
-                scoreboardStage.act();
-                scoreboardStage.draw();
-                break;
-        }
     }
 
     public static GameScreen getInstance() {
@@ -95,40 +62,6 @@ public class GameScreen implements Screen {
 
     public static void setGameState(GameState gameState) {
         GameScreen.gameState = gameState;
-    }
-
-    @Override
-    public void show() {
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        gameStage.getViewport().update(width, height, true);
-        escMenuStage.getViewport().update(width, height, true);
-        gameOptionsStage.getViewport().update(width, height, true);
-        hudStage.getViewport().update(width, height, true);
-    }
-
-    @Override
-    public void pause() {
-    }
-
-    @Override
-    public void resume() {
-    }
-
-    @Override
-    public void hide() {
-    }
-
-    @Override
-    public void dispose() {
-        gameStage.dispose();
-        escMenuStage.dispose();
-        gameOptionsStage.dispose();
-        scoreboardStage.dispose();
-        hudStage.dispose();
-        INSTANCE.dispose();
     }
 
     private static void gameRunningInput() {
@@ -232,5 +165,80 @@ public class GameScreen implements Screen {
 
         escMenuStage.addActor(background);
         escMenuStage.addActor(menuTable);
+    }
+
+    @Override
+    public void render(float delta) {
+        Gdx.gl.glClearColor(255, 255, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        if (ClientRound.getInstance().isFinished()) {
+            ClientRound.getInstance().act(delta);
+            roundEndStage.act();
+            roundEndStage.draw();
+            //System.out.println(ClientRound.getInstance().isFinished());
+        } else
+            gameStage.act();
+        gameStage.draw();
+
+        switch (gameState) {
+            case GAME_RUNNING:
+                gameRunningInput();
+                hudStage.act();
+                hudStage.draw();
+                break;
+            case GAME_PAUSED:
+                gamePausedInput();
+                escMenuStage.act();
+                escMenuStage.draw();
+                break;
+            case GAME_OPTIONS:
+                gameOptionsStage.act();
+                gameOptionsStage.draw();
+                break;
+            case SCOREBOARD:
+                scoreboardInput();
+                scoreboardStage.act();
+                scoreboardStage.draw();
+                break;
+        }
+    }
+
+    @Override
+    public void show() {
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        gameStage.getViewport().update(width, height, true);
+        viewport.update(width, height, true);
+    }
+
+    @Override
+    public void pause() {
+    }
+
+    @Override
+    public void resume() {
+    }
+
+    @Override
+    public void hide() {
+    }
+
+    @Override
+    public void dispose() {
+        gameStage.dispose();
+        escMenuStage.dispose();
+        gameOptionsStage.dispose();
+        scoreboardStage.dispose();
+        hudStage.dispose();
+        roundEndStage.dispose();
+        INSTANCE.dispose();
+        batch.dispose();
+    }
+
+    enum GameState {
+        GAME_RUNNING, GAME_PAUSED, GAME_OPTIONS, SCOREBOARD
     }
 }

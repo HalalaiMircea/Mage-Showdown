@@ -3,6 +3,7 @@ package com.mageshowdown.gamelogic;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -25,16 +26,10 @@ import static com.mageshowdown.gameclient.ClientAssetLoader.prefs;
 
 public class MenuScreen implements Screen {
 
-    public enum StagePhase {
-        MAIN_MENU_STAGE,
-        OPTIONS_STAGE
-    }
-
     //Singleton instantiation
     private static final MenuScreen INSTANCE = new MenuScreen();
-
     private static Viewport viewport;
-
+    private static Batch batch;
     private static Stage mainMenuStage;
     private static Stage menuOptionsStage;
     private static StagePhase stagePhase;
@@ -42,7 +37,7 @@ public class MenuScreen implements Screen {
 
     private MenuScreen() {
         viewport = new ScreenViewport();
-        SpriteBatch batch = new SpriteBatch();
+        batch = new SpriteBatch();
 
         mainMenuStage = new Stage(viewport, batch);
         menuOptionsStage = new OptionsStage(viewport, batch, ClientAssetLoader.menuBackground);
@@ -51,6 +46,18 @@ public class MenuScreen implements Screen {
 
         stagePhase = StagePhase.MAIN_MENU_STAGE;
         Gdx.input.setInputProcessor(mainMenuStage);
+    }
+
+    public static MenuScreen getInstance() {
+        return INSTANCE;
+    }
+
+    public static Stage getMainMenuStage() {
+        return mainMenuStage;
+    }
+
+    public static void setStagePhase(StagePhase stagePhase) {
+        MenuScreen.stagePhase = stagePhase;
     }
 
     @Override
@@ -96,18 +103,7 @@ public class MenuScreen implements Screen {
         mainMenuStage.dispose();
         menuOptionsStage.dispose();
         INSTANCE.dispose();
-    }
-
-    public static MenuScreen getInstance() {
-        return INSTANCE;
-    }
-
-    public static Stage getMainMenuStage() {
-        return mainMenuStage;
-    }
-
-    public static void setStagePhase(StagePhase stagePhase) {
-        MenuScreen.stagePhase = stagePhase;
+        batch.dispose();
     }
 
     private void prepareMainMenuStage() {
@@ -189,5 +185,10 @@ public class MenuScreen implements Screen {
             dialog.show(mainMenuStage);
         }
         myClient.addListener(new ClientListener());
+    }
+
+    public enum StagePhase {
+        MAIN_MENU_STAGE,
+        OPTIONS_STAGE
     }
 }
