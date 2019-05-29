@@ -175,11 +175,13 @@ public class GameScreen implements Screen {
         if (ClientRound.getInstance().isFinished()) {
             ClientRound.getInstance().act(delta);
             roundEndStage.act();
+            gameStage.draw();
             roundEndStage.draw();
             //System.out.println(ClientRound.getInstance().isFinished());
-        } else
+        } else {
             gameStage.act();
-        gameStage.draw();
+            gameStage.draw();
+        }
 
         switch (gameState) {
             case GAME_RUNNING:
