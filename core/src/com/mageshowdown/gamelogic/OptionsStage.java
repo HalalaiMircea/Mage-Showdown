@@ -21,8 +21,8 @@ import static com.mageshowdown.gameclient.ClientAssetLoader.uiSkin;
 
 public class OptionsStage extends Stage {
 
-    private Table foreground;
-    private Table background;
+    private Image background;
+    private Table root;
     private Texture backgroundTexture;
     private TextField playerNameField;
     private TextButton backButton;
@@ -58,20 +58,18 @@ public class OptionsStage extends Stage {
         handleWidgetEvents();
 
         this.addActor(background);
-        this.addActor(foreground);
+        this.addActor(root);
     }
 
     private void setupLayoutView() {
-        background = new Table();
-        Image bgImage = new Image(backgroundTexture);
+        background = new Image(backgroundTexture);
         if (backgroundTexture.equals(ClientAssetLoader.solidBlack))
-            bgImage.setColor(0, 0, 0, 0.8f);
-        background.add(bgImage);
+            background.setColor(0, 0, 0, 0.8f);
         background.setFillParent(true);
 
-        foreground = new Table();
-        foreground.setFillParent(true);
-        //foreground.debug();
+        root = new Table();
+        root.setFillParent(true);
+        //root.debug();
 
         Label resLabel = new Label("Resolution", uiSkin, "menu-label");
         Label displayModeLabel = new Label("Display Mode", uiSkin, "menu-label");
@@ -88,18 +86,18 @@ public class OptionsStage extends Stage {
         applyButton = new TextButton("Apply", uiSkin);
 
         //(1280x720)->290w 60h cells 25pad right left 20 top bottom
-        foreground.defaults().space(20, 25, 20, 25).width(290).height(60);
-        foreground.add(resLabel, resSelectBox);
-        foreground.row();
-        foreground.add(refreshLabel, refreshSelectBox);
-        foreground.row();
-        foreground.add(displayModeLabel, modeSelectBox);
-        foreground.row();
-        foreground.add(playerNameLabel, playerNameField);
-        foreground.row();
-        foreground.add(vsyncCheckBox).colspan(2).width(605);
-        foreground.row();
-        foreground.add(backButton, applyButton);
+        root.defaults().space(20, 25, 20, 25).width(290).height(60);
+        root.add(resLabel, resSelectBox);
+        root.row();
+        root.add(refreshLabel, refreshSelectBox);
+        root.row();
+        root.add(displayModeLabel, modeSelectBox);
+        root.row();
+        root.add(playerNameLabel, playerNameField);
+        root.row();
+        root.add(vsyncCheckBox).colspan(2).width(605);
+        root.row();
+        root.add(backButton, applyButton);
     }
 
     private void setupWidgetData() {

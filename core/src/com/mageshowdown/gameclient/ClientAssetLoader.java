@@ -20,7 +20,6 @@ public class ClientAssetLoader {
     public static Skin hudSkin;
     public static Texture menuBackground;
     //fonts
-    //public static BitmapFont font1;
     public static BitmapFont normalSizeFont;
     public static BitmapFont bigSizeFont;
     //player animations
@@ -41,7 +40,6 @@ public class ClientAssetLoader {
     public static Texture fireLaserSpritesheet;
     public static Texture energyShieldSpritesheet;
     public static Texture frozenSpritesheet;
-    public static Texture roundOverScreen;
     //preferences files
     public static Preferences prefs;
     //maps
@@ -86,26 +84,26 @@ public class ClientAssetLoader {
 //        manager.load("Maps/level2.tmx", TiledMap.class);
 //        manager.load("Maps/level3.tmx", TiledMap.class);
 //
-        friendlyIdleSpritesheet = new Texture(Gdx.files.internal("Player Animations/Friendly player/idleAnimationSpritesheet.png"));
-        friendlyJumpingSpritesheet = new Texture(Gdx.files.internal("Player Animations/Friendly player/jumpingAnimationSpritesheet.png"));
-        friendlyRunningSpritesheet = new Texture(Gdx.files.internal("Player Animations/Friendly player/runningAnimationSpritesheet.png"));
+        friendlyIdleSpritesheet = new Texture("Player Animations/Friendly player/idleAnimationSpritesheet.png");
+        friendlyJumpingSpritesheet = new Texture("Player Animations/Friendly player/jumpingAnimationSpritesheet.png");
+        friendlyRunningSpritesheet = new Texture("Player Animations/Friendly player/runningAnimationSpritesheet.png");
 
-        enemyIdleSpritesheet = new Texture(Gdx.files.internal("Player Animations/Enemy player/enemyIdleAnimationSpritesheet.png"));
-        enemyJumpingSpritesheet = new Texture(Gdx.files.internal("Player Animations/Enemy player/enemyJumpingAnimationSpritesheet.png"));
-        enemyRunningSpritesheet = new Texture(Gdx.files.internal("Player Animations/Enemy player/enemyRunningAnimationSpritesheet.png"));
+        enemyIdleSpritesheet = new Texture("Player Animations/Enemy player/enemyIdleAnimationSpritesheet.png");
+        enemyJumpingSpritesheet = new Texture("Player Animations/Enemy player/enemyJumpingAnimationSpritesheet.png");
+        enemyRunningSpritesheet = new Texture("Player Animations/Enemy player/enemyRunningAnimationSpritesheet.png");
 
-        freezeProjectileSpritesheet = new Texture(Gdx.files.internal("Player Animations/Ammo/freezeProjectileSpritesheet.png"));
-        freezeProjectileImpactSpritesheet=new Texture(Gdx.files.internal("Player Animations/Ammo/freezeProjectileImpactSpritesheet.png"));
-        armFreezeBombSpritesheet = new Texture(Gdx.files.internal("Player Animations/Effect/armFreezeBombSpritesheet.png"));
-        freezeBombSpritesheet = new Texture(Gdx.files.internal("Player Animations/Effect/freezeBombSpritesheet.png"));
+        freezeProjectileSpritesheet = new Texture(("Player Animations/Ammo/freezeProjectileSpritesheet.png"));
+        freezeProjectileImpactSpritesheet = new Texture("Player Animations/Ammo/freezeProjectileImpactSpritesheet.png");
+        armFreezeBombSpritesheet = new Texture("Player Animations/Effect/armFreezeBombSpritesheet.png");
+        freezeBombSpritesheet = new Texture("Player Animations/Effect/freezeBombSpritesheet.png");
         crystalSpritesheet = new Texture("Player Animations/Weapon/CrystalSpritesheet.png");
-        fireLaserSpritesheet = new Texture(Gdx.files.internal("Player Animations/Ammo/fireLaserSpritesheet.png"));
-        armFireBombSpritesheet = new Texture(Gdx.files.internal("Player Animations/Effect/armFireBombSpritesheet.png"));
-        fireBombSpritesheet = new Texture(Gdx.files.internal("Player Animations/Effect/fireBombSpritesheet.png"));
-        flameSpritesheet = new Texture(Gdx.files.internal("Player Animations/Weapon/flameSpritesheet.png"));
+        fireLaserSpritesheet = new Texture("Player Animations/Ammo/fireLaserSpritesheet.png");
+        armFireBombSpritesheet = new Texture("Player Animations/Effect/armFireBombSpritesheet.png");
+        fireBombSpritesheet = new Texture("Player Animations/Effect/fireBombSpritesheet.png");
+        flameSpritesheet = new Texture("Player Animations/Weapon/flameSpritesheet.png");
 
-        energyShieldSpritesheet = new Texture(Gdx.files.internal("Player Animations/Effect/energyShieldSpriteSheet.png"));
-        frozenSpritesheet = new Texture(Gdx.files.internal("Player Animations/Effect/frozenSpritesheet.png"));
+        energyShieldSpritesheet = new Texture("Player Animations/Effect/energyShieldSpriteSheet.png");
+        frozenSpritesheet = new Texture("Player Animations/Effect/frozenSpritesheet.png");
 
         uiSkin = new Skin(Gdx.files.internal("UIAssets/uiskin.json"));
         hudSkin = new Skin(Gdx.files.internal("UIAssets/golden-ui-skin.json"));
@@ -138,7 +136,7 @@ public class ClientAssetLoader {
 //        bigParameter.fontParameters.shadowOffsetY = 2;
 //        manager.load("joystixBig.ttf", BitmapFont.class, bigParameter);
 
-        //font1 = new BitmapFont(Gdx.files.internal("UIAssets/default.fnt"));
+        //font1 = new BitmapFont(("UIAssets/default.fnt"));
 
         retroFontGen = new FreeTypeFontGenerator(Gdx.files.internal("UIAssets/joystix monospace.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -178,7 +176,6 @@ public class ClientAssetLoader {
 //        frozenSpritesheet = manager.get("frozenSpriteSheet.png", Texture.class);
 //        menuBackground = manager.get("UIAssets/placeholder.jpg", Texture.class);
 //        solidBlack = manager.get("UIAssets/Black_1080p.png", Texture.class);
-//        roundOverScreen = manager.get("round over.png", Texture.class);
 //
 //        uiSkin = manager.get("UIAssets/uiskin.json", Skin.class);
 //
@@ -212,6 +209,7 @@ public class ClientAssetLoader {
 
         menuBackground.dispose();
         solidBlack.dispose();
+
         roundOverScreen.dispose();
 
         map1.dispose();

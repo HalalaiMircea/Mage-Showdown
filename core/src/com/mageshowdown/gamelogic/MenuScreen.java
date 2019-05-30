@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mageshowdown.gameclient.ClientAssetLoader;
@@ -30,23 +31,11 @@ public class MenuScreen implements Screen {
     private static final MenuScreen INSTANCE = new MenuScreen();
     private static Viewport viewport;
     private static Batch batch;
+
     private static Stage mainMenuStage;
     private static Stage menuOptionsStage;
     private static StagePhase stagePhase;
     private GameClient myClient = GameClient.getInstance();
-
-    private MenuScreen() {
-        viewport = new ScreenViewport();
-        batch = new SpriteBatch();
-
-        mainMenuStage = new Stage(viewport, batch);
-        menuOptionsStage = new OptionsStage(viewport, batch, ClientAssetLoader.menuBackground);
-
-        prepareMainMenuStage();
-
-        stagePhase = StagePhase.MAIN_MENU_STAGE;
-        Gdx.input.setInputProcessor(mainMenuStage);
-    }
 
     public static MenuScreen getInstance() {
         return INSTANCE;
@@ -62,6 +51,17 @@ public class MenuScreen implements Screen {
 
     @Override
     public void show() {
+        //Show method is called when the current screen becomes this
+        viewport = new ScreenViewport();
+        batch = new SpriteBatch();
+
+        mainMenuStage = new Stage(viewport, batch);
+        menuOptionsStage = new OptionsStage(viewport, batch, ClientAssetLoader.menuBackground);
+
+        prepareMainMenuStage();
+
+        stagePhase = StagePhase.MAIN_MENU_STAGE;
+        Gdx.input.setInputProcessor(mainMenuStage);
     }
 
     @Override
@@ -96,24 +96,24 @@ public class MenuScreen implements Screen {
 
     @Override
     public void hide() {
+        //hide method is called when we change to a new screen or before the Application exits
+        this.dispose();
     }
 
     @Override
     public void dispose() {
         mainMenuStage.dispose();
         menuOptionsStage.dispose();
-        INSTANCE.dispose();
         batch.dispose();
     }
 
     private void prepareMainMenuStage() {
-        Table background = new Table();
-        background.add(new Image(ClientAssetLoader.menuBackground));
+        Image background = new Image(ClientAssetLoader.menuBackground);
         background.setFillParent(true);
 
-        Table foreground = new Table();
-        foreground.setFillParent(true);
-        //foreground.debug();
+        Table root = new Table();
+        root.setFillParent(true);
+        //root.debug();
 
         TextButton connectButton = new TextButton("Connect", ClientAssetLoader.uiSkin);
         TextButton optionsButton = new TextButton("Options...", ClientAssetLoader.uiSkin);
@@ -121,14 +121,14 @@ public class MenuScreen implements Screen {
         final TextField addressField = new TextField(prefs.getString(PrefsKeys.LASTENTEREDIP), ClientAssetLoader.uiSkin);
 
         //(1280x720)->290w 60h cells 25pad right left 20 top bottom
-        foreground.defaults().space(20, 25, 20, 25).width(290).height(60);
-        foreground.add(connectButton);
-        foreground.add(addressField);
-        foreground.row();
-        foreground.defaults().width(605).colspan(2);
-        foreground.add(optionsButton);
-        foreground.row();
-        foreground.add(quitButton);
+        root.defaults().space(20, 25, 20, 25).width(290).height(60);
+        root.add(connectButton);
+        root.add(addressField);
+        root.row();
+        root.defaults().width(605).colspan(2);
+        root.add(optionsButton);
+        root.row();
+        root.add(quitButton);
 
         connectButton.addListener(new ClickListener() {
             @Override
@@ -158,18 +158,18 @@ public class MenuScreen implements Screen {
         });
 
         mainMenuStage.addActor(background);
-        mainMenuStage.addActor(foreground);
+        mainMenuStage.addActor(root);
     }
 
     private void clientStart(String ipAddress) {
-        myClient.setUserName(prefs.getString(PrefsKeys.PLAYERNAME));
-        myClient.start();
-
         try {
+            myClient.setUserName(prefs.getString(PrefsKeys.PLAYERNAME));
+            myClient.start();
             GameScreen.start();
             GameScreen.setGameState(GameScreen.GameState.GAME_RUNNING);
             myClient.connect(5000, ipAddress, Network.TCP_PORT, Network.UDP_PORT);
             MageShowdownClient.getInstance().setScreen(GameScreen.getInstance());
+
         } catch (IOException e) {
             final Dialog dialog = new Dialog("", ClientAssetLoader.uiSkin);
             dialog.text(e.toString(), ClientAssetLoader.uiSkin.get("menu-label", Label.LabelStyle.class));

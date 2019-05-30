@@ -15,7 +15,7 @@ public class DesktopServerLauncher {
         //config.height = 320;
 
         //new LwjglApplication(new MageShowdownServer(), config);
-        LwjglFrame kkt = new LwjglFrame(new MageShowdownServer(), "Mage Dedicated Server", 800, 500);
+        LwjglFrame kkt = new LwjglFrame(new MageShowdownServer(), "Mage Dedicated Server", 300, 300);
         kkt.add(new JButton("INTERFATA GRAFICA PT SERVER WOW!!!"));
     }
 }

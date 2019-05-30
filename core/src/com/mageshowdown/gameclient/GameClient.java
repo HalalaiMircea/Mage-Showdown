@@ -21,11 +21,6 @@ public class GameClient extends Client {
         registerClasses();
     }
 
-    @Override
-    public void connect(int timeout, String host, int tcpPort, int udpPort) throws IOException {
-        super.connect(timeout, host, tcpPort, udpPort);
-    }
-
     private void registerClasses() {
         Kryo kryo = getKryo();
         kryo.register(Network.OneCharacterState.class);
@@ -45,11 +40,6 @@ public class GameClient extends Client {
         kryo.register(Network.CurrentMap.class);
         kryo.register(Network.PlayerDead.class);
         kryo.register(Network.SwitchWeapons.class);
-    }
-
-    @Override
-    public void start() {
-        super.start();
     }
 
     @Override
