@@ -16,7 +16,7 @@ public class Bomb extends Ammo implements AnimatedActorInterface{
     private boolean exploded=false;
 
     public Bomb(Stage stage, Vector2 position, float rotation, int id, int ownerId, Weapon.AmmoType ammoType){
-        super(stage,new Vector2(0,0),position,new Vector2(190,190),new Vector2(.8f,.8f),rotation,id,ownerId,9);
+        super(stage,new Vector2(0,0),position,new Vector2(190,190),new Vector2(.8f,.8f),new Vector2(180,180),rotation,id,ownerId,9);
 
         this.ammoType=ammoType;
         switch(ammoType) {
@@ -55,11 +55,6 @@ public class Bomb extends Ammo implements AnimatedActorInterface{
         }
     }
 
-    @Override
-    public void draw(Batch batch, float parentAlpha) {
-        if(currFrame!=null)
-            batch.draw(currFrame,getX(),getY(),getOriginX(),getOriginY(),getWidth(),getHeight(),getScaleX(),getScaleY(),getRotation());
-    }
 
     @Override
     public void pickFrame() {

@@ -27,7 +27,7 @@ public class ServerGameStage extends Stage {
         playerCharacters=new HashMap<Integer, ServerPlayerCharacter>();
 
 
-        GameWorld.world.setContactListener(new CollisionListener(this));
+        GameWorld.world.setContactListener(new ServerCollisionListener(this));
         addActor(ServerRound.getInstance());
     }
 

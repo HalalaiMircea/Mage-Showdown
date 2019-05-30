@@ -8,7 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 public class MapObjectHitbox extends GameActor {
 
     public MapObjectHitbox(Stage stage, Vector2 position, Vector2 size){
-        super(stage,position,size,0f);
+        super(stage,position,size,new Vector2(size.x,size.y),0f);
         createBody(BodyDef.BodyType.StaticBody);
     }
 

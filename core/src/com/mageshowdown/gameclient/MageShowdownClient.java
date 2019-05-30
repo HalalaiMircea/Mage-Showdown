@@ -2,6 +2,7 @@ package com.mageshowdown.gameclient;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.mageshowdown.gamelogic.CollisionListener;
 import com.mageshowdown.gamelogic.GameWorld;
 import com.mageshowdown.gamelogic.MenuScreen;
 
@@ -9,7 +10,7 @@ public class MageShowdownClient extends Game {
     private static final MageShowdownClient INSTANCE = new MageShowdownClient();
 
     private MageShowdownClient() {
-
+        GameWorld.world.setContactListener(new ClientCollisionListener());
     }
 
     @Override

@@ -15,7 +15,7 @@ public class CreateBodies {
         Vector2 convPosition=GameWorld.convertPixelsToWorld(position);
         Vector2 convSize=GameWorld.convertPixelsToWorld(size);
         //since we use vertices to create our polygon the origin of the body is the lower left corner
-        bd.position.set(new Vector2(convPosition.x,convPosition.y));
+        bd.position.set(new Vector2(convPosition.x+convSize.x/2,convPosition.y+convSize.y/2));
 
         body=GameWorld.world.createBody(bd);
         Shape shape = createPolygonShape(convSize);
@@ -28,7 +28,10 @@ public class CreateBodies {
     private static PolygonShape createPolygonShape(Vector2 convSize){
         PolygonShape ps=new PolygonShape();
         //in order to be able to change the origin without headaches we use vertices instead of setAsBox()
-        Vector2 vertices[]=new Vector2[]{new Vector2(0,convSize.y),new Vector2(0,0),new Vector2(convSize.x,0),new Vector2(convSize.x,convSize.y)};
+        //Vector2[] vertices=new Vector2[]{new Vector2(0,convSize.y),new Vector2(0,0),new Vector2(convSize.x,0),new Vector2(convSize.x,convSize.y)};
+        Vector2[] vertices=new Vector2[]{new Vector2(-convSize.x/2,-convSize.y/2),new Vector2(-convSize.x/2,convSize.y/2),new Vector2(convSize.x/2,convSize.y/2),new Vector2(convSize.x/2,-convSize.y/2)};
+
+
 
         ps.set(vertices);
 

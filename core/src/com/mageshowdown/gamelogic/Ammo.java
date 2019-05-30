@@ -1,12 +1,13 @@
 package com.mageshowdown.gamelogic;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 public abstract class Ammo extends DynamicGameActor {
 
+    //when an ammo collides we may want to have an impact animation so we use a second boolean to know if we can destroy it
     protected boolean collided = false;
+    protected boolean destroyable=false;
     protected boolean outOfBounds = false;
     protected boolean expired = false;
     protected int id;
@@ -14,20 +15,8 @@ public abstract class Ammo extends DynamicGameActor {
 
     private final float DAMAGE_VALUE;
 
-    protected Ammo(Stage stage, Vector2 velocity, Vector2 position, Vector2 size, Texture texture, Vector2 sizeScaling, float rotation, int id, int ownerId, float damageValue) {
-        super(stage, position, size, rotation, texture, sizeScaling);
-
-        this.DAMAGE_VALUE = damageValue;
-        //the id is used to identify the projectile when it needs to be destroyed
-        this.id = id;
-        //the owner id is the id of the player that shot the bullet
-        this.ownerId = ownerId;
-        this.velocity = velocity;
-        stage.addActor(this);
-    }
-
-    protected Ammo(Stage stage, Vector2 velocity, Vector2 position, Vector2 size, Vector2 sizeScaling, float rotation, int id, int ownerId, float damageValue) {
-        super(stage, position, size, rotation, sizeScaling);
+    protected Ammo(Stage stage, Vector2 velocity, Vector2 position, Vector2 size,  Vector2 sizeScaling, Vector2 bodySize, float rotation, int id, int ownerId, float damageValue) {
+        super(stage, position, size, bodySize, rotation, sizeScaling);
 
         this.DAMAGE_VALUE = damageValue;
         this.id = id;
@@ -77,6 +66,12 @@ public abstract class Ammo extends DynamicGameActor {
         }
     }
 
+    @Override
+    protected void updatePositionFromBody() {
+        Vector2 convPosition = GameWorld.convertWorldToPixels(body.getPosition());
+        setPosition(convPosition.x-getWidth()/2, convPosition.y-getHeight()/2);
+        setRotation(body.getAngle() * 180 / (float) Math.PI);
+    }
 
     //we dont want the projectile to react to any collisions or be affected by gravity so we make it a sensor
     protected void makeBodySensor() {
@@ -100,6 +95,8 @@ public abstract class Ammo extends DynamicGameActor {
     public boolean hasCollided() {
         return collided;
     }
+
+    public boolean canDestroy(){return destroyable;}
 
     public boolean isOutOfBounds() {
         return outOfBounds;

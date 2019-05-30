@@ -47,7 +47,7 @@ public class Weapon extends GameActor implements AnimatedActorInterface {
     }
 
     public Weapon(Stage stage, boolean loadAnimation, AmmoType ammoType, float cd, int capacity) {
-        super(stage, new Vector2(0, 0), new Vector2(64, 66), 0f);
+        super(stage, new Vector2(0, 0), new Vector2(64, 66), new Vector2(0,0), 0f);
         this.gameStage = stage;
         COOLDOWN_TIME = cd;
         MAXIMUM_CAPACITY = capacity;
@@ -85,7 +85,6 @@ public class Weapon extends GameActor implements AnimatedActorInterface {
     @Override
     public void act(float delta) {
         super.act(delta);
-        //destroyEliminatedAmmo();
         rechargeWeapon();
 
         if (loadAnimation)
@@ -99,7 +98,7 @@ public class Weapon extends GameActor implements AnimatedActorInterface {
         ListIterator<Ammo> iter = ammunition.listIterator();
         while (iter.hasNext()) {
             Ammo x = iter.next();
-            if (x.isOutOfBounds() || x.hasCollided() || x.isExpired()) {
+            if (x.isOutOfBounds() || x.canDestroy() || x.isExpired()) {
                 x.remove();
                 iter.remove();
             }
@@ -119,14 +118,14 @@ public class Weapon extends GameActor implements AnimatedActorInterface {
         switch (ammoType) {
             case FREEZE:
                 if (currentCapacity > ammoCosts.get("freeze projectile")) {
-                    ammunition.add(new FreezeProjectile(getStage(), getShootingOrigin(), rotation, direction, ammunition.size(), ownerId));
+                    ammunition.add(new FreezeProjectile(getStage(), getShootingOrigin(rotation), rotation, direction, ammunition.size(), ownerId));
                     currentCapacity -= ammoCosts.get("freeze projectile");
                     recharge = false;
                 }
                 break;
             case FIRE:
                 if (currentCapacity > ammoCosts.get("laser")) {
-                    ammunition.add(new Laser(getStage(), getShootingOrigin(), rotation, ammunition.size(), ownerId));
+                    ammunition.add(new Laser(getStage(), getShootingOrigin(rotation), rotation, ammunition.size(), ownerId));
                     currentCapacity -= ammoCosts.get("laser");
                     recharge = false;
                 }
@@ -167,8 +166,9 @@ public class Weapon extends GameActor implements AnimatedActorInterface {
         }
     }
 
-    public Vector2 getShootingOrigin() {
-        return new Vector2((getX() + getWidth() / 2), (getY() + getHeight() / 2));
+    public Vector2 getShootingOrigin(float angle) {
+        return new Vector2((getX()+getOriginX())+getOriginX()*(float)Math.cos(angle*Math.PI/180)
+                , (getY()+getOriginY())+getOriginY()*(float)Math.sin(angle*Math.PI/180));
     }
 
     @Override

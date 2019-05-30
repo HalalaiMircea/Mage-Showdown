@@ -1,6 +1,5 @@
 package com.mageshowdown.gamelogic;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -11,7 +10,7 @@ public class Laser extends Ammo implements AnimatedActorInterface{
     private static final float duration=.25f;
 
     public Laser(Stage stage, Vector2 position, float rotation, int id, int ownerId){
-        super(stage,new Vector2(0f,0f),position,new Vector2(220,31),new Vector2(1.5f,1f),rotation,id,ownerId,2f);
+        super(stage,new Vector2(0f,0f),position,new Vector2(220,31),new Vector2(1.5f,1f),new Vector2(325,15),rotation,id,ownerId,2f);
         createBody(rotation,BodyDef.BodyType.StaticBody);
 
         addAnimation(1,7,.25f,"idle",ClientAssetLoader.fireLaserSpritesheet);
@@ -27,11 +26,6 @@ public class Laser extends Ammo implements AnimatedActorInterface{
         pickFrame();
     }
 
-    @Override
-    public void draw(Batch batch, float parentAlpha) {
-        if(currFrame!=null)
-            batch.draw(currFrame,getX(),getY(),getOriginX(),getOriginY(),getWidth(),getHeight(),getScaleX(),getScaleY(),getRotation());
-    }
 
     @Override
     public void pickFrame() {

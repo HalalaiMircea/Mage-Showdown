@@ -18,6 +18,7 @@ public abstract class GameActor extends Actor {
     protected HashMap<String, Animation<TextureRegion>> animations;
     protected float passedTime=0f;
     protected TextureRegion currFrame;
+    protected Vector2 bodySize;
 
     /*
      * declaring the variable where im holding the position of the actor
@@ -27,46 +28,38 @@ public abstract class GameActor extends Actor {
     protected boolean canClearPos=false;
 
 
-    protected GameActor(Stage stage, Vector2 position, Vector2 size, float rotation, Vector2 sizeScaling){
+    protected GameActor(Stage stage, Vector2 position, Vector2 size, Vector2 bodySize, float rotation, Vector2 sizeScaling){
         setScale(sizeScaling.x,sizeScaling.y);
         setPosition(position.x,position.y);
         setSize(size.x,size.y);
-        setOrigin(0,0);
+        this.bodySize=bodySize;
+        setOrigin(size.x/2,size.y/2);
         setRotation(rotation);
         stage.addActor(this);
-        //debug();
         animations=new HashMap<String, Animation<TextureRegion>>();
     }
-    protected GameActor(Stage stage,Vector2 position, Vector2 size, float rotation){
-        this(stage,position,size,rotation,new Vector2(1,1));
+    protected GameActor(Stage stage,Vector2 position, Vector2 size, Vector2 bodySize, float rotation){
+        this(stage,position,size,bodySize,rotation,new Vector2(1,1));
     }
-
-    protected GameActor(Stage stage,Vector2 position, Vector2 size, float rotation, Texture texture, Vector2 sizeScaling){
-        this(stage,position, size,rotation,new Vector2(sizeScaling.x+(size.x/texture.getWidth()-1),sizeScaling.y+(size.y/texture.getHeight()-1)));
-
-        sprite=new Sprite(texture);
-        sprite.setPosition(getX(),getY());
-        sprite.setScale(sizeScaling.x,sizeScaling.y);
-        sprite.setSize(getWidth(),getHeight());
-        sprite.setOrigin(getOriginX(),getOriginY());
-        sprite.setRotation(getRotation());
-    }
-
 
     @Override
     public void act(float delta) {
         passedTime+=delta;
 
         if(body!=null) {
-            Vector2 convPosition = GameWorld.convertWorldToPixels(body.getPosition());
-            setPosition(convPosition.x, convPosition.y);
-            setRotation(body.getAngle() * 180 / (float) Math.PI);
+            updatePositionFromBody();
         }
         if(sprite!=null){
             sprite.setPosition(getX(), getY());
         }
 
         super.act(delta);
+    }
+
+    protected void updatePositionFromBody(){
+        Vector2 convPosition = GameWorld.convertWorldToPixels(body.getPosition());
+        setPosition(convPosition.x-bodySize.x/2, convPosition.y-bodySize.y/2);
+        setRotation(body.getAngle() * 180 / (float) Math.PI);
     }
 
     @Override
@@ -78,6 +71,8 @@ public abstract class GameActor extends Actor {
     public void draw(Batch batch, float parentAlpha) {
         if(sprite!=null)
             batch.draw(sprite,getX(),getY(),sprite.getOriginX(),sprite.getOriginY(),getWidth(),getHeight(),1f,1f,sprite.getRotation());
+        else if(currFrame!=null)
+            batch.draw(currFrame,getX(),getY(),getOriginX(),getOriginY(),getWidth(),getHeight(),getScaleX(),getScaleY(),getRotation());
     }
 
     protected void addAnimation(int frameColumns, int frameRows, float animationDuration,String animationName, Texture spriteSheet){
@@ -102,8 +97,6 @@ public abstract class GameActor extends Actor {
 
 
     protected void createBody(float density, float friction, float restitution, float rotation, BodyDef.BodyType bodyType){
-        Vector2 bodySize=new Vector2(getWidth()*getScaleX(),
-                getHeight()*getScaleY());
 
         body=CreateBodies.createRectangleBody(new Vector2(getX(),getY()), bodySize,bodyType,density,friction,restitution,rotation);
         setTouchable(Touchable.enabled);

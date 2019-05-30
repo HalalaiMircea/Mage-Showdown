@@ -46,17 +46,11 @@ public abstract class DynamicGameActor extends GameActor {
     protected Vector2 queuedVel;
     protected boolean canClearVel=false;
 
-    protected DynamicGameActor(Stage stage, Vector2 position, Vector2 size, float rotation, Vector2 sizeScaling){
-        super(stage,position,size, rotation, sizeScaling);
+    protected DynamicGameActor(Stage stage, Vector2 position, Vector2 size, Vector2 bodySize, float rotation, Vector2 sizeScaling){
+        super(stage,position,size, bodySize, rotation, sizeScaling);
         velocity=new Vector2(0,0);
         horizontalState=HorizontalState.STANDING;
         verticalState=VerticalState.FLYING;
-    }
-
-    protected DynamicGameActor(Stage stage,Vector2 position, Vector2 size, float rotation, Texture texture, Vector2 sizeScaling){
-        super(stage,position,size,rotation, texture, sizeScaling);
-        velocity=new Vector2(0,0);
-        horizontalState=HorizontalState.STANDING;
     }
 
     @Override

@@ -69,10 +69,9 @@ public class ClientPlayerCharacter extends PlayerCharacter
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
+        super.draw(batch,parentAlpha);
         if (dmgImmune)
             batch.setColor(batch.getColor().r, batch.getColor().g, batch.getColor().b, 0);
-        if (currFrame != null)
-            batch.draw(currFrame, getX(), getY(), getWidth() * getScaleX(), getHeight() * getScaleY());
         if (energyShield > 0 && currShieldFrame != null)
             batch.draw(currShieldFrame, getX() - getWidth() / 2, getY() - getHeight() / 2, getWidth() * getScaleX() * 1.5f, getHeight() * getScaleY() * 1.5f);
         if (frozen && currFrozenFrame != null)
@@ -182,8 +181,8 @@ public class ClientPlayerCharacter extends PlayerCharacter
 
     private void shootMyWeapon() {
         ShootProjectile packet = new ShootProjectile();
-        float rotation = GameWorld.getMouseVectorAngle(currWeapon.getShootingOrigin());
-        Vector2 direction = GameWorld.getNormalizedMouseVector(currWeapon.getShootingOrigin());
+        float rotation = GameWorld.getMouseVectorAngle(new Vector2(currWeapon.getX()+currWeapon.getOriginX(),currWeapon.getY()+currWeapon.getOriginY()));
+        Vector2 direction = GameWorld.getNormalizedMouseVector(new Vector2(currWeapon.getX()+currWeapon.getOriginX(),currWeapon.getY()+currWeapon.getOriginY()));
 
         packet.id = myClient.getID();
         packet.rot = rotation;
