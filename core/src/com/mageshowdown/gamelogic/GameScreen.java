@@ -31,9 +31,6 @@ public class GameScreen implements Screen {
 
     private static GameState gameState;
 
-    private GameScreen() {
-    }
-
     public static void start() {
         viewport = new ScreenViewport();
         batch = new SpriteBatch();
@@ -64,7 +61,80 @@ public class GameScreen implements Screen {
         GameScreen.gameState = gameState;
     }
 
-    private static void gameRunningInput() {
+    @Override
+    public void render(float delta) {
+        Gdx.gl.glClearColor(255, 255, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        if (ClientRound.getInstance().isFinished()) {
+            ClientRound.getInstance().act(delta);
+            roundEndStage.act();
+            gameStage.draw();
+            roundEndStage.draw();
+        } else {
+            gameStage.act();
+            gameStage.draw();
+        }
+
+        switch (gameState) {
+            case GAME_RUNNING:
+                gameRunningInput();
+                hudStage.act();
+                hudStage.draw();
+                break;
+            case GAME_PAUSED:
+                gamePausedInput();
+                escMenuStage.act();
+                escMenuStage.draw();
+                break;
+            case GAME_OPTIONS:
+                gameOptionsStage.act();
+                gameOptionsStage.draw();
+                break;
+            case SCOREBOARD:
+                scoreboardInput();
+                scoreboardStage.act();
+                scoreboardStage.draw();
+                break;
+        }
+    }
+
+    @Override
+    public void show() {
+
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        gameStage.getViewport().update(width, height, true);
+        viewport.update(width, height, true);
+    }
+
+    @Override
+    public void pause() {
+    }
+
+    @Override
+    public void resume() {
+    }
+
+    @Override
+    public void hide() {
+        this.dispose();
+    }
+
+    @Override
+    public void dispose() {
+        gameStage.dispose();
+        escMenuStage.dispose();
+        gameOptionsStage.dispose();
+        scoreboardStage.dispose();
+        hudStage.dispose();
+        roundEndStage.dispose();
+        batch.dispose();
+    }
+
+    private void gameRunningInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) && gameState == GameState.GAME_RUNNING) {
             gameState = GameState.GAME_PAUSED;
             Gdx.input.setInputProcessor(escMenuStage);
@@ -73,41 +143,40 @@ public class GameScreen implements Screen {
             gameState = GameState.SCOREBOARD;
     }
 
-    private static void gamePausedInput() {
+    private void gamePausedInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) && gameState == GameState.GAME_PAUSED) {
             gameState = GameState.GAME_RUNNING;
             Gdx.input.setInputProcessor(gameStage.getPlayerCharacter());
         }
     }
 
-    private static void scoreboardInput() {
+    private void scoreboardInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.TAB) && gameState == GameState.SCOREBOARD)
             gameState = GameState.GAME_RUNNING;
     }
 
     private static void prepareEscMenu() {
-        Table menuTable = new Table();
-        menuTable.setFillParent(true);
-        //menuTable.debug();
-        Table background = new Table();
+        Image background = new Image(ClientAssetLoader.menuBackground);
         background.setFillParent(true);
+        background.setColor(0, 0, 0, 0.8f);
+
+        Table root = new Table();
+        root.setFillParent(true);
+        //root.debug();
 
         TextButton resumeButton = new TextButton("Resume Game", ClientAssetLoader.uiSkin);
         TextButton optionsButton = new TextButton("Options...", ClientAssetLoader.uiSkin);
         TextButton quitButton = new TextButton("Quit Game", ClientAssetLoader.uiSkin);
         TextButton disconnectButton = new TextButton("Disconnect", ClientAssetLoader.uiSkin);
-        Image semiTL = new Image(ClientAssetLoader.solidBlack);
-        semiTL.setColor(0, 0, 0, 0.8f);
 
         //(1280x720)->290w 60h cells 25pad right left 20 top bottom
-        menuTable.defaults().space(20, 25, 20, 25).width(605).height(60).colspan(2);
-        menuTable.add(resumeButton);
-        menuTable.row();
-        menuTable.add(optionsButton);
-        menuTable.row();
-        menuTable.defaults().width(290).colspan(1);
-        menuTable.add(disconnectButton, quitButton);
-        background.add(semiTL);
+        root.defaults().space(20, 25, 20, 25).width(605).height(60).colspan(2);
+        root.add(resumeButton);
+        root.row();
+        root.add(optionsButton);
+        root.row();
+        root.defaults().width(290).colspan(1);
+        root.add(disconnectButton, quitButton);
 
         resumeButton.addListener(new ClickListener() {
             @Override
@@ -128,10 +197,10 @@ public class GameScreen implements Screen {
         disconnectButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                MageShowdownClient.getInstance().setScreen(MenuScreen.getInstance());
                 GameClient.getInstance().stop();
                 ClientRound.getInstance().stop();
                 gameStage.clear();
+                MageShowdownClient.getInstance().setScreen(MenuScreen.getInstance());
 
                 Gdx.input.setInputProcessor(MenuScreen.getMainMenuStage());
             }
@@ -164,80 +233,7 @@ public class GameScreen implements Screen {
         });
 
         escMenuStage.addActor(background);
-        escMenuStage.addActor(menuTable);
-    }
-
-    @Override
-    public void render(float delta) {
-        Gdx.gl.glClearColor(255, 255, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        if (ClientRound.getInstance().isFinished()) {
-            ClientRound.getInstance().act(delta);
-            roundEndStage.act();
-            gameStage.draw();
-            roundEndStage.draw();
-            //System.out.println(ClientRound.getInstance().isFinished());
-        } else {
-            gameStage.act();
-            gameStage.draw();
-        }
-
-        switch (gameState) {
-            case GAME_RUNNING:
-                gameRunningInput();
-                hudStage.act();
-                hudStage.draw();
-                break;
-            case GAME_PAUSED:
-                gamePausedInput();
-                escMenuStage.act();
-                escMenuStage.draw();
-                break;
-            case GAME_OPTIONS:
-                gameOptionsStage.act();
-                gameOptionsStage.draw();
-                break;
-            case SCOREBOARD:
-                scoreboardInput();
-                scoreboardStage.act();
-                scoreboardStage.draw();
-                break;
-        }
-    }
-
-    @Override
-    public void show() {
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        gameStage.getViewport().update(width, height, true);
-        viewport.update(width, height, true);
-    }
-
-    @Override
-    public void pause() {
-    }
-
-    @Override
-    public void resume() {
-    }
-
-    @Override
-    public void hide() {
-    }
-
-    @Override
-    public void dispose() {
-        gameStage.dispose();
-        escMenuStage.dispose();
-        gameOptionsStage.dispose();
-        scoreboardStage.dispose();
-        hudStage.dispose();
-        roundEndStage.dispose();
-        INSTANCE.dispose();
-        batch.dispose();
+        escMenuStage.addActor(root);
     }
 
     enum GameState {

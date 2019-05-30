@@ -3,6 +3,7 @@ package com.mageshowdown.gamelogic;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mageshowdown.gameclient.ClientAssetLoader;
@@ -13,9 +14,15 @@ public class RoundEndStage extends Stage {
 
     public RoundEndStage(Viewport viewport, Batch batch) {
         super(viewport, batch);
+        Image background = new Image(ClientAssetLoader.menuBackground);
+        background.setFillParent(true);
+        background.setColor(0, 0, 0, 0.8f);
+
         roundEndLabel = new Label("", ClientAssetLoader.uiSkin.get("menu-label", Label.LabelStyle.class));
         Container<Label> wrapper = new Container<Label>(roundEndLabel);
         wrapper.setFillParent(true);
+
+        this.addActor(background);
         this.addActor(wrapper);
     }
 
