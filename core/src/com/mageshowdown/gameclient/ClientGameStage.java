@@ -54,7 +54,7 @@ public class ClientGameStage extends Stage {
     @Override
     public void draw() {
         gameLevel.render();
-        //b2dr.render(GameWorld.world, camera.combined.cpy().scale(100, 100, 1));
+        //b2dr.render(GameWorld.world, getViewport().getCamera().combined.cpy().scale(100, 100, 1));
         super.draw();
     }
 

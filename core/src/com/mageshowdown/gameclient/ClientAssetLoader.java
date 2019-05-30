@@ -16,7 +16,6 @@ public class ClientAssetLoader {
 
     //public AssetManager manager;
     public static Texture solidBlack;
-    public static Texture testTexture;
     public static Skin uiSkin;
     public static Skin hudSkin;
     public static Texture menuBackground;
@@ -114,8 +113,6 @@ public class ClientAssetLoader {
         menuBackground = new Texture(Gdx.files.internal("UIAssets/placeholder.jpg"));
         solidBlack = new Texture(Gdx.files.internal("UIAssets/Black_1080p.png"));
         roundOverScreen = new Texture(Gdx.files.internal("UIAssets/round over.png"));
-        testTexture = new Texture(Gdx.files.internal("UIAssets/testTexture.png"));
-        testTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Nearest);
 
         generateFonts();
 
@@ -216,7 +213,6 @@ public class ClientAssetLoader {
         menuBackground.dispose();
         solidBlack.dispose();
         roundOverScreen.dispose();
-        testTexture.dispose();
 
         map1.dispose();
         dungeonMap.dispose();

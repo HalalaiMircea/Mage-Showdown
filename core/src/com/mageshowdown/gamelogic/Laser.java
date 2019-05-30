@@ -9,9 +9,11 @@ public class Laser extends Ammo implements AnimatedActorInterface{
 
     private static final float duration=.25f;
 
+
     public Laser(Stage stage, Vector2 position, float rotation, int id, int ownerId){
-        super(stage,new Vector2(0f,0f),position,new Vector2(220,31),new Vector2(1.5f,1f),new Vector2(325,15),rotation,id,ownerId,2f);
-        createBody(rotation,BodyDef.BodyType.StaticBody);
+        super(stage,new Vector2(0f,0f),position,new Vector2(220,31),new Vector2(1.5f,1.2f),new Vector2(325,15),rotation,id,ownerId,2f);
+        setOrigin(0,getHeight()/2);
+        createBody(rotation,new Vector2(0,getOriginY()/2),BodyDef.BodyType.StaticBody);
 
         addAnimation(1,7,.25f,"idle",ClientAssetLoader.fireLaserSpritesheet);
     }
@@ -26,6 +28,12 @@ public class Laser extends Ammo implements AnimatedActorInterface{
         pickFrame();
     }
 
+    @Override
+    protected void updatePositionFromBody() {
+        Vector2 convPosition = GameWorld.convertWorldToPixels(body.getPosition());
+        setPosition(convPosition.x, convPosition.y-getOriginY());
+        setRotation(body.getAngle() * 180 / (float) Math.PI);
+    }
 
     @Override
     public void pickFrame() {

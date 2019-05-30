@@ -7,9 +7,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 
 public class MapObjectHitbox extends GameActor {
 
-    public MapObjectHitbox(Stage stage, Vector2 position, Vector2 size){
-        super(stage,position,size,new Vector2(size.x,size.y),0f);
-        createBody(BodyDef.BodyType.StaticBody);
+    public MapObjectHitbox(Stage stage, Vector2 position, Vector2 size) {
+        super(stage, position, size, new Vector2(size.x, size.y), 0f);
+        createBody(new Vector2(getOriginX(), getOriginY()), BodyDef.BodyType.StaticBody);
     }
 
     //we override the base draw method with an empty one as we dont want these hitboxes to be drawn

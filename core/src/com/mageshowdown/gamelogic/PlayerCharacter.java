@@ -32,7 +32,7 @@ public abstract class PlayerCharacter extends DynamicGameActor {
     protected PlayerCharacter(Stage stage, Vector2 position, int weaponEquipped, boolean loadWeaponAnimation) {
         super(stage, position, new Vector2(22, 32),new Vector2(22,32), 0f, new Vector2(1.5f, 1.5f));
 
-        createBody(BodyDef.BodyType.DynamicBody);
+        createBody(new Vector2(getOriginX(),getOriginY()),BodyDef.BodyType.DynamicBody);
         gameStage = stage;
 
         freezeWeapon = new Weapon(stage, loadWeaponAnimation, Weapon.AmmoType.FREEZE, 1.5f, 25);
