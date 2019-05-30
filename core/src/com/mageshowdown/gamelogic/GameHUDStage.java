@@ -1,12 +1,14 @@
 package com.mageshowdown.gamelogic;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mageshowdown.gameclient.ClientAssetLoader;
 import com.mageshowdown.gameclient.ClientGameStage;
 
@@ -23,6 +25,21 @@ public class GameHUDStage extends Stage {
     private ClientGameStage gameStage = GameScreen.getGameStage();
 
     public GameHUDStage() {
+        super();
+        init();
+    }
+
+    public GameHUDStage(Viewport viewport) {
+        super(viewport);
+        init();
+    }
+
+    public GameHUDStage(Viewport viewport, Batch batch) {
+        super(viewport, batch);
+        init();
+    }
+
+    private void init() {
         Table root = new Table();
         root.setFillParent(true);
         //root.debug();

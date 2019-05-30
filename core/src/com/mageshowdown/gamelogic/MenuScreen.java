@@ -3,12 +3,16 @@ package com.mageshowdown.gamelogic;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mageshowdown.gameclient.ClientAssetLoader;
 import com.mageshowdown.gameclient.ClientListener;
 import com.mageshowdown.gameclient.GameClient;
@@ -18,29 +22,42 @@ import com.mageshowdown.utils.PrefsKeys;
 
 import java.io.IOException;
 
-public class MenuScreen implements Screen {
+import static com.mageshowdown.gameclient.ClientAssetLoader.prefs;
 
-    public enum StagePhase {
-        MAIN_MENU_STAGE,
-        OPTIONS_STAGE
-    }
+public class MenuScreen implements Screen {
 
     //Singleton instantiation
     private static final MenuScreen INSTANCE = new MenuScreen();
-
+    private static Viewport viewport;
+    private static Batch batch;
     private static Stage mainMenuStage;
-    private static OptionsStage menuOptionsStage;
+    private static Stage menuOptionsStage;
     private static StagePhase stagePhase;
     private GameClient myClient = GameClient.getInstance();
 
     private MenuScreen() {
-        mainMenuStage = new Stage();
-        menuOptionsStage = new OptionsStage(ClientAssetLoader.menuBackground);
+        viewport = new ScreenViewport();
+        batch = new SpriteBatch();
+
+        mainMenuStage = new Stage(viewport, batch);
+        menuOptionsStage = new OptionsStage(viewport, batch, ClientAssetLoader.menuBackground);
 
         prepareMainMenuStage();
 
         stagePhase = StagePhase.MAIN_MENU_STAGE;
         Gdx.input.setInputProcessor(mainMenuStage);
+    }
+
+    public static MenuScreen getInstance() {
+        return INSTANCE;
+    }
+
+    public static Stage getMainMenuStage() {
+        return mainMenuStage;
+    }
+
+    public static void setStagePhase(StagePhase stagePhase) {
+        MenuScreen.stagePhase = stagePhase;
     }
 
     @Override
@@ -66,8 +83,7 @@ public class MenuScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        mainMenuStage.getViewport().update(width, height, true);
-        menuOptionsStage.getViewport().update(width, height, true);
+        viewport.update(width, height, true);
     }
 
     @Override
@@ -87,22 +103,7 @@ public class MenuScreen implements Screen {
         mainMenuStage.dispose();
         menuOptionsStage.dispose();
         INSTANCE.dispose();
-    }
-
-    public static MenuScreen getInstance() {
-        return INSTANCE;
-    }
-
-    public static Stage getMainMenuStage() {
-        return mainMenuStage;
-    }
-
-    public static OptionsStage getMenuOptionsStage() {
-        return menuOptionsStage;
-    }
-
-    public static void setStagePhase(StagePhase stagePhase) {
-        MenuScreen.stagePhase = stagePhase;
+        batch.dispose();
     }
 
     private void prepareMainMenuStage() {
@@ -110,19 +111,15 @@ public class MenuScreen implements Screen {
         background.add(new Image(ClientAssetLoader.menuBackground));
         background.setFillParent(true);
 
-
         Table foreground = new Table();
         foreground.setFillParent(true);
         //foreground.debug();
 
-
-        //Widgets declarations
         TextButton connectButton = new TextButton("Connect", ClientAssetLoader.uiSkin);
         TextButton optionsButton = new TextButton("Options...", ClientAssetLoader.uiSkin);
         TextButton quitButton = new TextButton("Quit Game", ClientAssetLoader.uiSkin);
-        final TextField addressField = new TextField("127.0.0.1", ClientAssetLoader.uiSkin);
-        //
-        //Order sensitive addition and positioning of widgets into table
+        final TextField addressField = new TextField(prefs.getString(PrefsKeys.LASTENTEREDIP), ClientAssetLoader.uiSkin);
+
         //(1280x720)->290w 60h cells 25pad right left 20 top bottom
         foreground.defaults().space(20, 25, 20, 25).width(290).height(60);
         foreground.add(connectButton);
@@ -138,6 +135,7 @@ public class MenuScreen implements Screen {
             public void clicked(InputEvent even, float x, float y) {
                 if (GameWorld.world.getBodyCount() == 0) {
                     String ipAddress = addressField.getText();
+                    prefs.putString(PrefsKeys.LASTENTEREDIP, ipAddress).flush();
                     clientStart(ipAddress);
                 } else
                     System.out.println(GameWorld.world.getBodyCount());
@@ -164,7 +162,7 @@ public class MenuScreen implements Screen {
     }
 
     private void clientStart(String ipAddress) {
-        myClient.setUserName(ClientAssetLoader.prefs.getString(PrefsKeys.PLAYERNAME));
+        myClient.setUserName(prefs.getString(PrefsKeys.PLAYERNAME));
         myClient.start();
 
         try {
@@ -174,8 +172,8 @@ public class MenuScreen implements Screen {
             MageShowdownClient.getInstance().setScreen(GameScreen.getInstance());
         } catch (IOException e) {
             final Dialog dialog = new Dialog("", ClientAssetLoader.uiSkin);
-            dialog.text(e.toString());
-            Button backBtn = new TextButton("Back...", ClientAssetLoader.uiSkin);
+            dialog.text(e.toString(), ClientAssetLoader.uiSkin.get("menu-label", Label.LabelStyle.class));
+            Button backBtn = new TextButton("Back", ClientAssetLoader.uiSkin);
             backBtn.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
@@ -187,5 +185,10 @@ public class MenuScreen implements Screen {
             dialog.show(mainMenuStage);
         }
         myClient.addListener(new ClientListener());
+    }
+
+    public enum StagePhase {
+        MAIN_MENU_STAGE,
+        OPTIONS_STAGE
     }
 }

@@ -6,20 +6,18 @@ import com.mageshowdown.gameclient.ClientAssetLoader;
 import com.mageshowdown.gamelogic.GameWorld;
 import com.mageshowdown.packets.Network;
 
-import java.util.Random;
-
 public class MageShowdownServer extends Game {
 
-    private GameServer myServer=GameServer.getInstance();
+    private GameServer myServer = GameServer.getInstance();
 
     private ServerGameStage gameStage;
-    private boolean updatePositions=false;
-    private float timePassed=0f;
+    private boolean updatePositions = false;
+    private float timePassed = 0f;
 
     @Override
-    public void create () {
-        GameWorld.resolutionScale=1f;
-        gameStage=new ServerGameStage();
+    public void create() {
+        GameWorld.resolutionScale = 1f;
+        gameStage = new ServerGameStage();
         myServer.setGameStage(gameStage);
         serverStart();
         ServerAssetLoader.load();
@@ -28,35 +26,35 @@ public class MageShowdownServer extends Game {
     }
 
     @Override
-    public void render () {
-        Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond()+" ");
+    public void render() {
+        Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() + " ");
 
         //if the round is finished we "pause" the stage and only update the round
-        if(!ServerRound.getInstance().isFinished())
+        if (!ServerRound.getInstance().isFinished())
             gameStage.act();
         else ServerRound.getInstance().act(Gdx.graphics.getDeltaTime());
 
-        if(myServer.getUpdatePositions()){
+        if (myServer.getUpdatePositions()) {
             new UpdatePlayerPositions(gameStage);
-            timePassed=0f;
+            timePassed = 0f;
             myServer.setUpdatePositions(false);
-        }else{
-            if(timePassed>=0.01f){
+        } else {
+            if (timePassed >= 0.01f) {
                 new UpdatePlayerPositions(gameStage);
-                timePassed=0f;
-            }else{
-                timePassed+=Gdx.graphics.getDeltaTime();
+                timePassed = 0f;
+            } else {
+                timePassed += Gdx.graphics.getDeltaTime();
             }
         }
 
     }
 
     @Override
-    public void dispose () {
+    public void dispose() {
         ServerAssetLoader.dispose();
     }
 
-    public void serverStart(){
+    public void serverStart() {
         myServer.start();
         myServer.bind(Network.TCP_PORT, Network.UDP_PORT);
 

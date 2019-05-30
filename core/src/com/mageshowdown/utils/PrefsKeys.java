@@ -10,4 +10,5 @@ public class PrefsKeys {
     public static final String PLAYERNAME = "playerName";
     public static final String FOREGROUNDFPS = "foregroundFPS";
     public static final String BACKGROUNDFPS = "backgroundFPS";
+    public static final String LASTENTEREDIP = "lastEnteredIp";
 }
