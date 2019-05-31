@@ -115,17 +115,18 @@ public class Weapon extends GameActor implements AnimatedActorInterface {
     }
 
     public void shoot(Vector2 direction, float rotation, int ownerId) {
+        System.out.println(getStartPosition(rotation));
         switch (ammoType) {
             case FREEZE:
                 if (currentCapacity > ammoCosts.get("freeze projectile")) {
-                    ammunition.add(new FreezeProjectile(getStage(), getShootingOrigin(rotation), rotation, direction, ammunition.size(), ownerId));
+                    ammunition.add(new FreezeProjectile(getStage(), getStartPosition(rotation), rotation, direction, ammunition.size(), ownerId));
                     currentCapacity -= ammoCosts.get("freeze projectile");
                     recharge = false;
                 }
                 break;
             case FIRE:
                 if (currentCapacity > ammoCosts.get("laser")) {
-                    ammunition.add(new Laser(getStage(), getShootingOrigin(rotation), rotation, ammunition.size(), ownerId));
+                    ammunition.add(new Laser(getStage(), getStartPosition(rotation), rotation, ammunition.size(), ownerId));
                     currentCapacity -= ammoCosts.get("laser");
                     recharge = false;
                 }
@@ -166,9 +167,9 @@ public class Weapon extends GameActor implements AnimatedActorInterface {
         }
     }
 
-    public Vector2 getShootingOrigin(float angle) {
-        return new Vector2((getX()+getOriginX())+getOriginX()*(float)Math.cos(angle*Math.PI/180)
-                , (getY()+getOriginY())+getOriginY()*(float)Math.sin(angle*Math.PI/180));
+    public Vector2 getStartPosition(float angle) {
+        return new Vector2((getX()+getOriginX()-5)+(getOriginX()-15)*(float)Math.cos(angle*Math.PI/180)
+                , (getY()+getOriginY()-15)+(getOriginY()-15)*(float)Math.sin(angle*Math.PI/180));
     }
 
     @Override

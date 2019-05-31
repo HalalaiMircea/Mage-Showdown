@@ -113,8 +113,9 @@ public class ClientAssetLoader {
         uiSkin = new Skin(Gdx.files.internal("UIAssets/uiskin.json"));
         hudSkin = new Skin(Gdx.files.internal("UIAssets/golden-ui-skin.json"));
 
-        menuBackground = new Texture("UIAssets/placeholder.jpg");
-        solidBlack = new Texture("UIAssets/Black_1080p.png");
+        menuBackground = new Texture(Gdx.files.internal("UIAssets/placeholder.jpg"));
+        solidBlack = new Texture(Gdx.files.internal("UIAssets/Black_1080p.png"));
+        roundOverScreen = new Texture(Gdx.files.internal("UIAssets/round over.png"));
 
         generateFonts();
 
@@ -215,6 +216,8 @@ public class ClientAssetLoader {
 
         menuBackground.dispose();
         solidBlack.dispose();
+
+        roundOverScreen.dispose();
 
         map1.dispose();
         dungeonMap.dispose();

@@ -16,7 +16,7 @@ public abstract class GameActor extends Actor {
     protected Sprite sprite;
     protected Body body;
     protected HashMap<String, Animation<TextureRegion>> animations;
-    protected float passedTime=0f;
+    protected float passedTime = 0f;
     protected TextureRegion currFrame;
     protected Vector2 bodySize;
 
@@ -25,40 +25,41 @@ public abstract class GameActor extends Actor {
      * after the world steps, we update its body with these values
      */
     protected Vector2 queuedPos;
-    protected boolean canClearPos=false;
+    protected boolean canClearPos = false;
 
 
-    protected GameActor(Stage stage, Vector2 position, Vector2 size, Vector2 bodySize, float rotation, Vector2 sizeScaling){
-        setScale(sizeScaling.x,sizeScaling.y);
-        setPosition(position.x,position.y);
-        setSize(size.x,size.y);
-        this.bodySize=bodySize;
-        setOrigin(size.x/2,size.y/2);
+    protected GameActor(Stage stage, Vector2 position, Vector2 size, Vector2 bodySize, float rotation, Vector2 sizeScaling) {
+        setScale(sizeScaling.x, sizeScaling.y);
+        setPosition(position.x, position.y);
+        setSize(size.x, size.y);
+        this.bodySize = bodySize;
+        setOrigin(size.x / 2, size.y / 2);
         setRotation(rotation);
         stage.addActor(this);
-        animations=new HashMap<String, Animation<TextureRegion>>();
+        animations = new HashMap<String, Animation<TextureRegion>>();
     }
-    protected GameActor(Stage stage,Vector2 position, Vector2 size, Vector2 bodySize, float rotation){
-        this(stage,position,size,bodySize,rotation,new Vector2(1,1));
+
+    protected GameActor(Stage stage, Vector2 position, Vector2 size, Vector2 bodySize, float rotation) {
+        this(stage, position, size, bodySize, rotation, new Vector2(1, 1));
     }
 
     @Override
     public void act(float delta) {
-        passedTime+=delta;
+        passedTime += delta;
 
-        if(body!=null) {
+        if (body != null) {
             updatePositionFromBody();
         }
-        if(sprite!=null){
+        if (sprite != null) {
             sprite.setPosition(getX(), getY());
         }
 
         super.act(delta);
     }
 
-    protected void updatePositionFromBody(){
+    protected void updatePositionFromBody() {
         Vector2 convPosition = GameWorld.convertWorldToPixels(body.getPosition());
-        setPosition(convPosition.x-bodySize.x/2, convPosition.y-bodySize.y/2);
+        setPosition(convPosition.x - bodySize.x / 2, convPosition.y - bodySize.y / 2);
         setRotation(body.getAngle() * 180 / (float) Math.PI);
     }
 
@@ -69,72 +70,75 @@ public abstract class GameActor extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        if(sprite!=null)
-            batch.draw(sprite,getX(),getY(),sprite.getOriginX(),sprite.getOriginY(),getWidth(),getHeight(),1f,1f,sprite.getRotation());
-        else if(currFrame!=null)
-            batch.draw(currFrame,getX(),getY(),getOriginX(),getOriginY(),getWidth(),getHeight(),getScaleX(),getScaleY(),getRotation());
+        if (sprite != null)
+            batch.draw(sprite, getX(), getY(), sprite.getOriginX(), sprite.getOriginY(), getWidth(), getHeight(), 1f, 1f, sprite.getRotation());
+        else if (currFrame != null)
+            batch.draw(currFrame, getX(), getY(), getOriginX(), getOriginY(), getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
     }
 
-    protected void addAnimation(int frameColumns, int frameRows, float animationDuration,String animationName, Texture spriteSheet){
+    protected void addAnimation(int frameColumns, int frameRows, float animationDuration, String animationName, Texture spriteSheet) {
 
-       /*
-       * split the spritesheet by number of columns and rows into a TextureRegion matrix,
-       * put those frames into an ArrayList and then create the animation from said ArrayList
-       */
-        TextureRegion[][] tmp=TextureRegion.split(spriteSheet,
-                spriteSheet.getWidth()/frameColumns,
-                spriteSheet.getHeight()/frameRows);
-        TextureRegion[] animationFrames=new TextureRegion[frameColumns*frameRows];
+        /*
+         * split the spritesheet by number of columns and rows into a TextureRegion matrix,
+         * put those frames into an ArrayList and then create the animation from said ArrayList
+         */
+        TextureRegion[][] tmp = TextureRegion.split(spriteSheet,
+                spriteSheet.getWidth() / frameColumns,
+                spriteSheet.getHeight() / frameRows);
+        TextureRegion[] animationFrames = new TextureRegion[frameColumns * frameRows];
 
-        int index=0;
-        for(int i=0;i<frameRows;i++)
-            for(int j=0;j<frameColumns;j++)
-                animationFrames[index++]=tmp[i][j];
+        int index = 0;
+        for (int i = 0; i < frameRows; i++)
+            for (int j = 0; j < frameColumns; j++)
+                animationFrames[index++] = tmp[i][j];
 
         animations.put(animationName,
-                new Animation<TextureRegion>(animationDuration/(float)(frameColumns*frameRows), animationFrames));
+                new Animation<TextureRegion>(animationDuration / (float) (frameColumns * frameRows), animationFrames));
     }
 
 
-    protected void createBody(float density, float friction, float restitution, float rotation, BodyDef.BodyType bodyType){
+    protected void createBody(float density, float friction, float restitution, float rotation, Vector2 origin, BodyDef.BodyType bodyType) {
 
-        body=CreateBodies.createRectangleBody(new Vector2(getX(),getY()), bodySize,bodyType,density,friction,restitution,rotation);
+        body = CreateBodies.createRectangleBody(new Vector2(getX(), getY()), bodySize, origin, bodyType, density, friction, restitution, rotation)
+        ;
         setTouchable(Touchable.enabled);
 
         //we set the body's user data to the current object in order to retrieve it later for collision handling
         body.setUserData(this);
     }
 
-    public void clearQueue(){
-        if(canClearPos){
-            body.setTransform(queuedPos,body.getAngle());
-            canClearPos=false;
+    public void clearQueue() {
+        if (canClearPos) {
+            body.setTransform(queuedPos, body.getAngle());
+            canClearPos = false;
         }
     }
 
     public void setQueuedPos(Vector2 queuedPos) {
         this.queuedPos = queuedPos;
-        canClearPos=true;
+        canClearPos = true;
     }
 
-    protected void createBody(float rotation,BodyDef.BodyType bodyType){
-        final float localRotation=rotation;
-        final BodyDef.BodyType localBodyType=bodyType;
+    protected void createBody(float rotation, Vector2 origin, BodyDef.BodyType bodyType) {
+        final float localRotation = rotation;
+        final BodyDef.BodyType localBodyType = bodyType;
+        final Vector2 localOrigin = origin;
         GameWorld.addToBodyCreationQueue(new Callable<Void>() {
             @Override
             public Void call() throws Exception {
-                createBody(.6f,0f,0f,localRotation,localBodyType);
+                createBody(.6f, 0f, 0f, localRotation, localOrigin, localBodyType);
                 return null;
             }
         });
     }
 
-    protected void createBody(BodyDef.BodyType bodyType){
-        final BodyDef.BodyType localBodyType=bodyType;
+    protected void createBody(Vector2 origin, BodyDef.BodyType bodyType) {
+        final BodyDef.BodyType localBodyType = bodyType;
+        final Vector2 localOrigin = origin;
         GameWorld.addToBodyCreationQueue(new Callable<Void>() {
             @Override
             public Void call() throws Exception {
-                createBody(.6f,0f,0f,0,localBodyType);
+                createBody(.6f, 0f, 0f, 0, localOrigin, localBodyType);
                 return null;
             }
         });
@@ -146,7 +150,7 @@ public abstract class GameActor extends Actor {
 
     @Override
     public boolean remove() {
-        if(body!=null)
+        if (body != null)
             GameWorld.addToBodyRemovalQueue(body);
         return super.remove();
     }
