@@ -11,4 +11,6 @@ public class PrefsKeys {
     public static final String FOREGROUNDFPS = "foregroundFPS";
     public static final String BACKGROUNDFPS = "backgroundFPS";
     public static final String LASTENTEREDIP = "lastEnteredIp";
+    public static final String SOUNDVOLUME = "soundVolume";
+    public static final String MUSICVOLUME = "musicVolume";
 }

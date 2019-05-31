@@ -22,15 +22,19 @@ import static com.mageshowdown.gameclient.ClientAssetLoader.uiSkin;
 public class OptionsStage extends Stage {
 
     private Image background;
-    private Table root;
     private Texture backgroundTexture;
+    private Table root;
     private TextField playerNameField;
+    private TextButton vsyncCheckBox;
     private TextButton backButton;
     private TextButton applyButton;
     private SelectBox<String> resSelectBox;
     private SelectBox<String> modeSelectBox;
     private SelectBox<Integer> refreshSelectBox;
-    private TextButton vsyncCheckBox;
+    private Label soundVolumeLabel;
+    private Label musicVolumeLabel;
+    private Slider soundVolumeSlider;
+    private Slider musicVolumeSlider;
 
     private Graphics.DisplayMode[] displayModes;
 
@@ -79,9 +83,15 @@ public class OptionsStage extends Stage {
         refreshSelectBox = new SelectBox<Integer>(uiSkin);
         vsyncCheckBox = new TextButton("Vertical Sync: ", uiSkin);
 
+        soundVolumeLabel = new Label("", uiSkin, "menu-label");
+        musicVolumeLabel = new Label("", uiSkin, "menu-label");
+        soundVolumeSlider = new Slider(0f, 1f, 0.05f, false, uiSkin);
+        musicVolumeSlider = new Slider(0f, 1f, 0.05f, false, uiSkin);
+
         Label playerNameLabel = new Label("Player name", uiSkin, "menu-label");
         playerNameField = new TextField(prefs.getString(PrefsKeys.PLAYERNAME), uiSkin);
         playerNameField.setMessageText("Enter your name...");
+
         backButton = new TextButton("Back", uiSkin);
         applyButton = new TextButton("Apply", uiSkin);
 
@@ -96,6 +106,11 @@ public class OptionsStage extends Stage {
         root.add(playerNameLabel, playerNameField);
         root.row();
         root.add(vsyncCheckBox).colspan(2).width(605);
+        root.row();
+        root.defaults().space(20, 25, 20, 25).width(290).height(60);
+        root.add(soundVolumeLabel, soundVolumeSlider);
+        root.row();
+        root.add(musicVolumeLabel, musicVolumeSlider);
         root.row();
         root.add(backButton, applyButton);
     }
@@ -141,12 +156,63 @@ public class OptionsStage extends Stage {
             vsyncCheckBox.setText("Vertical Sync: OFF");
         vsyncCheckBox.setChecked(prefs.getBoolean(PrefsKeys.VSYNC));
 
+        soundVolumeSlider.setValue(prefs.getFloat(PrefsKeys.SOUNDVOLUME));
+        soundVolumeLabel.setText("Sound: " + (int) (soundVolumeSlider.getPercent() * 100) + "%");
+        musicVolumeSlider.setValue(prefs.getFloat(PrefsKeys.MUSICVOLUME));
+        musicVolumeLabel.setText("Music: " + (int) (musicVolumeSlider.getPercent() * 100) + "%");
     }
 
     private void handleWidgetEvents() {
+        vsyncCheckBox.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                ClientAssetLoader.btnClickSound.play(prefs.getFloat(PrefsKeys.SOUNDVOLUME));
+
+                if (vsyncCheckBox.isChecked())
+                    vsyncCheckBox.setText("Vertical Sync: ON");
+                else
+                    vsyncCheckBox.setText("Vertical Sync: OFF");
+            }
+        });
+
+        soundVolumeSlider.addListener(new ClickListener() {
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                super.touchUp(event, x, y, pointer, button);
+                prefs.putFloat(PrefsKeys.SOUNDVOLUME, soundVolumeSlider.getValue());
+                prefs.flush();
+                ClientAssetLoader.btnClickSound.play(prefs.getFloat(PrefsKeys.SOUNDVOLUME));
+                soundVolumeLabel.setText("Sound: " + (int) (soundVolumeSlider.getPercent() * 100) + "%");
+            }
+
+            @Override
+            public void touchDragged(InputEvent event, float x, float y, int pointer) {
+                super.touchDragged(event, x, y, pointer);
+                soundVolumeLabel.setText("Sound: " + (int) (soundVolumeSlider.getPercent() * 100) + "%");
+            }
+        });
+
+        musicVolumeSlider.addListener(new ClickListener() {
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                super.touchUp(event, x, y, pointer, button);
+                prefs.putFloat(PrefsKeys.MUSICVOLUME, musicVolumeSlider.getValue());
+                prefs.flush();
+                musicVolumeLabel.setText("Music: " + (int) (musicVolumeSlider.getPercent() * 100) + "%");
+            }
+
+            @Override
+            public void touchDragged(InputEvent event, float x, float y, int pointer) {
+                super.touchDragged(event, x, y, pointer);
+                musicVolumeLabel.setText("Music: " + (int) (musicVolumeSlider.getPercent() * 100) + "%");
+            }
+        });
+
         applyButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                ClientAssetLoader.btnClickSound.play(prefs.getFloat(PrefsKeys.SOUNDVOLUME));
+
                 String[] str = resSelectBox.getSelected().split("x");
                 if (modeSelectBox.getSelected().equals("Fullscreen")) {
                     for (Graphics.DisplayMode each : displayModes)
@@ -174,18 +240,12 @@ public class OptionsStage extends Stage {
                 GameWorld.updateResolutionScale();
             }
         });
-        vsyncCheckBox.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (vsyncCheckBox.isChecked())
-                    vsyncCheckBox.setText("Vertical Sync: ON");
-                else
-                    vsyncCheckBox.setText("Vertical Sync: OFF");
-            }
-        });
+
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                ClientAssetLoader.btnClickSound.play(prefs.getFloat(PrefsKeys.SOUNDVOLUME));
+
                 if (MageShowdownClient.getInstance().getScreen().equals(MenuScreen.getInstance())) {
                     MenuScreen.setStagePhase(MenuScreen.StagePhase.MAIN_MENU_STAGE);
                     Gdx.input.setInputProcessor(MenuScreen.getMainMenuStage());
@@ -196,15 +256,5 @@ public class OptionsStage extends Stage {
                 }
             }
         });
-    }
-
-    @Override
-    public void act() {
-        super.act();
-    }
-
-    @Override
-    public void draw() {
-        super.draw();
     }
 }

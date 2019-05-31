@@ -205,6 +205,8 @@ public class GamePreferences implements Preferences {
         this.putBoolean(PrefsKeys.USEGL30, false);
         this.putBoolean(PrefsKeys.FULLSCREEN, false);
         this.putString(PrefsKeys.LASTENTEREDIP, "127.0.0.1");
+        this.putFloat(PrefsKeys.SOUNDVOLUME, 0.5f);
+        this.putFloat(PrefsKeys.MUSICVOLUME, 0.5f);
         //TO-DO: put defaults to load into preference xml
 
         this.flush();

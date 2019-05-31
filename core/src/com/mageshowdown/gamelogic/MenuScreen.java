@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mageshowdown.gameclient.ClientAssetLoader;
@@ -133,6 +132,7 @@ public class MenuScreen implements Screen {
         connectButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent even, float x, float y) {
+                ClientAssetLoader.btnClickSound.play(prefs.getFloat(PrefsKeys.SOUNDVOLUME));
                 if (GameWorld.world.getBodyCount() == 0) {
                     String ipAddress = addressField.getText();
                     prefs.putString(PrefsKeys.LASTENTEREDIP, ipAddress).flush();
@@ -145,6 +145,7 @@ public class MenuScreen implements Screen {
         optionsButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                ClientAssetLoader.btnClickSound.play(prefs.getFloat(PrefsKeys.SOUNDVOLUME));
                 stagePhase = StagePhase.OPTIONS_STAGE;
                 Gdx.input.setInputProcessor(menuOptionsStage);
             }
@@ -153,6 +154,7 @@ public class MenuScreen implements Screen {
         quitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                ClientAssetLoader.btnClickSound.play(prefs.getFloat(PrefsKeys.SOUNDVOLUME));
                 Gdx.app.exit();
             }
         });

@@ -15,6 +15,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mageshowdown.gameclient.*;
+import com.mageshowdown.utils.PrefsKeys;
+
+import static com.mageshowdown.gameclient.ClientAssetLoader.prefs;
 
 public class GameScreen implements Screen {
 
@@ -181,6 +184,8 @@ public class GameScreen implements Screen {
         resumeButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                ClientAssetLoader.btnClickSound.play(prefs.getFloat(PrefsKeys.SOUNDVOLUME));
+
                 gameState = GameState.GAME_RUNNING;
                 Gdx.input.setInputProcessor(gameStage.getPlayerCharacter());
             }
@@ -189,6 +194,8 @@ public class GameScreen implements Screen {
         optionsButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                ClientAssetLoader.btnClickSound.play(prefs.getFloat(PrefsKeys.SOUNDVOLUME));
+
                 gameState = GameState.GAME_OPTIONS;
                 Gdx.input.setInputProcessor(gameOptionsStage);
             }
@@ -197,6 +204,8 @@ public class GameScreen implements Screen {
         disconnectButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                ClientAssetLoader.btnClickSound.play(prefs.getFloat(PrefsKeys.SOUNDVOLUME));
+
                 GameClient.getInstance().stop();
                 ClientRound.getInstance().stop();
                 gameStage.clear();
@@ -209,6 +218,8 @@ public class GameScreen implements Screen {
         quitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                ClientAssetLoader.btnClickSound.play(prefs.getFloat(PrefsKeys.SOUNDVOLUME));
+
                 final Dialog dialog = new Dialog("", ClientAssetLoader.uiSkin);
                 dialog.text("Are you sure?", ClientAssetLoader.uiSkin.get("menu-label", Label.LabelStyle.class));
                 Button confirmBtn = new TextButton("Yes, quit the Game!", ClientAssetLoader.uiSkin);
@@ -216,12 +227,14 @@ public class GameScreen implements Screen {
                 confirmBtn.addListener(new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
+                        ClientAssetLoader.btnClickSound.play(prefs.getFloat(PrefsKeys.SOUNDVOLUME));
                         Gdx.app.exit();
                     }
                 });
                 cancelBtn.addListener(new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
+                        ClientAssetLoader.btnClickSound.play(prefs.getFloat(PrefsKeys.SOUNDVOLUME));
                         dialog.hide();
                     }
                 });
