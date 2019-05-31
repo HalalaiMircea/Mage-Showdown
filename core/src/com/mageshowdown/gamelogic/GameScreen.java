@@ -6,15 +6,19 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mageshowdown.gameclient.*;
+
+import java.util.ArrayList;
 
 public class GameScreen implements Screen {
 
@@ -199,7 +203,7 @@ public class GameScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 GameClient.getInstance().stop();
                 ClientRound.getInstance().stop();
-                gameStage.clear();
+
                 MageShowdownClient.getInstance().setScreen(MenuScreen.getInstance());
 
                 Gdx.input.setInputProcessor(MenuScreen.getMainMenuStage());

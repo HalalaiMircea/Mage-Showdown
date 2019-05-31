@@ -1,9 +1,6 @@
 package com.mageshowdown.gameclient;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.mageshowdown.gamelogic.GameScreen;
 import com.mageshowdown.gamelogic.Round;
 
 public class ClientRound extends Round {

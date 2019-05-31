@@ -20,7 +20,6 @@ public class GameServer extends Server {
     //a hashmap where the values are the usernames and the keys the id's of the player
     private HashMap<Integer,String> users;
     private boolean updatePositions=false;
-    private float timeSinceLastUpdate=0;
     private ServerGameStage gameStage;
 
     private GameServer(){

@@ -129,6 +129,8 @@ public class ClientListener extends Listener {
     private void handleCurrentMap(Connection connection, Object object) {
         if (object instanceof Network.CurrentMap) {
             Network.CurrentMap packet = (Network.CurrentMap) object;
+            if(GameScreen.getInstance().getGameStage().getGameLevel().getMapNr()==packet.nr)
+                return;
 
             GameScreen.getInstance().getGameStage().getGameLevel().setMap(packet.nr);
             GameScreen.getInstance().getGameStage().getGameLevel().changeLevel();

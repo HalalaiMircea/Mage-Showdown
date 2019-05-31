@@ -137,8 +137,7 @@ public class MenuScreen implements Screen {
                     String ipAddress = addressField.getText();
                     prefs.putString(PrefsKeys.LASTENTEREDIP, ipAddress).flush();
                     clientStart(ipAddress);
-                } else
-                    System.out.println(GameWorld.world.getBodyCount());
+                }
             }
         });
 

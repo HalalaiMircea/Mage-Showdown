@@ -18,8 +18,8 @@ public class FreezeProjectile extends Ammo implements AnimatedActorInterface {
     @Override
     public void act(float delta) {
         super.act(delta);
-        if (body != null && !body.isFixedRotation())
-            body.setFixedRotation(true);
+        //if (body != null && !body.isFixedRotation())
+          //  body.setFixedRotation(true);
         if (collided && animations.get("impact").isAnimationFinished(passedTime))
             destroyable = true;
         pickFrame();

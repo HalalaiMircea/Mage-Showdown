@@ -9,7 +9,7 @@ public class MageShowdownClient extends Game {
     private static final MageShowdownClient INSTANCE = new MageShowdownClient();
 
     private MageShowdownClient() {
-        GameWorld.world.setContactListener(new ClientCollisionListener());
+        GameWorld.world.setContactListener(new ClientCollisionManager());
     }
 
     @Override

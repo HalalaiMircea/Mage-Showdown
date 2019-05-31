@@ -5,7 +5,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
-import com.mageshowdown.gamelogic.CollisionListener;
 import com.mageshowdown.gamelogic.GameLevel;
 import com.mageshowdown.gamelogic.GameWorld;
 import com.mageshowdown.packets.Network;
@@ -27,7 +26,7 @@ public class ServerGameStage extends Stage {
         playerCharacters=new HashMap<Integer, ServerPlayerCharacter>();
 
 
-        GameWorld.world.setContactListener(new ServerCollisionListener(this));
+        GameWorld.world.setContactListener(new ServerCollisionManager(this));
         addActor(ServerRound.getInstance());
     }
 

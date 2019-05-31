@@ -42,7 +42,6 @@ public abstract class Ammo extends DynamicGameActor {
         if(body!=null && !body.getFixtureList().get(0).isSensor())
             makeBodySensor();
 
-        //every frame we check if the projectile is out of bounds
         if (getRotation() > 80f) {
             if (sprite != null)
                 sprite.setFlip(false, true);
@@ -58,6 +57,7 @@ public abstract class Ammo extends DynamicGameActor {
                     currFrame.flip(false, false);
         }
 
+        //every frame we check if the projectile is out of bounds
         if (body != null) {
             Vector2 convPosition = GameWorld.convertWorldToPixels(body.getPosition());
             if (convPosition.x > 1280 || convPosition.x < 0 || convPosition.y > 720 || convPosition.y < 0) {
@@ -73,9 +73,9 @@ public abstract class Ammo extends DynamicGameActor {
         setRotation(body.getAngle() * 180 / (float) Math.PI);
     }
 
-    //we dont want the projectile to react to any collisions or be affected by gravity so we make it a sensor
+    //we dont want the projectile to change its angle or be affected by gravity
     protected void makeBodySensor() {
-        body.getFixtureList().get(0).setSensor(true);
+        body.setFixedRotation(true);
         body.setGravityScale(0f);
     }
 

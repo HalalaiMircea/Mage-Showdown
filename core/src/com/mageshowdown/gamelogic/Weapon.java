@@ -115,7 +115,6 @@ public class Weapon extends GameActor implements AnimatedActorInterface {
     }
 
     public void shoot(Vector2 direction, float rotation, int ownerId) {
-        System.out.println(getStartPosition(rotation));
         switch (ammoType) {
             case FREEZE:
                 if (currentCapacity > ammoCosts.get("freeze projectile")) {

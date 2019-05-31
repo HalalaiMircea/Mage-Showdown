@@ -38,6 +38,7 @@ public class ClientAssetLoader {
     public static Texture fireBombSpritesheet;
     public static Texture flameSpritesheet;
     public static Texture fireLaserSpritesheet;
+    public static Texture burningSpritesheet;
     public static Texture energyShieldSpritesheet;
     public static Texture frozenSpritesheet;
     //preferences files
@@ -101,6 +102,7 @@ public class ClientAssetLoader {
         armFireBombSpritesheet = new Texture("Player Animations/Effect/armFireBombSpritesheet.png");
         fireBombSpritesheet = new Texture("Player Animations/Effect/fireBombSpritesheet.png");
         flameSpritesheet = new Texture("Player Animations/Weapon/flameSpritesheet.png");
+        burningSpritesheet=new Texture("Player Animations/Effect/burningSpritesheet.png");
 
         energyShieldSpritesheet = new Texture("Player Animations/Effect/energyShieldSpriteSheet.png");
         frozenSpritesheet = new Texture("Player Animations/Effect/frozenSpritesheet.png");
@@ -110,7 +112,6 @@ public class ClientAssetLoader {
 
         menuBackground = new Texture(Gdx.files.internal("UIAssets/placeholder.jpg"));
         solidBlack = new Texture(Gdx.files.internal("UIAssets/Black_1080p.png"));
-        roundOverScreen = new Texture(Gdx.files.internal("UIAssets/round over.png"));
 
         generateFonts();
 
@@ -200,6 +201,7 @@ public class ClientAssetLoader {
         armFireBombSpritesheet.dispose();
         fireBombSpritesheet.dispose();
         flameSpritesheet.dispose();
+        burningSpritesheet.dispose();
 
         energyShieldSpritesheet.dispose();
         frozenSpritesheet.dispose();
@@ -209,8 +211,6 @@ public class ClientAssetLoader {
 
         menuBackground.dispose();
         solidBlack.dispose();
-
-        roundOverScreen.dispose();
 
         map1.dispose();
         dungeonMap.dispose();

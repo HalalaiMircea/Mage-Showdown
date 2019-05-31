@@ -6,6 +6,7 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mageshowdown.gameclient.ClientAssetLoader;
 import com.mageshowdown.gameserver.ServerAssetLoader;
@@ -37,9 +38,10 @@ public class GameLevel {
 
         changedLevel = true;
         renderer.setMap(map);
-        //first empty the hitboxes and spawn points of the previous map
+        //first empty the hitboxes, spawn points and burning effects from the previous map
         clearHitboxes();
         clearSpawnPoints();
+        clearBurningEffects();
 
         /*
          * we have to be careful when creating the maps for the layer with hitboxes to be the first one
@@ -100,6 +102,15 @@ public class GameLevel {
         while (spawnIter.hasNext()) {
             spawnIter.next();
             spawnIter.remove();
+        }
+    }
+
+    //we dont want the burning effects to remain there on a map change so we get rid of them
+    private void clearBurningEffects(){
+        for(Actor actor:stage.getActors()){
+            if(actor instanceof Laser.BurningEffect){
+                actor.remove();
+            }
         }
     }
 

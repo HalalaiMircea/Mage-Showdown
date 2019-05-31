@@ -12,6 +12,7 @@ public class MapObjectHitbox extends GameActor {
         createBody(new Vector2(getOriginX(), getOriginY()), BodyDef.BodyType.StaticBody);
     }
 
+
     //we override the base draw method with an empty one as we dont want these hitboxes to be drawn
     @Override
     public void draw(Batch batch, float parentAlpha) {

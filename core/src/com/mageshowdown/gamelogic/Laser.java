@@ -9,13 +9,35 @@ public class Laser extends Ammo implements AnimatedActorInterface{
 
     private static final float duration=.25f;
 
+    public static class BurningEffect extends GameActor implements AnimatedActorInterface{
+        private BurningEffect(Stage stage, Vector2 position){
+            super(stage,new Vector2(position.x-7,position.y-11),new Vector2(15,23),new Vector2(0,0),0,new Vector2(2f,2f));
+            addAnimation(4,3,2f,"idle",ClientAssetLoader.burningSpritesheet);
+        }
+
+        @Override
+        public void act(float delta) {
+            super.act(delta);
+            if(animations.containsKey("idle") && animations.get("idle").isAnimationFinished(passedTime))
+                remove();
+            pickFrame();
+        }
+
+        @Override
+        public void pickFrame() {
+            if(animations.containsKey("idle"))
+                currFrame=animations.get("idle").getKeyFrame(passedTime,false);
+        }
+
+    }
 
     public Laser(Stage stage, Vector2 position, float rotation, int id, int ownerId){
-        super(stage,new Vector2(0f,0f),position,new Vector2(220,31),new Vector2(1.5f,1.2f),new Vector2(325,15),rotation,id,ownerId,2f);
-        setOrigin(0,getHeight()/2);
-        createBody(rotation,new Vector2(0,getOriginY()/2),BodyDef.BodyType.StaticBody);
+        super(stage,new Vector2(0.001f,0.001f),position,new Vector2(220,31),new Vector2(1.5f,1.2f),new Vector2(325,15),rotation,id,ownerId,2);
+        setOrigin(0,getOriginY());
+        createBody(rotation,new Vector2(0,getOriginY()/2),BodyDef.BodyType.DynamicBody);
 
         addAnimation(1,7,.25f,"idle",ClientAssetLoader.fireLaserSpritesheet);
+
     }
 
     @Override
@@ -39,5 +61,10 @@ public class Laser extends Ammo implements AnimatedActorInterface{
     public void pickFrame() {
         if(animations.containsKey("idle"))
             currFrame=animations.get("idle").getKeyFrame(passedTime,false);
+    }
+
+    public void createBurningEffect(Vector2 position){
+        System.out.println(position);
+        new BurningEffect(getStage(),position);
     }
 }
