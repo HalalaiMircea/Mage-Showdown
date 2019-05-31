@@ -2,6 +2,7 @@ package com.mageshowdown.gameclient;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -41,6 +42,8 @@ public class ClientAssetLoader {
     public static Texture burningSpritesheet;
     public static Texture energyShieldSpritesheet;
     public static Texture frozenSpritesheet;
+    //sounds & music
+    public static Sound btnClickSound;
     //preferences files
     public static Preferences prefs;
     //maps
@@ -106,6 +109,8 @@ public class ClientAssetLoader {
 
         energyShieldSpritesheet = new Texture("Player Animations/Effect/energyShieldSpriteSheet.png");
         frozenSpritesheet = new Texture("Player Animations/Effect/frozenSpritesheet.png");
+
+        btnClickSound = Gdx.audio.newSound(Gdx.files.internal("Sounds/click.ogg"));
 
         uiSkin = new Skin(Gdx.files.internal("UIAssets/uiskin.json"));
         hudSkin = new Skin(Gdx.files.internal("UIAssets/golden-ui-skin.json"));
@@ -205,6 +210,8 @@ public class ClientAssetLoader {
 
         energyShieldSpritesheet.dispose();
         frozenSpritesheet.dispose();
+
+        btnClickSound.dispose();
 
         uiSkin.dispose();
         hudSkin.dispose();
