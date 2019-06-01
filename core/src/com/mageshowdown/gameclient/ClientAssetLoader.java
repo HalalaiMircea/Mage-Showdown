@@ -67,10 +67,10 @@ public class ClientAssetLoader {
 //        manager.load("Player Animations/Enemy player/enemyJumpingAnimationSpritesheet.png", Texture.class);
 //        manager.load("Player Animations/Enemy player/enemyRunningAnimationSpritesheet.png", Texture.class);
 //
-//        manager.load("Player Animations/Ammo/freezeProjectile.png", Texture.class);
-//        manager.load("Player Animations/Weapon/CrystalSpritesheet.png", Texture.class);
-//        manager.load("Player Animations/Ammo/fireLaserSpritesheet.png", Texture.class);
-//        manager.load("Player Animations/Weapon/sphereSpritesheet.png", Texture.class);
+//        manager.load("Player Animations/Spell/freezeProjectile.png", Texture.class);
+//        manager.load("Player Animations/Orb/CrystalSpritesheet.png", Texture.class);
+//        manager.load("Player Animations/Spell/fireLaserSpritesheet.png", Texture.class);
+//        manager.load("Player Animations/Orb/sphereSpritesheet.png", Texture.class);
 //
 //        manager.load("energyShieldSpriteSheet.png", Texture.class);
 //        manager.load("frozenSpriteSheet.png", Texture.class);
@@ -96,15 +96,15 @@ public class ClientAssetLoader {
         enemyJumpingSpritesheet = new Texture("Player Animations/Enemy player/enemyJumpingAnimationSpritesheet.png");
         enemyRunningSpritesheet = new Texture("Player Animations/Enemy player/enemyRunningAnimationSpritesheet.png");
 
-        freezeProjectileSpritesheet = new Texture(("Player Animations/Ammo/freezeProjectileSpritesheet.png"));
-        freezeProjectileImpactSpritesheet = new Texture("Player Animations/Ammo/freezeProjectileImpactSpritesheet.png");
+        freezeProjectileSpritesheet = new Texture(("Player Animations/Spell/freezeProjectileSpritesheet.png"));
+        freezeProjectileImpactSpritesheet = new Texture("Player Animations/Spell/freezeProjectileImpactSpritesheet.png");
         armFreezeBombSpritesheet = new Texture("Player Animations/Effect/armFreezeBombSpritesheet.png");
         freezeBombSpritesheet = new Texture("Player Animations/Effect/freezeBombSpritesheet.png");
-        crystalSpritesheet = new Texture("Player Animations/Weapon/CrystalSpritesheet.png");
-        fireLaserSpritesheet = new Texture("Player Animations/Ammo/fireLaserSpritesheet.png");
+        crystalSpritesheet = new Texture("Player Animations/Orb/CrystalSpritesheet.png");
+        fireLaserSpritesheet = new Texture("Player Animations/Spell/fireLaserSpritesheet.png");
         armFireBombSpritesheet = new Texture("Player Animations/Effect/armFireBombSpritesheet.png");
         fireBombSpritesheet = new Texture("Player Animations/Effect/fireBombSpritesheet.png");
-        flameSpritesheet = new Texture("Player Animations/Weapon/flameSpritesheet.png");
+        flameSpritesheet = new Texture("Player Animations/Orb/flameSpritesheet.png");
         burningSpritesheet=new Texture("Player Animations/Effect/burningSpritesheet.png");
 
         energyShieldSpritesheet = new Texture("Player Animations/Effect/energyShieldSpriteSheet.png");
@@ -173,10 +173,10 @@ public class ClientAssetLoader {
 //        enemyJumpingSpritesheet = manager.get("Player Animations/Enemy player/enemyJumpingAnimationSpritesheet.png", Texture.class);
 //        enemyRunningSpritesheet = manager.get("Player Animations/Enemy player/enemyRunningAnimationSpritesheet.png", Texture.class);
 //
-//        freezeProjectileSpritesheet = manager.get("Player Animations/Ammo/freezeProjectile.png", Texture.class);
-//        crystalSpritesheet = manager.get("Player Animations/Weapon/CrystalSpritesheet.png", Texture.class);
-//        fireLaserSpritesheet = manager.get("Player Animations/Ammo/fireLaserSpritesheet.png", Texture.class);
-//        flameSpritesheet = manager.get("Player Animations/Weapon/sphereSpritesheet.png", Texture.class);
+//        freezeProjectileSpritesheet = manager.get("Player Animations/Spell/freezeProjectile.png", Texture.class);
+//        crystalSpritesheet = manager.get("Player Animations/Orb/CrystalSpritesheet.png", Texture.class);
+//        fireLaserSpritesheet = manager.get("Player Animations/Spell/fireLaserSpritesheet.png", Texture.class);
+//        flameSpritesheet = manager.get("Player Animations/Orb/sphereSpritesheet.png", Texture.class);
 //
 //        energyShieldSpritesheet = manager.get("energyShieldSpriteSheet.png", Texture.class);
 //        frozenSpritesheet = manager.get("frozenSpriteSheet.png", Texture.class);

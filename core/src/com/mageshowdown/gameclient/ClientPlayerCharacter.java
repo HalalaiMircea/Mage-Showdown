@@ -11,8 +11,8 @@ import com.mageshowdown.gamelogic.PlayerCharacter;
 import com.mageshowdown.packets.Network;
 import com.mageshowdown.packets.Network.KeyUp;
 import com.mageshowdown.packets.Network.MoveKeyDown;
-import com.mageshowdown.packets.Network.ShootProjectile;
-import com.mageshowdown.packets.Network.SwitchWeapons;
+import com.mageshowdown.packets.Network.CastSpellProjectile;
+import com.mageshowdown.packets.Network.SwitchOrbs;
 
 import java.util.Comparator;
 
@@ -30,12 +30,13 @@ public class ClientPlayerCharacter extends PlayerCharacter
     private boolean isMyPlayer;
     private boolean shoot = false;
     private boolean plantBomb = false;
-    private boolean switchWeapons = false;
+    private boolean switchOrbs = false;
+
     private String userName;
     private int id;
 
-    public ClientPlayerCharacter(ClientGameStage stage, Vector2 position, int weaponEquipped, String userName, boolean isMyPlayer) {
-        super(stage, position, weaponEquipped, true);
+    public ClientPlayerCharacter(ClientGameStage stage, Vector2 position, int orbEquipped, String userName, boolean isMyPlayer) {
+        super(stage, position, orbEquipped, true);
         this.isMyPlayer = isMyPlayer;
 
         if (isMyPlayer) {
@@ -60,10 +61,9 @@ public class ClientPlayerCharacter extends PlayerCharacter
         sendInputPackets();
         pickFrame();
         calcState();
-        updateWeaponPos();
+        updateOrbPosition();
         updateFrozenState();
-        updateAmmoState();
-
+        updateSpellState();
         updateGameActor(delta);
     }
 
@@ -119,13 +119,13 @@ public class ClientPlayerCharacter extends PlayerCharacter
             myClient.sendTCP(keyPress);
         }
         if (shoot) {
-            shootMyWeapon();
+            castMySpellProjectile();
         } else if (plantBomb) {
-            plantMyBomb();
-        } else if (switchWeapons) {
-            switchMyWeapons();
-            myClient.sendTCP(new SwitchWeapons());
-            switchWeapons = false;
+            castMyBomb();
+        } else if (switchOrbs) {
+            switchMyOrbs();
+            myClient.sendTCP(new SwitchOrbs());
+            switchOrbs = false;
         }
     }
 
@@ -179,27 +179,28 @@ public class ClientPlayerCharacter extends PlayerCharacter
         }
     }
 
-    private void shootMyWeapon() {
-        ShootProjectile packet = new ShootProjectile();
-        float rotation = GameWorld.getMouseVectorAngle(new Vector2(currWeapon.getX()+currWeapon.getOriginX(),currWeapon.getY()+currWeapon.getOriginY()));
-        Vector2 direction = GameWorld.getNormalizedMouseVector(new Vector2(currWeapon.getX()+currWeapon.getOriginX(),currWeapon.getY()+currWeapon.getOriginY()));
+    //when casting a projectile we need the rotation angle from which we calculate the direction vector
+    public void castMySpellProjectile() {
+        CastSpellProjectile packet = new CastSpellProjectile();
+        float rotation = GameWorld.getMouseVectorAngle(new Vector2(currentOrb.getX()+ currentOrb.getOriginX(), currentOrb.getY()+ currentOrb.getOriginY()));
+        Vector2 direction = new Vector2((float)Math.cos(rotation*Math.PI/180),(float)Math.sin(rotation*Math.PI/180));
 
         packet.id = myClient.getID();
         packet.rot = rotation;
-        packet.dir = direction;
         myClient.sendTCP(packet);
-        currWeapon.shoot(direction, rotation, myClient.getID());
+        currentOrb.castSpellProjectile(direction, rotation, myClient.getID());
 
         shoot = false;
     }
 
-    private void plantMyBomb() {
-        Network.PlantBomb packet = new Network.PlantBomb();
+    //when casting a bomb we only want the position of the mouse
+    public void castMyBomb() {
+        Network.CastBomb packet = new Network.CastBomb();
 
         packet.id = myClient.getID();
         packet.pos = GameWorld.getMousePos(new Vector2(95, 95));
         myClient.sendTCP(packet);
-        currWeapon.plantBomb(packet.pos, myClient.getID());
+        currentOrb.castBomb(packet.pos, myClient.getID());
 
         plantBomb = false;
     }
@@ -243,7 +244,7 @@ public class ClientPlayerCharacter extends PlayerCharacter
             jump = true;
         }
         if (keycode == Input.Keys.Q) {
-            switchWeapons = true;
+            switchOrbs = true;
         }
 
         return true;
@@ -251,7 +252,6 @@ public class ClientPlayerCharacter extends PlayerCharacter
 
     @Override
     public boolean keyUp(int keycode) {
-        //if we stop moving we send a packet informing the server that we want to synchronize
         KeyUp ku = new KeyUp();
         ku.keycode = keycode;
         if (keycode == Input.Keys.A) {

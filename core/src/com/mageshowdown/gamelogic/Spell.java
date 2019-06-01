@@ -3,9 +3,10 @@ package com.mageshowdown.gamelogic;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
-public abstract class Ammo extends DynamicGameActor {
+public abstract class Spell extends DynamicGameActor {
+    private final float DAMAGE_VALUE;
 
-    //when an ammo collides we may want to have an impact animation so we use a second boolean to know if we can destroy it
+    //when a spell collides we may want to have an impact animation so we use a second boolean besides collided to know if we can destroy it
     protected boolean collided = false;
     protected boolean destroyable=false;
     protected boolean outOfBounds = false;
@@ -13,9 +14,7 @@ public abstract class Ammo extends DynamicGameActor {
     protected int id;
     protected int ownerId;
 
-    private final float DAMAGE_VALUE;
-
-    protected Ammo(Stage stage, Vector2 velocity, Vector2 position, Vector2 size,  Vector2 sizeScaling, Vector2 bodySize, float rotation, int id, int ownerId, float damageValue) {
+    protected Spell(Stage stage, Vector2 velocity, Vector2 position, Vector2 size, Vector2 sizeScaling, Vector2 bodySize, float rotation, int id, int ownerId, float damageValue) {
         super(stage, position, size, bodySize, rotation, sizeScaling);
 
         this.DAMAGE_VALUE = damageValue;
@@ -29,8 +28,8 @@ public abstract class Ammo extends DynamicGameActor {
     //if two projectiles have the same position then we know its the same projectile
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Ammo) {
-            return ((Ammo) obj).getX() == getX() && ((Ammo) obj).getY() == getY();
+        if (obj instanceof Spell) {
+            return ((Spell) obj).getX() == getX() && ((Spell) obj).getY() == getY();
         }
         return false;
     }

@@ -89,7 +89,7 @@ public class ClientGameStage extends Stage {
     }
 
     public void spawnMyPlayerCharacter(Network.NewPlayerSpawned packet) {
-        playerCharacter = new ClientPlayerCharacter(this, packet.pos, packet.weaponEquipped, packet.userName, true);
+        playerCharacter = new ClientPlayerCharacter(this, packet.pos, packet.orbEquipped, packet.userName, true);
         sortedPlayers.put(playerCharacter.getId(), playerCharacter);
         //System.out.println("Map with my player: " + sortedPlayers);
 
@@ -100,7 +100,7 @@ public class ClientGameStage extends Stage {
     }
 
     public void spawnOtherPlayer(Network.NewPlayerSpawned packet) {
-        ClientPlayerCharacter temp = new ClientPlayerCharacter(this, packet.pos, packet.weaponEquipped, packet.userName, false);
+        ClientPlayerCharacter temp = new ClientPlayerCharacter(this, packet.pos, packet.orbEquipped, packet.userName, false);
         temp.setId(packet.id);
         otherPlayers.put(packet.id, temp);
         sortedPlayers.put(packet.id, temp);

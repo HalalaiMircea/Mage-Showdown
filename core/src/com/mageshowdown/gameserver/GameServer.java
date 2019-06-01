@@ -17,7 +17,7 @@ public class GameServer extends Server {
     private static GameServer instance=new GameServer();
 
     private final int NUMBER_OF_MAPS=3;
-    //a hashmap where the values are the usernames and the keys the id's of the player
+    //a hashmap where the values are the usernames and the keys the id's of the players
     private HashMap<Integer,String> users;
     private boolean updatePositions=false;
     private ServerGameStage gameStage;
@@ -48,15 +48,14 @@ public class GameServer extends Server {
         kryo.register(ArrayList.class);
         kryo.register(Network.MoveKeyDown.class);
         kryo.register(Network.KeyUp.class);
-        kryo.register(Network.ShootProjectile.class);
-        kryo.register(Network.PlantBomb.class);
-        kryo.register(Network.ProjectileCollided.class);
+        kryo.register(Network.CastSpellProjectile.class);
+        kryo.register(Network.CastBomb.class);
         kryo.register(Network.LoginRequest.class);
         kryo.register(Network.NewPlayerSpawned.class);
         kryo.register(Network.PlayerDisconnected.class);
         kryo.register(Network.CurrentMap.class);
         kryo.register(Network.PlayerDead.class);
-        kryo.register(Network.SwitchWeapons.class);
+        kryo.register(Network.SwitchOrbs.class);
     }
 
     public void sendMapChange(int nr){

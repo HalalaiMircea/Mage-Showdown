@@ -6,8 +6,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mageshowdown.gamelogic.Bomb;
 import com.mageshowdown.gamelogic.FreezeProjectile;
+import com.mageshowdown.gamelogic.Orb;
 import com.mageshowdown.gamelogic.PlayerCharacter;
-import com.mageshowdown.gamelogic.Weapon;
 import com.mageshowdown.packets.Network;
 
 public class ServerPlayerCharacter extends PlayerCharacter {
@@ -17,8 +17,8 @@ public class ServerPlayerCharacter extends PlayerCharacter {
 
     //whenever you're hit, there will be a short cooldown before your shield starts regenerating
     //when that cooldown expires, youll be regenerating the energy shield at SHIELD_REGEN_RATE/second
-    private float SHIELD_REGEN_RATE=1f;
-    private float SHIELD_COOLDOWN=3f;
+    private final float SHIELD_REGEN_RATE=1f;
+    private final float SHIELD_COOLDOWN=3f;
     private float shieldRegenTimer=0f;
     private boolean regenShield=true;
 
@@ -27,8 +27,8 @@ public class ServerPlayerCharacter extends PlayerCharacter {
 
     private final float FREEZE_SLOWING_FACTOR=.5f;
 
-    public ServerPlayerCharacter(Stage stage, Vector2 pos, int weaponEquipped, int id) {
-        super(stage,pos,weaponEquipped,false);
+    public ServerPlayerCharacter(Stage stage, Vector2 pos, int orbEquipped, int id) {
+        super(stage,pos,orbEquipped,false);
         this.id=id;
     }
 
@@ -37,7 +37,7 @@ public class ServerPlayerCharacter extends PlayerCharacter {
         updateDmgImmuneState();
         updateFrozenState();
         updateShieldState();
-        updateWeaponPos();
+        updateOrbPosition();
 
         switch (moveDirection){
             case Input.Keys.A:
@@ -126,27 +126,28 @@ public class ServerPlayerCharacter extends PlayerCharacter {
             }else health-=damageValue;
 
             //check what the character gets damaged by
-            if(object instanceof FreezeProjectile || object instanceof Bomb && ((Bomb)(object)).getAmmoType()==Weapon.AmmoType.FREEZE){
+            if(object instanceof FreezeProjectile || object instanceof Bomb && ((Bomb)(object)).getSpellType()== Orb.SpellType.FROST){
                 dmgImmune = true;
                 frozen=true;
             }
         }
     }
 
-    public void shootProjectile(Network.ShootProjectile packet){
-        currWeapon.shoot(packet.dir,packet.rot,packet.id);
+    public void castSpellProjectile(Network.CastSpellProjectile packet){
+        Vector2 direction = new Vector2((float)Math.cos(packet.rot*Math.PI/180),(float)Math.sin(packet.rot*Math.PI/180));
+
+        currentOrb.castSpellProjectile(direction,packet.rot,packet.id);
         GameServer.getInstance().sendToAllExceptTCP(packet.id,packet);
     }
 
-    public void plantBomb(Network.PlantBomb packet){
-        currWeapon.plantBomb(packet.pos,packet.id);
+    public void castBomb(Network.CastBomb packet){
+        currentOrb.castBomb(packet.pos,packet.id);
         GameServer.getInstance().sendToAllExceptTCP(packet.id,packet);
     }
 
     public void addKill(){
         kills++;
     }
-
 
     public void setMoveDirection(int moveDirection) {
         this.moveDirection = moveDirection;

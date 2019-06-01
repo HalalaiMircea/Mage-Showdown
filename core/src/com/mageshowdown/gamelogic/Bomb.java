@@ -1,26 +1,25 @@
 package com.mageshowdown.gamelogic;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mageshowdown.gameclient.ClientAssetLoader;
 
-public class Bomb extends Ammo implements AnimatedActorInterface {
+public class Bomb extends Spell implements AnimatedActorInterface {
 
     private final float duration;
-    private Weapon.AmmoType ammoType;
+    private Orb.SpellType spellType;
     //each bomb has an "arming time", after which it explodes and it damages whoever is in range
     private float explosionTime = 0f;
     private boolean exploded = false;
 
-    public Bomb(Stage stage, Vector2 position, float rotation, int id, int ownerId, Weapon.AmmoType ammoType) {
+    public Bomb(Stage stage, Vector2 position, float rotation, int id, int ownerId, Orb.SpellType spellType) {
         super(stage, new Vector2(0, 0), position, new Vector2(190, 190), new Vector2(.8f, .8f), new Vector2(140, 140), rotation, id, ownerId, 9);
 
-        this.ammoType = ammoType;
-        switch (ammoType) {
-            case FREEZE:
+        this.spellType = spellType;
+        switch (spellType) {
+            case FROST:
                 duration = 2.5f;
                 addAnimation(5, 5, duration / 2f, "explosion", ClientAssetLoader.freezeBombSpritesheet);
                 addAnimation(5, 4, duration / 2f, "arm", ClientAssetLoader.armFreezeBombSpritesheet);
@@ -65,7 +64,7 @@ public class Bomb extends Ammo implements AnimatedActorInterface {
         }
     }
 
-    public Weapon.AmmoType getAmmoType() {
-        return ammoType;
+    public Orb.SpellType getSpellType() {
+        return spellType;
     }
 }

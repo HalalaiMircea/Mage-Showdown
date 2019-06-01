@@ -5,7 +5,6 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
 import com.mageshowdown.packets.Network;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class GameClient extends Client {
@@ -31,15 +30,14 @@ public class GameClient extends Client {
         kryo.register(ArrayList.class);
         kryo.register(Network.MoveKeyDown.class);
         kryo.register(Network.KeyUp.class);
-        kryo.register(Network.ShootProjectile.class);
-        kryo.register(Network.PlantBomb.class);
-        kryo.register(Network.ProjectileCollided.class);
+        kryo.register(Network.CastSpellProjectile.class);
+        kryo.register(Network.CastBomb.class);
         kryo.register(Network.LoginRequest.class);
         kryo.register(Network.NewPlayerSpawned.class);
         kryo.register(Network.PlayerDisconnected.class);
         kryo.register(Network.CurrentMap.class);
         kryo.register(Network.PlayerDead.class);
-        kryo.register(Network.SwitchWeapons.class);
+        kryo.register(Network.SwitchOrbs.class);
     }
 
     @Override

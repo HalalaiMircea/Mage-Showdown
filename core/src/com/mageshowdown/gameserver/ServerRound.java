@@ -1,10 +1,6 @@
 package com.mageshowdown.gameserver;
 
-import com.badlogic.gdx.Gdx;
-import com.mageshowdown.gamelogic.GameScreen;
 import com.mageshowdown.gamelogic.Round;
-
-import java.util.Random;
 
 public class ServerRound extends Round {
 

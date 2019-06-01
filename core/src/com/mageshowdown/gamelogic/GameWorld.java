@@ -5,17 +5,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
-import com.mageshowdown.gameclient.GameClient;
-import com.mageshowdown.gameserver.GameServer;
-
-import javax.swing.*;
 import java.util.LinkedList;
 import java.util.concurrent.Callable;
 
 public class GameWorld {
     public static final World world;
     public static float resolutionScale;
-    /* queues for body removals and creations that will happen after the world has stepped
+    /* we need queues for body removals and creations that will happen after the world has stepped;
      * because each actor may want to create a specific type of body, for body creation i use
      * a queue of callables and in the call method of these
      * i put the specific createBody() call of a particular actor
@@ -31,7 +27,7 @@ public class GameWorld {
 
     /*
     * since the size of the world remains static, we need to know how much smaller/bigger it is than the resolution
-    * in order to find the correct position of the mouse
+    * in order to find the correct position of the mouse in the game's world
      */
     public static void updateResolutionScale() {
         resolutionScale = Gdx.graphics.getWidth() / 1280f;

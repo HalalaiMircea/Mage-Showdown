@@ -35,11 +35,11 @@ public abstract class CollisionManager implements ContactListener {
                 obj2 = contact.getFixtureB().getBody().getUserData();
 
         /*
-         * if an ammo wants to react to a collision with something, we disable the contact
-         * this is needed because if we'd rather make the fixture a sensor,
-         * we dont obtain the proper contact point between the ammo and something else
+         * if a spell wants to react to a collision with something, we disable the contact
+         * this is needed because if we were to make the body's fixture a sensor,
+         * we arent provided the proper contact points between the spell and something else
          */
-        if(obj1 instanceof Ammo || obj2 instanceof Ammo)
+        if(obj1 instanceof Spell || obj2 instanceof Spell)
             contact.setEnabled(false);
     }
 

@@ -5,8 +5,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
-import java.util.concurrent.Callable;
-
 
 public abstract class PlayerCharacter extends DynamicGameActor {
     protected static final float MAXIMUM_ENERGY_SHIELD = 5f;
@@ -15,9 +13,9 @@ public abstract class PlayerCharacter extends DynamicGameActor {
 
     protected Stage gameStage;
 
-    protected Weapon freezeWeapon;
-    protected Weapon fireWeapon;
-    protected Weapon currWeapon;
+    protected Orb frostOrb;
+    protected Orb fireOrb;
+    protected Orb currentOrb;
 
     protected float energyShield = MAXIMUM_ENERGY_SHIELD;
     protected float health = MAXIMUM_HEALTH;
@@ -29,30 +27,30 @@ public abstract class PlayerCharacter extends DynamicGameActor {
     protected int score = 0;
     protected int kills = 0;
 
-    protected PlayerCharacter(Stage stage, Vector2 position, int weaponEquipped, boolean loadWeaponAnimation) {
+    protected PlayerCharacter(Stage stage, Vector2 position, int orbEquipped, boolean loadOrbAnimation) {
         super(stage, position, new Vector2(22, 32),new Vector2(22,32), 0f, new Vector2(1.5f, 1.5f));
 
         createBody(new Vector2(getOriginX(),getOriginY()),BodyDef.BodyType.DynamicBody);
         gameStage = stage;
 
-        freezeWeapon = new Weapon(stage, loadWeaponAnimation, Weapon.AmmoType.FREEZE, 1.5f, 25);
-        fireWeapon = new Weapon(stage, loadWeaponAnimation, Weapon.AmmoType.FIRE, 1.5f, 25);
+        frostOrb = new Orb(stage, loadOrbAnimation, Orb.SpellType.FROST, 1.5f, 25);
+        fireOrb = new Orb(stage, loadOrbAnimation, Orb.SpellType.FIRE, 1.5f, 25);
 
-        freezeWeapon.remove();
-        fireWeapon.remove();
+        frostOrb.remove();
+        fireOrb.remove();
 
-        if (weaponEquipped == 1)
-            currWeapon = freezeWeapon;
-        else currWeapon = fireWeapon;
+        if (orbEquipped == 1)
+            currentOrb = frostOrb;
+        else currentOrb = fireOrb;
 
-        gameStage.addActor(currWeapon);
+        gameStage.addActor(currentOrb);
     }
 
     @Override
     public void act(float delta) {
         super.act(delta);
 
-        updateAmmoState();
+        updateSpellState();
         setBodyFixedRotation();
     }
 
@@ -63,21 +61,21 @@ public abstract class PlayerCharacter extends DynamicGameActor {
 
     @Override
     public boolean remove() {
-        destroyWeapons();
+        destroyOrbs();
         return super.remove();
     }
 
 
-    protected void updateWeaponPos() {
-        if (currWeapon != null)
-            currWeapon.updatePosition(new Vector2(getX(), getY()));
+    protected void updateOrbPosition() {
+        if (currentOrb != null)
+            currentOrb.updatePosition(new Vector2(getX(), getY()));
     }
 
-    protected void updateAmmoState(){
-        if(freezeWeapon!=null)
-            freezeWeapon.destroyEliminatedAmmo();
-        if(fireWeapon!=null)
-            fireWeapon.destroyEliminatedAmmo();
+    protected void updateSpellState(){
+        if(frostOrb !=null)
+            frostOrb.destroyEliminatedSpells();
+        if(fireOrb !=null)
+            fireOrb.destroyEliminatedSpells();
     }
 
     protected void updateFrozenState() {
@@ -90,24 +88,24 @@ public abstract class PlayerCharacter extends DynamicGameActor {
         }
     }
 
-    protected void destroyWeapons() {
-        freezeWeapon.remove();
-        fireWeapon.remove();
+    protected void destroyOrbs() {
+        frostOrb.remove();
+        fireOrb.remove();
     }
 
-    public void switchMyWeapons() {
-        currWeapon.unequipWeapon();
+    public void switchMyOrbs() {
+        currentOrb.unequipOrb();
 
-        if (currWeapon.equals(freezeWeapon)) {
-            currWeapon = fireWeapon;
+        if (currentOrb.equals(frostOrb)) {
+            currentOrb = fireOrb;
         } else {
-            currWeapon = freezeWeapon;
+            currentOrb = frostOrb;
         }
-        currWeapon.equipWeapon();
+        currentOrb.equipOrb();
     }
 
-    public Weapon getCurrWeapon() {
-        return currWeapon;
+    public Orb getCurrentOrb() {
+        return currentOrb;
     }
 
     public int getScore() {
@@ -166,8 +164,8 @@ public abstract class PlayerCharacter extends DynamicGameActor {
         this.kills = kills;
     }
 
-    public int getWeaponEquipped() {
-        if (currWeapon.equals(freezeWeapon))
+    public int getEquippedOrb() {
+        if (currentOrb.equals(frostOrb))
             return 1;
         else return 2;
     }

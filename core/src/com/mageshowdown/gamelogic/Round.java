@@ -5,8 +5,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public abstract class Round extends Actor {
 
-    protected final float TIME_BETWEEN_ROUNDS = 10f;
-    protected final float ROUND_LENGTH = 100f;
+    protected static final float TIME_BETWEEN_ROUNDS = 10f;
+    protected static final float ROUND_LENGTH = 100f;
 
     protected boolean finished = false;
     protected boolean started = false;

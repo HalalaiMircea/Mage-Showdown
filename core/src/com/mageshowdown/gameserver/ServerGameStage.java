@@ -49,7 +49,7 @@ public class ServerGameStage extends Stage {
     }
 
     public void addPlayerCharacter(Network.NewPlayerSpawned packet){
-        playerCharacters.put(packet.id,new ServerPlayerCharacter(this,packet.pos,packet.weaponEquipped,packet.id));
+        playerCharacters.put(packet.id,new ServerPlayerCharacter(this,packet.pos,packet.orbEquipped,packet.id));
     }
 
     public ServerPlayerCharacter getPlayerById(int connectionId){

@@ -17,10 +17,10 @@ import static com.mageshowdown.gameclient.ClientAssetLoader.hudSkin;
 public class GameHUDStage extends Stage {
     private ProgressBar healthOrb;
     private ProgressBar shieldBar;
-    private ProgressBar ammoBar;
+    private ProgressBar manaBar;
     private Label healthText;
     private Label shieldText;
-    private Label ammoText;
+    private Label manaText;
 
     private ClientGameStage gameStage = GameScreen.getInstance().getGameStage();
 
@@ -68,17 +68,17 @@ public class GameHUDStage extends Stage {
         tiledDrawable = hudSkin.getTiledDrawable("progress-bar-mana");
         tiledDrawable.setMinWidth(0f);
         hudSkin.get("mana", ProgressBar.ProgressBarStyle.class).knobBefore = tiledDrawable;
-        ammoBar = new ProgressBar(0, 25, 1f, false, hudSkin, "mana");
-        ammoBar.setAnimateDuration(0.1f);
-        ammoText = new Label("", resourceTextStyle);
-        Stack ammoStack = new Stack();
-        ammoStack.add(ammoBar);
-        ammoStack.add(ammoText);
+        manaBar = new ProgressBar(0, 25, 1f, false, hudSkin, "mana");
+        manaBar.setAnimateDuration(0.1f);
+        manaText = new Label("", resourceTextStyle);
+        Stack manaStack = new Stack();
+        manaStack.add(manaBar);
+        manaStack.add(manaText);
 
         root.left().bottom();
         root.add(healthStack).width(201).height(164).left();
         root.add(shieldStack).height(175).padLeft(20).left().expandX();
-        root.add(ammoStack).width(175);
+        root.add(manaStack).width(175);
 
         this.addActor(root);
     }
@@ -93,11 +93,11 @@ public class GameHUDStage extends Stage {
             shieldBar.setValue(gameStage.getPlayerCharacter().getEnergyShield());
             shieldText.setText(" " + (int) gameStage.getPlayerCharacter().getEnergyShield());
 
-            float maxCapacity = gameStage.getPlayerCharacter().getCurrWeapon().getMaxCapacity();
-            float currCapacity = gameStage.getPlayerCharacter().getCurrWeapon().getCurrentCapacity();
-            ammoBar.setRange(0f, maxCapacity);
-            ammoBar.setValue((int) currCapacity);
-            ammoText.setText("  " + (int) currCapacity + "/" + (int) maxCapacity);
+            float maxCapacity = gameStage.getPlayerCharacter().getCurrentOrb().getMaxCapacity();
+            float currCapacity = gameStage.getPlayerCharacter().getCurrentOrb().getCurrentMana();
+            manaBar.setRange(0f, maxCapacity);
+            manaBar.setValue((int) currCapacity);
+            manaText.setText("  " + (int) currCapacity + "/" + (int) maxCapacity);
         }
     }
 }

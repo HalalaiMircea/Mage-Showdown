@@ -6,8 +6,8 @@ import java.util.ArrayList;
 
 public class Network {
 
-    public final static int TCP_PORT=1311;
-    public final static int UDP_PORT=1333;
+    public static final int TCP_PORT=1311;
+    public static final int UDP_PORT=1333;
 
     public static class OneCharacterState{
         public Vector2 pos;
@@ -41,22 +41,16 @@ public class Network {
         public int keycode;
     }
 
-    public static class ShootProjectile{
+    public static class CastSpellProjectile {
         public int id;
         public float rot;
-        public Vector2 dir;
     }
 
-    public static class PlantBomb{
+    public static class CastBomb {
         public int id;
         public Vector2 pos;
     }
 
-    public static class ProjectileCollided{
-        public int projId;
-        public int ownerId;
-        public int playerHitId;
-    }
 
     public static class LoginRequest{
         public String user;
@@ -67,7 +61,7 @@ public class Network {
         public String userName;
         public Vector2 pos;
         public float roundTimePassed;
-        public int weaponEquipped;  //1 for freeze, 2 for fire
+        public int orbEquipped;  //1 for frost, 2 for fire
     }
 
     public static class PlayerDisconnected{
@@ -83,8 +77,7 @@ public class Network {
         public Vector2 respawnPos;
     }
 
-    public static class SwitchWeapons{
+    public static class SwitchOrbs {
         public int id;
     }
-
 }

@@ -5,7 +5,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mageshowdown.gameclient.ClientAssetLoader;
 
-public class FreezeProjectile extends Ammo implements AnimatedActorInterface {
+public class FreezeProjectile extends Spell implements AnimatedActorInterface {
 
     public FreezeProjectile(Stage stage, Vector2 position, float rotation, Vector2 direction, int id, int ownerId) {
         super(stage, new Vector2(3.5f * direction.x, 3.5f * direction.y), position, new Vector2(46, 31), new Vector2(1f, 1f), new Vector2(24, 12), rotation, id, ownerId, 3);
@@ -18,8 +18,6 @@ public class FreezeProjectile extends Ammo implements AnimatedActorInterface {
     @Override
     public void act(float delta) {
         super.act(delta);
-        //if (body != null && !body.isFixedRotation())
-          //  body.setFixedRotation(true);
         if (collided && animations.get("impact").isAnimationFinished(passedTime))
             destroyable = true;
         pickFrame();

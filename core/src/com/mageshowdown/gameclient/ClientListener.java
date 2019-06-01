@@ -1,5 +1,6 @@
 package com.mageshowdown.gameclient;
 
+import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.mageshowdown.gamelogic.GameScreen;
@@ -20,11 +21,10 @@ public class ClientListener extends Listener {
         handleNewPlayerSpawned(connection, object);
         handleUpdateCharacterStates(connection, object);
         handleShootProjectile(connection, object);
-        handleProjectileCollided(connection, object);
         handlePlayerDisconnected(connection, object);
         handleCurrentMap(connection, object);
         handlePlayerDead(connection, object);
-        handleSwitchWeapons(connection, object);
+        handleSwitchOrbs(connection, object);
         handlePlantBomb(connection,object);
     }
 
@@ -88,33 +88,19 @@ public class ClientListener extends Listener {
     }
 
     private void handleShootProjectile(Connection connection, Object object) {
-        if (object instanceof Network.ShootProjectile) {
-            Network.ShootProjectile packet = (Network.ShootProjectile) object;
+        if (object instanceof Network.CastSpellProjectile) {
+            Network.CastSpellProjectile packet = (Network.CastSpellProjectile) object;
 
-            GameScreen.getInstance().getGameStage().getOtherPlayers().get(packet.id).getCurrWeapon().shoot(packet.dir, packet.rot, packet.id);
+            Vector2 direction = new Vector2((float)Math.cos(packet.rot*Math.PI/180),(float)Math.sin(packet.rot*Math.PI/180));
+            GameScreen.getInstance().getGameStage().getOtherPlayers().get(packet.id).getCurrentOrb().castSpellProjectile(direction, packet.rot, packet.id);
         }
     }
 
     private void handlePlantBomb(Connection connection, Object object){
-        if(object instanceof Network.PlantBomb){
-            Network.PlantBomb packet=(Network.PlantBomb)object;
+        if(object instanceof Network.CastBomb){
+            Network.CastBomb packet=(Network.CastBomb)object;
 
-            GameScreen.getInstance().getGameStage().getOtherPlayers().get(packet.id).getCurrWeapon().plantBomb(packet.pos,packet.id);
-        }
-    }
-
-    private void handleProjectileCollided(Connection connection, Object object) {
-        if (object instanceof Network.ProjectileCollided) {
-            Network.ProjectileCollided packet = (Network.ProjectileCollided) object;
-
-            //if the bullet is the client's player's
-            if (packet.ownerId == connection.getID()) {
-                GameScreen.getInstance().getGameStage().getPlayerCharacter().getCurrWeapon().ammoHasCollided(packet.projId);
-            }
-            //if the bullet is some other client's player's
-            else {
-                GameScreen.getInstance().getGameStage().getOtherPlayers().get(packet.ownerId).getCurrWeapon().ammoHasCollided(packet.projId);
-            }
+            GameScreen.getInstance().getGameStage().getOtherPlayers().get(packet.id).getCurrentOrb().castBomb(packet.pos,packet.id);
         }
     }
 
@@ -149,11 +135,11 @@ public class ClientListener extends Listener {
         }
     }
 
-    private void handleSwitchWeapons(Connection connection, Object object) {
-        if (object instanceof Network.SwitchWeapons) {
-            Network.SwitchWeapons packet = (Network.SwitchWeapons) object;
+    private void handleSwitchOrbs(Connection connection, Object object) {
+        if (object instanceof Network.SwitchOrbs) {
+            Network.SwitchOrbs packet = (Network.SwitchOrbs) object;
 
-            GameScreen.getInstance().getGameStage().getOtherPlayers().get(packet.id).switchMyWeapons();
+            GameScreen.getInstance().getGameStage().getOtherPlayers().get(packet.id).switchMyOrbs();
         }
     }
 }

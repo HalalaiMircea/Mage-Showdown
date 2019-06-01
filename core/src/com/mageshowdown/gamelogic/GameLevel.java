@@ -9,7 +9,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mageshowdown.gameclient.ClientAssetLoader;
-import com.mageshowdown.gameserver.ServerAssetLoader;
 
 import java.util.ArrayList;
 import java.util.ListIterator;
