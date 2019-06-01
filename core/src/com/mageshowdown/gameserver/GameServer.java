@@ -61,7 +61,7 @@ public class GameServer extends Server {
     public void sendMapChange(int nr){
         Network.CurrentMap mapToBeSent=new Network.CurrentMap();
         mapToBeSent.nr=nr;
-        gameStage.getGameLevel().setMap(nr);
+        gameStage.getGameLevel().setMapServer(nr);
         gameStage.getGameLevel().changeLevel();
 
         for(Connection x:getConnections()){

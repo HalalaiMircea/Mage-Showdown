@@ -27,14 +27,14 @@ public abstract class PlayerCharacter extends DynamicGameActor {
     protected int score = 0;
     protected int kills = 0;
 
-    protected PlayerCharacter(Stage stage, Vector2 position, int orbEquipped, boolean loadOrbAnimation) {
-        super(stage, position, new Vector2(22, 32),new Vector2(22,32), 0f, new Vector2(1.5f, 1.5f));
+    protected PlayerCharacter(Stage stage, Vector2 position, int orbEquipped, boolean isClient) {
+        super(stage, position, new Vector2(22, 32),new Vector2(22,32), 0f, new Vector2(1.5f, 1.5f),isClient);
 
         createBody(new Vector2(getOriginX(),getOriginY()),BodyDef.BodyType.DynamicBody);
         gameStage = stage;
 
-        frostOrb = new Orb(stage, loadOrbAnimation, Orb.SpellType.FROST, 1.5f, 25);
-        fireOrb = new Orb(stage, loadOrbAnimation, Orb.SpellType.FIRE, 1.5f, 25);
+        frostOrb = new Orb(stage, Orb.SpellType.FROST, 1.5f, 25,isClient);
+        fireOrb = new Orb(stage, Orb.SpellType.FIRE, 1.5f, 25,isClient);
 
         frostOrb.remove();
         fireOrb.remove();

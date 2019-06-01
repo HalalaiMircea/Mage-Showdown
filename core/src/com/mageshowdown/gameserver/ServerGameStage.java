@@ -62,7 +62,7 @@ public class ServerGameStage extends Stage {
     }
 
     public void start(){
-        gameLevel.setMap(2);
+        gameLevel.setMapServer(2);
         gameLevel.changeLevel();
     }
 

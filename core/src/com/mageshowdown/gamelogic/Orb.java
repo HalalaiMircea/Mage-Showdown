@@ -21,7 +21,6 @@ public class Orb extends GameActor implements AnimatedActorInterface {
     private SpellType spellType;
     private ArrayList<Spell> spells;
     private static final HashMap<String, Float> spellCosts;
-    private boolean loadAnimation;
     //we need the stage as an attribute to re-add the orb to it when we equip it
     private Stage gameStage;
 
@@ -44,18 +43,17 @@ public class Orb extends GameActor implements AnimatedActorInterface {
         spellCosts.put("fire bomb", 8f);
     }
 
-    public Orb(Stage stage, boolean loadAnimation, SpellType spellType, float cd, int capacity) {
-        super(stage, new Vector2(0, 0), new Vector2(64, 66), new Vector2(0,0), 0f);
+    public Orb(Stage stage, SpellType spellType, float cd, int capacity, boolean isClient) {
+        super(stage, new Vector2(0, 0), new Vector2(64, 66), new Vector2(0,0), 0f, isClient);
         this.gameStage = stage;
         COOLDOWN_TIME = cd;
         MAXIMUM_MANA = capacity;
         currentMana = MAXIMUM_MANA;
         this.spellType = spellType;
         spells = new ArrayList<Spell>();
-        this.loadAnimation = loadAnimation;
 
 
-        if (loadAnimation)
+        if (CLIENT_ACTOR)
             switch (spellType) {
                 case FROST:
                     addAnimation(6, 1, 1.5f, "idle", ClientAssetLoader.crystalSpritesheet);
@@ -85,7 +83,7 @@ public class Orb extends GameActor implements AnimatedActorInterface {
         super.act(delta);
         rechargeOrb();
 
-        if (loadAnimation)
+        if (CLIENT_ACTOR)
             pickFrame();
     }
 
@@ -103,27 +101,18 @@ public class Orb extends GameActor implements AnimatedActorInterface {
         }
     }
 
-    public void spellHasCollided(int projId) {
-        for (Spell x : spells) {
-            if (x.getId() == projId) {
-                x.setCollided(true);
-                break;
-            }
-        }
-    }
-
     public void castSpellProjectile(Vector2 direction, float rotation, int ownerId) {
         switch (spellType) {
             case FROST:
                 if (currentMana > spellCosts.get("freeze projectile")) {
-                    spells.add(new FreezeProjectile(getStage(), getStartPosition(rotation), rotation, direction, spells.size(), ownerId));
+                    spells.add(new FreezeProjectile(getStage(), getStartPosition(rotation), rotation, direction, spells.size(), ownerId, CLIENT_ACTOR));
                     currentMana -= spellCosts.get("freeze projectile");
                     recharge = false;
                 }
                 break;
             case FIRE:
                 if (currentMana > spellCosts.get("laser")) {
-                    spells.add(new Laser(getStage(), getStartPosition(rotation), rotation, spells.size(), ownerId));
+                    spells.add(new Laser(getStage(), getStartPosition(rotation), rotation, spells.size(), ownerId, CLIENT_ACTOR));
                     currentMana -= spellCosts.get("laser");
                     recharge = false;
                 }
@@ -135,14 +124,14 @@ public class Orb extends GameActor implements AnimatedActorInterface {
         switch (spellType) {
             case FROST:
                 if (currentMana > spellCosts.get("freeze bomb")) {
-                    spells.add(new Bomb(getStage(), position, 0, spells.size(), ownerId, spellType));
+                    spells.add(new Bomb(getStage(), position, 0, spells.size(), ownerId, spellType, CLIENT_ACTOR));
                     currentMana -= spellCosts.get("freeze bomb");
                     recharge = false;
                 }
                 break;
             case FIRE:
                 if (currentMana > spellCosts.get("fire bomb")) {
-                    spells.add(new Bomb(getStage(), position, 0, spells.size(), ownerId, spellType));
+                    spells.add(new Bomb(getStage(), position, 0, spells.size(), ownerId, spellType,CLIENT_ACTOR));
                     currentMana -= spellCosts.get("fire bomb");
                     recharge = false;
                 }

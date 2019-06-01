@@ -7,20 +7,25 @@ import com.mageshowdown.gameclient.ClientAssetLoader;
 
 public class FreezeProjectile extends Spell implements AnimatedActorInterface {
 
-    public FreezeProjectile(Stage stage, Vector2 position, float rotation, Vector2 direction, int id, int ownerId) {
-        super(stage, new Vector2(3.5f * direction.x, 3.5f * direction.y), position, new Vector2(46, 31), new Vector2(1f, 1f), new Vector2(24, 12), rotation, id, ownerId, 3);
+    public FreezeProjectile(Stage stage, Vector2 position, float rotation, Vector2 direction, int id, int ownerId, boolean isClient) {
+        super(stage, new Vector2(3.5f * direction.x, 3.5f * direction.y), position, new Vector2(46, 31), new Vector2(1f, 1f), new Vector2(24, 12), rotation, id, ownerId, 3, isClient);
         createBody(getRotation(), new Vector2(getOriginX() / 2, getOriginY() / 2), BodyDef.BodyType.DynamicBody);
-        addAnimation(9, 1, 1f, "idle", ClientAssetLoader.freezeProjectileSpritesheet);
-        addAnimation(1, 8, 1f, "impact", ClientAssetLoader.freezeProjectileImpactSpritesheet);
+
+        if (CLIENT_ACTOR) {
+            addAnimation(9, 1, 1f, "idle", ClientAssetLoader.freezeProjectileSpritesheet);
+            addAnimation(1, 8, 1f, "impact", ClientAssetLoader.freezeProjectileImpactSpritesheet);
+        }
     }
 
 
     @Override
     public void act(float delta) {
         super.act(delta);
-        if (collided && animations.get("impact").isAnimationFinished(passedTime))
+        if (collided && passedTime>=1f)
             destroyable = true;
-        pickFrame();
+
+        if(CLIENT_ACTOR)
+            pickFrame();
     }
 
     @Override

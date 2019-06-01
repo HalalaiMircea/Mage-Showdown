@@ -39,6 +39,7 @@ public class ClientPlayerCharacter extends PlayerCharacter
         super(stage, position, orbEquipped, true);
         this.isMyPlayer = isMyPlayer;
 
+        //if its the client's player, load the ally assets for the character, otherwise load the ones for the enemy
         if (isMyPlayer) {
             addAnimation(4, 1, 1.2f, "idle", ClientAssetLoader.friendlyIdleSpritesheet);
             addAnimation(2, 1, .8f, "jumping", ClientAssetLoader.friendlyJumpingSpritesheet);

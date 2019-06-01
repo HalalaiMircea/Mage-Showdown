@@ -118,7 +118,7 @@ public class ClientListener extends Listener {
             if(GameScreen.getInstance().getGameStage().getGameLevel().getMapNr()==packet.nr)
                 return;
 
-            GameScreen.getInstance().getGameStage().getGameLevel().setMap(packet.nr);
+            GameScreen.getInstance().getGameStage().getGameLevel().setMapClient(packet.nr);
             GameScreen.getInstance().getGameStage().getGameLevel().changeLevel();
         }
     }

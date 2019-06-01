@@ -10,9 +10,11 @@ public class Laser extends Spell implements AnimatedActorInterface {
     private static final float DURATION = .25f;
 
     public static class BurningEffect extends GameActor implements AnimatedActorInterface {
-        private BurningEffect(Stage stage, Vector2 position) {
-            super(stage, new Vector2(position.x, position.y), new Vector2(15, 23), new Vector2(0, 0), 0, new Vector2(2f, 2f));
-            addAnimation(4, 3, 2f, "idle", ClientAssetLoader.burningSpritesheet);
+        private BurningEffect(Stage stage, Vector2 position, boolean isClient) {
+            super(stage, new Vector2(position.x, position.y), new Vector2(15, 23), new Vector2(0, 0), 0, new Vector2(2f, 2f),isClient);
+
+            if(CLIENT_ACTOR)
+                addAnimation(4, 3, 2f, "idle", ClientAssetLoader.burningSpritesheet);
         }
 
         @Override
@@ -31,12 +33,13 @@ public class Laser extends Spell implements AnimatedActorInterface {
 
     }
 
-    public Laser(Stage stage, Vector2 position, float rotation, int id, int ownerId) {
-        super(stage, new Vector2(0.001f, 0.001f), position, new Vector2(220, 31), new Vector2(1.5f, 1.2f), new Vector2(325, 15), rotation, id, ownerId, 2);
+    public Laser(Stage stage, Vector2 position, float rotation, int id, int ownerId, boolean isClient) {
+        super(stage, new Vector2(0.001f, 0.001f), position, new Vector2(220, 31), new Vector2(1.5f, 1.2f), new Vector2(325, 15), rotation, id, ownerId, 2, isClient);
         setOrigin(0, getOriginY());
         createBody(rotation, new Vector2(0, getOriginY() / 2), BodyDef.BodyType.DynamicBody);
 
-        addAnimation(1, 7, .25f, "idle", ClientAssetLoader.fireLaserSpritesheet);
+        if(CLIENT_ACTOR)
+            addAnimation(1, 7, .25f, "idle", ClientAssetLoader.fireLaserSpritesheet);
 
     }
 
@@ -47,7 +50,8 @@ public class Laser extends Spell implements AnimatedActorInterface {
             setExpired(true);
         }
 
-        pickFrame();
+        if(CLIENT_ACTOR)
+            pickFrame();
     }
 
     @Override
@@ -65,6 +69,6 @@ public class Laser extends Spell implements AnimatedActorInterface {
 
     public void createBurningEffect(Vector2 position) {
         System.out.println(position);
-        new BurningEffect(getStage(), position);
+        new BurningEffect(getStage(), position,CLIENT_ACTOR);
     }
 }

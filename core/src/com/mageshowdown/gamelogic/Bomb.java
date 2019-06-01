@@ -14,20 +14,24 @@ public class Bomb extends Spell implements AnimatedActorInterface {
     private float explosionTime = 0f;
     private boolean exploded = false;
 
-    public Bomb(Stage stage, Vector2 position, float rotation, int id, int ownerId, Orb.SpellType spellType) {
-        super(stage, new Vector2(0, 0), position, new Vector2(190, 190), new Vector2(.8f, .8f), new Vector2(140, 140), rotation, id, ownerId, 9);
+    public Bomb(Stage stage, Vector2 position, float rotation, int id, int ownerId, Orb.SpellType spellType, boolean isClient) {
+        super(stage, new Vector2(0, 0), position, new Vector2(190, 190), new Vector2(.8f, .8f), new Vector2(140, 140), rotation, id, ownerId, 9, isClient);
 
         this.spellType = spellType;
         switch (spellType) {
             case FROST:
                 duration = 2.5f;
-                addAnimation(5, 5, duration / 2f, "explosion", ClientAssetLoader.freezeBombSpritesheet);
-                addAnimation(5, 4, duration / 2f, "arm", ClientAssetLoader.armFreezeBombSpritesheet);
+                if (CLIENT_ACTOR) {
+                    addAnimation(5, 5, duration / 2f, "explosion", ClientAssetLoader.freezeBombSpritesheet);
+                    addAnimation(5, 4, duration / 2f, "arm", ClientAssetLoader.armFreezeBombSpritesheet);
+                }
                 break;
             case FIRE:
                 duration = 2.5f;
-                addAnimation(5, 4, duration / 2f, "explosion", ClientAssetLoader.fireBombSpritesheet);
-                addAnimation(5, 4, duration / 2f, "arm", ClientAssetLoader.armFireBombSpritesheet);
+                if (CLIENT_ACTOR) {
+                    addAnimation(5, 4, duration / 2f, "explosion", ClientAssetLoader.fireBombSpritesheet);
+                    addAnimation(5, 4, duration / 2f, "arm", ClientAssetLoader.armFireBombSpritesheet);
+                }
                 break;
             default:
                 duration = 0;
@@ -38,7 +42,9 @@ public class Bomb extends Spell implements AnimatedActorInterface {
     @Override
     public void act(float delta) {
         super.act(delta);
-        pickFrame();
+
+        if (CLIENT_ACTOR)
+            pickFrame();
         if (exploded) {
             explosionTime += Gdx.graphics.getDeltaTime();
         }

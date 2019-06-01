@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mageshowdown.gameclient.ClientAssetLoader;
+import com.mageshowdown.gameserver.ServerAssetLoader;
 
 import java.util.ArrayList;
 import java.util.ListIterator;
@@ -72,7 +73,9 @@ public class GameLevel {
         }
     }
 
-    public void setMap(int nr) {
+    //we use one setmap function for client and one for server to know from where to get the map
+
+    public void setMapClient(int nr) {
         mapNr = nr;
         switch (mapNr) {
             case 1:
@@ -87,7 +90,22 @@ public class GameLevel {
         }
     }
 
-    public void clearHitboxes(){
+    public void setMapServer(int nr) {
+        mapNr = nr;
+        switch (mapNr) {
+            case 1:
+                map = ServerAssetLoader.map1;
+                break;
+            case 2:
+                map = ServerAssetLoader.dungeonMap;
+                break;
+            case 3:
+                map = ServerAssetLoader.purpleMap;
+                break;
+        }
+    }
+
+    public void clearHitboxes() {
         ListIterator<MapObjectHitbox> iter = platforms.listIterator();
         while (iter.hasNext()) {
             MapObjectHitbox hitbox = iter.next();
@@ -96,7 +114,7 @@ public class GameLevel {
         }
     }
 
-    private void clearSpawnPoints(){
+    private void clearSpawnPoints() {
         ListIterator<Vector2> spawnIter = spawnPoints.listIterator();
         while (spawnIter.hasNext()) {
             spawnIter.next();
@@ -105,9 +123,9 @@ public class GameLevel {
     }
 
     //we dont want the burning effects to remain there on a map change so we get rid of them
-    private void clearBurningEffects(){
-        for(Actor actor:stage.getActors()){
-            if(actor instanceof Laser.BurningEffect){
+    private void clearBurningEffects() {
+        for (Actor actor : stage.getActors()) {
+            if (actor instanceof Laser.BurningEffect) {
                 actor.remove();
             }
         }

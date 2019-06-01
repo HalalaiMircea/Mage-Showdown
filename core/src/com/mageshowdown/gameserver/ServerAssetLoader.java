@@ -18,5 +18,6 @@ public class ServerAssetLoader {
     public static void dispose() {
         map1.dispose();
         dungeonMap.dispose();
+        purpleMap.dispose();
     }
 }

@@ -14,8 +14,8 @@ public abstract class Spell extends DynamicGameActor {
     protected int id;
     protected int ownerId;
 
-    protected Spell(Stage stage, Vector2 velocity, Vector2 position, Vector2 size, Vector2 sizeScaling, Vector2 bodySize, float rotation, int id, int ownerId, float damageValue) {
-        super(stage, position, size, bodySize, rotation, sizeScaling);
+    protected Spell(Stage stage, Vector2 velocity, Vector2 position, Vector2 size, Vector2 sizeScaling, Vector2 bodySize, float rotation, int id, int ownerId, float damageValue, boolean isClient) {
+        super(stage, position, size, bodySize, rotation, sizeScaling, isClient);
 
         this.DAMAGE_VALUE = damageValue;
         this.id = id;

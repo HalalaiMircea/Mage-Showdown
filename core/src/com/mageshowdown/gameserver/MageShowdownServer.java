@@ -21,7 +21,6 @@ public class MageShowdownServer extends Game {
         myServer.setGameStage(gameStage);
         serverStart();
         ServerAssetLoader.load();
-        ClientAssetLoader.load();
         gameStage.start();
     }
 

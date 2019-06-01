@@ -6,12 +6,16 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.scenes.scene2d.*;
+import com.mageshowdown.gameclient.GameClient;
 
 
 import java.util.HashMap;
 import java.util.concurrent.Callable;
 
 public abstract class GameActor extends Actor {
+
+    //in this boolean ill know wether the actor is created by a client or a server, for the purpose of loading assets
+    protected final boolean CLIENT_ACTOR;
 
     protected Sprite sprite;
     protected Body body;
@@ -28,10 +32,11 @@ public abstract class GameActor extends Actor {
     protected boolean canClearPos = false;
 
 
-    protected GameActor(Stage stage, Vector2 position, Vector2 size, Vector2 bodySize, float rotation, Vector2 sizeScaling) {
+    protected GameActor(Stage stage, Vector2 position, Vector2 size, Vector2 bodySize, float rotation, Vector2 sizeScaling, boolean isClient) {
         setScale(sizeScaling.x, sizeScaling.y);
         setPosition(position.x, position.y);
         setSize(size.x, size.y);
+        CLIENT_ACTOR=isClient;
         this.bodySize = bodySize;
         setOrigin(size.x / 2, size.y / 2);
         setRotation(rotation);
@@ -40,7 +45,15 @@ public abstract class GameActor extends Actor {
     }
 
     protected GameActor(Stage stage, Vector2 position, Vector2 size, Vector2 bodySize, float rotation) {
-        this(stage, position, size, bodySize, rotation, new Vector2(1, 1));
+        this(stage, position, size, bodySize, rotation, new Vector2(1, 1),true);
+    }
+
+    protected GameActor(Stage stage, Vector2 position, Vector2 size, Vector2 bodySize, float rotation, Vector2 sizeScaling) {
+        this(stage, position, size, bodySize, rotation, sizeScaling, true);
+    }
+
+    protected GameActor(Stage stage, Vector2 position, Vector2 size, Vector2 bodySize, float rotation, boolean isClient) {
+        this(stage, position, size, bodySize, rotation, new Vector2(1, 1),isClient);
     }
 
     @Override

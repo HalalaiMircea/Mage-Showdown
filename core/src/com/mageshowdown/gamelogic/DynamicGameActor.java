@@ -4,14 +4,14 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 public abstract class DynamicGameActor extends GameActor {
-    public enum VerticalState{
+    public enum VerticalState {
         GROUNDED("idle"),
         FLYING("jumping");
 
         private String name;
 
-        VerticalState(String name){
-            this.name=name;
+        VerticalState(String name) {
+            this.name = name;
         }
 
         @Override
@@ -19,15 +19,16 @@ public abstract class DynamicGameActor extends GameActor {
             return this.name;
         }
     }
-    public enum HorizontalState{
+
+    public enum HorizontalState {
         GOING_LEFT("running"),
         GOING_RIGHT("running"),
         STANDING("idle");
 
         private String name;
 
-        HorizontalState(String name){
-            this.name=name;
+        HorizontalState(String name) {
+            this.name = name;
         }
 
         @Override
@@ -41,23 +42,23 @@ public abstract class DynamicGameActor extends GameActor {
     protected HorizontalState horizontalState;
 
     /*
-    * because the dynamic game actor also has velocity we'll want to change, we also queue that up
-    */
+     * because the dynamic game actor also has velocity we'll want to change, we also queue that up
+     */
     protected Vector2 queuedVel;
-    protected boolean canClearVel=false;
+    protected boolean canClearVel = false;
 
-    protected DynamicGameActor(Stage stage, Vector2 position, Vector2 size, Vector2 bodySize, float rotation, Vector2 sizeScaling){
-        super(stage,position,size, bodySize, rotation, sizeScaling);
-        velocity=new Vector2(0,0);
-        horizontalState=HorizontalState.STANDING;
-        verticalState=VerticalState.FLYING;
+    protected DynamicGameActor(Stage stage, Vector2 position, Vector2 size, Vector2 bodySize, float rotation, Vector2 sizeScaling, boolean isClient) {
+        super(stage, position, size, bodySize, rotation, sizeScaling, isClient);
+        velocity = new Vector2(0, 0);
+        horizontalState = HorizontalState.STANDING;
+        verticalState = VerticalState.FLYING;
     }
 
     @Override
     public void act(float delta) {
         updateGameActor(delta);
 
-        if(body!=null && !GameWorld.world.isLocked()) {
+        if (body != null && !GameWorld.world.isLocked()) {
             body.setLinearVelocity(new Vector2(velocity.x, velocity.y));
         }
     }
@@ -65,15 +66,15 @@ public abstract class DynamicGameActor extends GameActor {
     @Override
     public void clearQueue() {
         super.clearQueue();
-        if(canClearVel){
+        if (canClearVel) {
             body.setLinearVelocity(queuedVel);
-            canClearVel=false;
+            canClearVel = false;
         }
     }
 
     public void setQueuedVel(Vector2 queuedVel) {
         this.queuedVel = queuedVel;
-        canClearVel=true;
+        canClearVel = true;
     }
 
     public void setHorizontalState(HorizontalState horizontalState) {
@@ -96,7 +97,7 @@ public abstract class DynamicGameActor extends GameActor {
         this.velocity = velocity;
     }
 
-    public void updateGameActor(float delta){
+    public void updateGameActor(float delta) {
         super.act(delta);
     }
 }
