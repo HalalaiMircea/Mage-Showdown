@@ -3,7 +3,7 @@ package com.mageshowdown.gameclient;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.mageshowdown.gamelogic.GameWorld;
-import com.mageshowdown.gamelogic.MenuScreen;
+import com.mageshowdown.gamelogic.LoadingScreen;
 
 public class MageShowdownClient extends Game {
     private static final MageShowdownClient INSTANCE = new MageShowdownClient();
@@ -15,9 +15,9 @@ public class MageShowdownClient extends Game {
     @Override
     public void create() {
         GameWorld.updateResolutionScale();
-        ClientAssetLoader.load();
+        ClientAssetLoader.getInstance().load();
 
-        this.setScreen(MenuScreen.getInstance());
+        this.setScreen(new LoadingScreen());
     }
 
     @Override
@@ -29,9 +29,7 @@ public class MageShowdownClient extends Game {
     @Override
     public void dispose() {
         super.dispose();
-        //MenuScreen.getInstance().dispose();
-        //GameScreen.getInstance().dispose();
-        ClientAssetLoader.dispose();
+        ClientAssetLoader.getInstance().dispose();
     }
 
     public static MageShowdownClient getInstance() {

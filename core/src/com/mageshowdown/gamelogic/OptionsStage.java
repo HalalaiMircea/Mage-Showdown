@@ -249,10 +249,12 @@ public class OptionsStage extends Stage {
                 if (MageShowdownClient.getInstance().getScreen().equals(MenuScreen.getInstance())) {
                     MenuScreen.setStagePhase(MenuScreen.StagePhase.MAIN_MENU_STAGE);
                     Gdx.input.setInputProcessor(MenuScreen.getMainMenuStage());
+                    MenuScreen.getMenuOptionsStage().dispose();
                 }
                 if (MageShowdownClient.getInstance().getScreen().equals(GameScreen.getInstance())) {
                     GameScreen.setGameState(GameScreen.GameState.GAME_PAUSED);
                     Gdx.input.setInputProcessor(GameScreen.getEscMenuStage());
+                    GameScreen.getGameOptionsStage().dispose();
                 }
             }
         });

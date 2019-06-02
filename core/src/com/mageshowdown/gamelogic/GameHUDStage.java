@@ -22,7 +22,7 @@ public class GameHUDStage extends Stage {
     private Label shieldText;
     private Label manaText;
 
-    private ClientGameStage gameStage = GameScreen.getInstance().getGameStage();
+    private ClientGameStage gameStage = GameScreen.getGameStage();
 
     public GameHUDStage() {
         super();
