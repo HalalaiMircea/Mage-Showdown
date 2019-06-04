@@ -19,8 +19,6 @@ import com.mageshowdown.utils.PrefsKeys;
 
 import static com.mageshowdown.gameclient.ClientAssetLoader.prefs;
 
-import java.util.ArrayList;
-
 public class GameScreen implements Screen {
 
     private static final GameScreen INSTANCE = new GameScreen();
@@ -44,7 +42,6 @@ public class GameScreen implements Screen {
         hudStage = new GameHUDStage(viewport, batch);
         scoreboardStage = new ScoreboardStage(viewport, batch);
         escMenuStage = new Stage(viewport, batch);
-        gameOptionsStage = new OptionsStage(viewport, batch, ClientAssetLoader.solidBlack);
         roundEndStage = new RoundEndStage(viewport, batch);
 
         prepareEscMenu();
@@ -60,6 +57,10 @@ public class GameScreen implements Screen {
 
     public static Stage getEscMenuStage() {
         return escMenuStage;
+    }
+
+    public static OptionsStage getGameOptionsStage() {
+        return gameOptionsStage;
     }
 
     public static void setGameState(GameState gameState) {
@@ -132,7 +133,7 @@ public class GameScreen implements Screen {
     public void dispose() {
         gameStage.dispose();
         escMenuStage.dispose();
-        gameOptionsStage.dispose();
+        //gameOptionsStage.dispose();
         scoreboardStage.dispose();
         hudStage.dispose();
         roundEndStage.dispose();
@@ -198,6 +199,7 @@ public class GameScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 ClientAssetLoader.btnClickSound.play(prefs.getFloat(PrefsKeys.SOUNDVOLUME));
 
+                gameOptionsStage = new OptionsStage(viewport, batch, ClientAssetLoader.solidBlack);
                 gameState = GameState.GAME_OPTIONS;
                 Gdx.input.setInputProcessor(gameOptionsStage);
             }
@@ -212,7 +214,6 @@ public class GameScreen implements Screen {
                 ClientRound.getInstance().stop();
 
                 MageShowdownClient.getInstance().setScreen(MenuScreen.getInstance());
-
                 Gdx.input.setInputProcessor(MenuScreen.getMainMenuStage());
             }
         });

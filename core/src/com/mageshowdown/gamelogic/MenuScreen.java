@@ -44,6 +44,10 @@ public class MenuScreen implements Screen {
         return mainMenuStage;
     }
 
+    public static Stage getMenuOptionsStage() {
+        return menuOptionsStage;
+    }
+
     public static void setStagePhase(StagePhase stagePhase) {
         MenuScreen.stagePhase = stagePhase;
     }
@@ -55,8 +59,6 @@ public class MenuScreen implements Screen {
         batch = new SpriteBatch();
 
         mainMenuStage = new Stage(viewport, batch);
-        menuOptionsStage = new OptionsStage(viewport, batch, ClientAssetLoader.menuBackground);
-
         prepareMainMenuStage();
 
         stagePhase = StagePhase.MAIN_MENU_STAGE;
@@ -102,7 +104,7 @@ public class MenuScreen implements Screen {
     @Override
     public void dispose() {
         mainMenuStage.dispose();
-        menuOptionsStage.dispose();
+        //menuOptionsStage.dispose();
         batch.dispose();
     }
 
@@ -145,6 +147,7 @@ public class MenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 ClientAssetLoader.btnClickSound.play(prefs.getFloat(PrefsKeys.SOUNDVOLUME));
+                menuOptionsStage = new OptionsStage(viewport, batch, ClientAssetLoader.menuBackground);
                 stagePhase = StagePhase.OPTIONS_STAGE;
                 Gdx.input.setInputProcessor(menuOptionsStage);
             }
@@ -178,6 +181,7 @@ public class MenuScreen implements Screen {
             backBtn.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
+                    ClientAssetLoader.btnClickSound.play(prefs.getFloat(PrefsKeys.SOUNDVOLUME));
                     dialog.hide();
                 }
             });
