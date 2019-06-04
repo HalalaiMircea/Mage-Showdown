@@ -5,6 +5,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mageshowdown.gameclient.ClientAssetLoader;
+import com.mageshowdown.utils.PrefsKeys;
+
+import static com.mageshowdown.gameclient.ClientAssetLoader.prefs;
 
 public class Bomb extends Spell implements AnimatedActorInterface {
 
@@ -53,7 +56,8 @@ public class Bomb extends Spell implements AnimatedActorInterface {
         }
         if (passedTime > duration / 2f && !exploded) {
             exploded = true;
-            hasJustExploded();
+            if(CLIENT_ACTOR)
+                hasJustExploded();
             //we enable collision with the bomb only after it actually explodes by only then creating the actual body
             createBody(new Vector2(getOriginX(), getOriginY()), BodyDef.BodyType.StaticBody);
         }
@@ -72,7 +76,10 @@ public class Bomb extends Spell implements AnimatedActorInterface {
     }
 
     private void hasJustExploded(){
-
+        if(spellType==Orb.SpellType.FROST)
+            ClientAssetLoader.frostBombExplosion.play(prefs.getFloat(PrefsKeys.SOUNDVOLUME) / 2);
+        else if(spellType==Orb.SpellType.FIRE)
+            ClientAssetLoader.fireBombExplosion.play(prefs.getFloat(PrefsKeys.SOUNDVOLUME) / 2);
     }
 
     public Orb.SpellType getSpellType() {

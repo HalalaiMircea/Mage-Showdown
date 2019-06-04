@@ -4,6 +4,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mageshowdown.gameclient.ClientAssetLoader;
+import com.mageshowdown.utils.PrefsKeys;
+
+import static com.mageshowdown.gameclient.ClientAssetLoader.prefs;
 
 public class FrostProjectile extends Spell implements AnimatedActorInterface {
 
@@ -46,10 +49,11 @@ public class FrostProjectile extends Spell implements AnimatedActorInterface {
             velocity = new Vector2(0, 0);
             setScale(1.5f);
         }
-        hasJustCollided();
+        if(CLIENT_ACTOR)
+            hasJustCollided();
     }
 
     private void hasJustCollided(){
-
+        ClientAssetLoader.frozenEffect.play(prefs.getFloat(PrefsKeys.SOUNDVOLUME) / 2);
     }
 }

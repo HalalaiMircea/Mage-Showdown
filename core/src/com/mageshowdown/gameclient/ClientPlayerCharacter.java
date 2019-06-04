@@ -296,7 +296,6 @@ public class ClientPlayerCharacter extends PlayerCharacter
 
     public void hasJustFrozen() {
         System.out.println("someone just froze");
-        ClientAssetLoader.frozenEffect.play(prefs.getFloat(PrefsKeys.SOUNDVOLUME) / 2);
     }
 
     public void hasJustCastFrostProjectile() {
@@ -314,12 +313,10 @@ public class ClientPlayerCharacter extends PlayerCharacter
 
     public void hasJustCastFireBomb() {
         System.out.println("someone just cast a fire bomb");
-        ClientAssetLoader.fireBombExplosion.play(prefs.getFloat(PrefsKeys.SOUNDVOLUME) / 2);
     }
 
     public void hasJustCastFrostBomb() {
         System.out.println("someone just cast a frost bomb");
-        ClientAssetLoader.frostBombExplosion.play(prefs.getFloat(PrefsKeys.SOUNDVOLUME) / 2);
     }
 
     @Override
