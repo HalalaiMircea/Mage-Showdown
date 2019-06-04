@@ -45,6 +45,13 @@ public class ClientAssetLoader {
     public static Texture frozenSpritesheet;
     //sounds & music
     public static Sound btnClickSound;
+    public static Sound fireShot1;
+    public static Sound fireShot2;
+    public static Sound frozenEffect;
+    public static Sound fireBombExplosion;
+    public static Sound frostBombExplosion;
+    public static Sound frostShot;
+
     //preferences files
     public static Preferences prefs;
     //maps
@@ -93,8 +100,14 @@ public class ClientAssetLoader {
         manager.load("Player Animations/Effect/frozenSpritesheet.png", Texture.class);
 
         manager.load("Sounds/click.ogg", Sound.class);
+        manager.load("Sounds/fireShot1.mp3", Sound.class);
+        manager.load("Sounds/fireShot2.mp3", Sound.class);
+        manager.load("Sounds/IceBlastImpact.wav", Sound.class);
+        manager.load("Sounds/fireBomb.wav", Sound.class);
+        manager.load("Sounds/frostBomb.wav", Sound.class);
+        manager.load("Sounds/IceCast.wav", Sound.class);
 
-        manager.load("UIAssets/placeholder.jpg", Texture.class);
+        manager.load("UIAssets/menuBackground.png", Texture.class);
         manager.load("UIAssets/Black_1080p.png", Texture.class);
 
         manager.load("UIAssets/uiskin.json", Skin.class);
@@ -152,8 +165,14 @@ public class ClientAssetLoader {
         frozenSpritesheet = manager.get("Player Animations/Effect/frozenSpritesheet.png", Texture.class);
 
         btnClickSound = manager.get("Sounds/click.ogg", Sound.class);
+        fireShot1 = manager.get("Sounds/fireShot1.mp3", Sound.class);
+        fireShot2 = manager.get("Sounds/fireShot2.mp3", Sound.class);
+        frozenEffect = manager.get("Sounds/IceBlastImpact.wav", Sound.class);
+        fireBombExplosion = manager.get("Sounds/fireBomb.wav", Sound.class);
+        frostBombExplosion = manager.get("Sounds/frostBomb.wav", Sound.class);
+        frostShot = manager.get("Sounds/IceCast.wav", Sound.class);
 
-        menuBackground = manager.get("UIAssets/placeholder.jpg", Texture.class);
+        menuBackground = manager.get("UIAssets/menuBackground.png", Texture.class);
         solidBlack = manager.get("UIAssets/Black_1080p.png", Texture.class);
 
         uiSkin = manager.get("UIAssets/uiskin.json", Skin.class);

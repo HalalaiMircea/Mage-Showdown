@@ -51,9 +51,9 @@ public class ClientListener extends Listener {
                 ClientPlayerCharacter playerCharacter;
                 //if the character is mine i update my position
                 if (characterState.id == connection.getID()) {
-                    playerCharacter = GameScreen.getInstance().getGameStage().getPlayerCharacter();
+                    playerCharacter = GameScreen.getGameStage().getPlayerCharacter();
                 } else {
-                    playerCharacter = GameScreen.getInstance().getGameStage().getOtherPlayers().get(characterState.id);
+                    playerCharacter = GameScreen.getGameStage().getOtherPlayers().get(characterState.id);
                 }
                 if(playerCharacter!=null){
                     //if the player wasnt frozen before and now is means they just became that way
@@ -80,14 +80,14 @@ public class ClientListener extends Listener {
             packet.pos = GameWorld.convertWorldToPixels(packet.pos);
             ClientRound.getInstance().setTimePassed(packet.roundTimePassed);
             if (connection.getID() == packet.id) {
-                if(GameScreen.getInstance().getGameStage().getPlayerCharacter()!=null)
+                if(GameScreen.getGameStage().getPlayerCharacter()!=null)
                     return;
                 System.out.println("spwaning myself");
-                GameScreen.getInstance().getGameStage().spawnMyPlayerCharacter(packet);
-                GameScreen.getInstance().getGameStage().getPlayerCharacter().setMyPlayer(true);
-                GameScreen.getInstance().getGameStage().getPlayerCharacter().setId(packet.id);
+                GameScreen.getGameStage().spawnMyPlayerCharacter(packet);
+                GameScreen.getGameStage().getPlayerCharacter().setMyPlayer(true);
+                GameScreen.getGameStage().getPlayerCharacter().setId(packet.id);
             } else {
-                GameScreen.getInstance().getGameStage().spawnOtherPlayer(packet);
+                GameScreen.getGameStage().spawnOtherPlayer(packet);
             }
         }
     }
@@ -97,7 +97,7 @@ public class ClientListener extends Listener {
             Network.CastSpellProjectile packet = (Network.CastSpellProjectile) object;
 
             Vector2 direction = new Vector2((float)Math.cos(packet.rot*Math.PI/180),(float)Math.sin(packet.rot*Math.PI/180));
-            ClientPlayerCharacter playerCharacter=GameScreen.getInstance().getGameStage().getOtherPlayers().get(packet.id);
+            ClientPlayerCharacter playerCharacter= GameScreen.getGameStage().getOtherPlayers().get(packet.id);
             playerCharacter.getCurrentOrb().castSpellProjectile(direction, packet.rot, packet.id);
             if(playerCharacter.getCurrentOrb().getSpellType()==Orb.SpellType.FROST)
                 playerCharacter.hasJustCastFrostProjectile();
@@ -109,7 +109,7 @@ public class ClientListener extends Listener {
         if(object instanceof Network.CastBomb){
             Network.CastBomb packet=(Network.CastBomb)object;
 
-            ClientPlayerCharacter playerCharacter=GameScreen.getInstance().getGameStage().getOtherPlayers().get(packet.id);
+            ClientPlayerCharacter playerCharacter= GameScreen.getGameStage().getOtherPlayers().get(packet.id);
             playerCharacter.getCurrentOrb().castBomb(packet.pos,packet.id);
             if(playerCharacter.getCurrentOrb().getSpellType()==Orb.SpellType.FROST)
                 playerCharacter.hasJustCastFrostBomb();
@@ -121,18 +121,18 @@ public class ClientListener extends Listener {
         if (object instanceof Network.PlayerDisconnected) {
             Network.PlayerDisconnected packet = (Network.PlayerDisconnected) object;
 
-            GameScreen.getInstance().getGameStage().removePlayerCharacter(packet.id);
+            GameScreen.getGameStage().removePlayerCharacter(packet.id);
         }
     }
 
     private void handleCurrentMap(Connection connection, Object object) {
         if (object instanceof Network.CurrentMap) {
             Network.CurrentMap packet = (Network.CurrentMap) object;
-            if(GameScreen.getInstance().getGameStage().getGameLevel().getMapNr()==packet.nr)
+            if(GameScreen.getGameStage().getGameLevel().getMapNr()==packet.nr)
                 return;
 
-            GameScreen.getInstance().getGameStage().getGameLevel().setMapClient(packet.nr);
-            GameScreen.getInstance().getGameStage().getGameLevel().changeLevel();
+            GameScreen.getGameStage().getGameLevel().setMapClient(packet.nr);
+            GameScreen.getGameStage().getGameLevel().changeLevel();
         }
     }
 
@@ -152,7 +152,7 @@ public class ClientListener extends Listener {
         if (object instanceof Network.SwitchOrbs) {
             Network.SwitchOrbs packet = (Network.SwitchOrbs) object;
 
-            GameScreen.getInstance().getGameStage().getOtherPlayers().get(packet.id).switchMyOrbs();
+            GameScreen.getGameStage().getOtherPlayers().get(packet.id).switchMyOrbs();
         }
     }
 }

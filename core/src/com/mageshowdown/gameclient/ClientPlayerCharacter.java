@@ -10,12 +10,16 @@ import com.mageshowdown.gamelogic.GameWorld;
 import com.mageshowdown.gamelogic.Orb;
 import com.mageshowdown.gamelogic.PlayerCharacter;
 import com.mageshowdown.packets.Network;
+import com.mageshowdown.packets.Network.CastSpellProjectile;
 import com.mageshowdown.packets.Network.KeyUp;
 import com.mageshowdown.packets.Network.MoveKeyDown;
-import com.mageshowdown.packets.Network.CastSpellProjectile;
 import com.mageshowdown.packets.Network.SwitchOrbs;
+import com.mageshowdown.utils.PrefsKeys;
 
 import java.util.Comparator;
+import java.util.Random;
+
+import static com.mageshowdown.gameclient.ClientAssetLoader.prefs;
 
 public class ClientPlayerCharacter extends PlayerCharacter
         implements AnimatedActorInterface, Comparator<ClientPlayerCharacter>, InputProcessor {
@@ -35,6 +39,7 @@ public class ClientPlayerCharacter extends PlayerCharacter
 
     private String userName;
     private int id;
+    private static Random rndSound = new Random();
 
     public ClientPlayerCharacter(ClientGameStage stage, Vector2 position, Orb.SpellType orbEquipped, String userName, boolean isMyPlayer) {
         super(stage, position, orbEquipped, true);
@@ -71,7 +76,7 @@ public class ClientPlayerCharacter extends PlayerCharacter
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        super.draw(batch,parentAlpha);
+        super.draw(batch, parentAlpha);
         if (dmgImmune)
             batch.setColor(batch.getColor().r, batch.getColor().g, batch.getColor().b, 0);
         if (energyShield > 0 && currShieldFrame != null)
@@ -96,11 +101,11 @@ public class ClientPlayerCharacter extends PlayerCharacter
          */
         switch (verticalState) {
             case GROUNDED:
-                if(animations.containsKey(horizontalState.toString()))
-                    currFrame=animations.get(horizontalState.toString()).getKeyFrame(passedTime,true);
+                if (animations.containsKey(horizontalState.toString()))
+                    currFrame = animations.get(horizontalState.toString()).getKeyFrame(passedTime, true);
                 break;
             case FLYING:
-                if(animations.containsKey(verticalState.toString()))
+                if (animations.containsKey(verticalState.toString()))
                     currFrame = animations.get(verticalState.toString()).getKeyFrame(passedTime, false);
                 break;
         }
@@ -169,12 +174,12 @@ public class ClientPlayerCharacter extends PlayerCharacter
                     //only the client's own character flips in the direction of the mouse
                     if (isMyPlayer) {
                         if (GameWorld.getMousePos().x < getX()) {
-                            currFrame.flip(!currFrame.isFlipX(),false);
+                            currFrame.flip(!currFrame.isFlipX(), false);
                         } else {
-                            currFrame.flip(currFrame.isFlipX(),false);
+                            currFrame.flip(currFrame.isFlipX(), false);
                         }
                     } else {
-                        currFrame.flip(currFrame.isFlipX(),false);
+                        currFrame.flip(currFrame.isFlipX(), false);
                     }
                     break;
             }
@@ -184,9 +189,9 @@ public class ClientPlayerCharacter extends PlayerCharacter
     //when casting a projectile we need the rotation angle from which we calculate the direction vector
     public void castMySpellProjectile() {
         CastSpellProjectile packet = new CastSpellProjectile();
-        float rotation = GameWorld.getMouseVectorAngle(new Vector2(currentOrb.getX()+ currentOrb.getOriginX(), currentOrb.getY()+ currentOrb.getOriginY()));
-        Vector2 direction = new Vector2((float)Math.cos(rotation*Math.PI/180),(float)Math.sin(rotation*Math.PI/180));
-        if(currentOrb.getSpellType()==Orb.SpellType.FROST)
+        float rotation = GameWorld.getMouseVectorAngle(new Vector2(currentOrb.getX() + currentOrb.getOriginX(), currentOrb.getY() + currentOrb.getOriginY()));
+        Vector2 direction = new Vector2((float) Math.cos(rotation * Math.PI / 180), (float) Math.sin(rotation * Math.PI / 180));
+        if (currentOrb.getSpellType() == Orb.SpellType.FROST)
             hasJustCastFrostProjectile();
         else hasJustCastLaser();
 
@@ -201,7 +206,7 @@ public class ClientPlayerCharacter extends PlayerCharacter
     //when casting a bomb we only want the position of the mouse
     public void castMyBomb() {
         Network.CastBomb packet = new Network.CastBomb();
-        if(currentOrb.getSpellType()==Orb.SpellType.FROST)
+        if (currentOrb.getSpellType() == Orb.SpellType.FROST)
             hasJustCastFrostBomb();
         else hasJustCastFireBomb();
 
@@ -291,22 +296,30 @@ public class ClientPlayerCharacter extends PlayerCharacter
 
     public void hasJustFrozen() {
         System.out.println("someone just froze");
+        ClientAssetLoader.frozenEffect.play(prefs.getFloat(PrefsKeys.SOUNDVOLUME) / 2);
     }
 
     public void hasJustCastFrostProjectile() {
         System.out.println("someone just cast a frost spell projectile");
+        ClientAssetLoader.frostShot.play(prefs.getFloat(PrefsKeys.SOUNDVOLUME) / 2);
     }
 
-    public void hasJustCastLaser(){
+    public void hasJustCastLaser() {
         System.out.println("someone just cast a laser spell");
+        if (rndSound.nextBoolean())
+            ClientAssetLoader.fireShot1.play(prefs.getFloat(PrefsKeys.SOUNDVOLUME) / 2);
+        else
+            ClientAssetLoader.fireShot2.play(prefs.getFloat(PrefsKeys.SOUNDVOLUME) / 2);
     }
 
-    public void hasJustCastFireBomb(){
+    public void hasJustCastFireBomb() {
         System.out.println("someone just cast a fire bomb");
+        ClientAssetLoader.fireBombExplosion.play(prefs.getFloat(PrefsKeys.SOUNDVOLUME) / 2);
     }
 
-    public void hasJustCastFrostBomb(){
+    public void hasJustCastFrostBomb() {
         System.out.println("someone just cast a frost bomb");
+        ClientAssetLoader.frostBombExplosion.play(prefs.getFloat(PrefsKeys.SOUNDVOLUME) / 2);
     }
 
     @Override
