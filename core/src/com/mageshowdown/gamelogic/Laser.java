@@ -8,11 +8,17 @@ import com.mageshowdown.gameclient.ClientAssetLoader;
 public class Laser extends Spell implements AnimatedActorInterface {
 
     private static final float DURATION = .25f;
+    //the number of burning effects on screen
+    private static int nr;
+
+    static {
+        nr=0;
+    }
 
     public static class BurningEffect extends GameActor implements AnimatedActorInterface {
         private BurningEffect(Stage stage, Vector2 position, boolean isClient) {
             super(stage, new Vector2(position.x, position.y), new Vector2(15, 23), new Vector2(0, 0), 0, new Vector2(2f, 2f),isClient);
-
+            nr++;
             if(CLIENT_ACTOR)
                 addAnimation(4, 3, 2f, "idle", ClientAssetLoader.burningSpritesheet);
         }
@@ -26,9 +32,19 @@ public class Laser extends Spell implements AnimatedActorInterface {
         }
 
         @Override
+        public boolean remove() {
+            nr--;
+            return super.remove();
+        }
+
+        @Override
         public void pickFrame() {
             if (animations.containsKey("idle"))
                 currFrame = animations.get("idle").getKeyFrame(passedTime, true);
+        }
+
+        public static int getNrOfBurningEffects(){
+            return nr;
         }
 
     }

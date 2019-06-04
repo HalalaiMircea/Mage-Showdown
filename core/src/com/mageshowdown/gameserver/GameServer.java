@@ -5,6 +5,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
 import com.mageshowdown.gamelogic.GameWorld;
+import com.mageshowdown.gamelogic.Orb;
 import com.mageshowdown.packets.Network;
 
 import java.io.IOException;
@@ -56,6 +57,7 @@ public class GameServer extends Server {
         kryo.register(Network.CurrentMap.class);
         kryo.register(Network.PlayerDead.class);
         kryo.register(Network.SwitchOrbs.class);
+        kryo.register(Orb.SpellType.class);
     }
 
     public void sendMapChange(int nr){

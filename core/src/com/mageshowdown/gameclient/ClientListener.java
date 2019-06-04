@@ -5,6 +5,7 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.mageshowdown.gamelogic.GameScreen;
 import com.mageshowdown.gamelogic.GameWorld;
+import com.mageshowdown.gamelogic.Orb;
 import com.mageshowdown.packets.Network;
 
 public class ClientListener extends Listener {
@@ -55,6 +56,10 @@ public class ClientListener extends Listener {
                     playerCharacter = GameScreen.getInstance().getGameStage().getOtherPlayers().get(characterState.id);
                 }
                 if(playerCharacter!=null){
+                    //if the player wasnt frozen before and now is means they just became that way
+                    if(!playerCharacter.isFrozen() && characterState.frozen)
+                        playerCharacter.hasJustFrozen();
+
                     playerCharacter.setQueuedPos(characterState.pos);
                     playerCharacter.setQueuedVel(characterState.linVel);
                     playerCharacter.setHealth(characterState.health);
@@ -92,7 +97,11 @@ public class ClientListener extends Listener {
             Network.CastSpellProjectile packet = (Network.CastSpellProjectile) object;
 
             Vector2 direction = new Vector2((float)Math.cos(packet.rot*Math.PI/180),(float)Math.sin(packet.rot*Math.PI/180));
-            GameScreen.getInstance().getGameStage().getOtherPlayers().get(packet.id).getCurrentOrb().castSpellProjectile(direction, packet.rot, packet.id);
+            ClientPlayerCharacter playerCharacter=GameScreen.getInstance().getGameStage().getOtherPlayers().get(packet.id);
+            playerCharacter.getCurrentOrb().castSpellProjectile(direction, packet.rot, packet.id);
+            if(playerCharacter.getCurrentOrb().getSpellType()==Orb.SpellType.FROST)
+                playerCharacter.hasJustCastFrostProjectile();
+            else playerCharacter.hasJustCastLaser();
         }
     }
 
@@ -100,7 +109,11 @@ public class ClientListener extends Listener {
         if(object instanceof Network.CastBomb){
             Network.CastBomb packet=(Network.CastBomb)object;
 
-            GameScreen.getInstance().getGameStage().getOtherPlayers().get(packet.id).getCurrentOrb().castBomb(packet.pos,packet.id);
+            ClientPlayerCharacter playerCharacter=GameScreen.getInstance().getGameStage().getOtherPlayers().get(packet.id);
+            playerCharacter.getCurrentOrb().castBomb(packet.pos,packet.id);
+            if(playerCharacter.getCurrentOrb().getSpellType()==Orb.SpellType.FROST)
+                playerCharacter.hasJustCastFrostBomb();
+            else playerCharacter.hasJustCastFireBomb();
         }
     }
 

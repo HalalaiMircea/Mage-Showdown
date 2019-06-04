@@ -1,6 +1,7 @@
 package com.mageshowdown.packets;
 
 import com.badlogic.gdx.math.Vector2;
+import com.mageshowdown.gamelogic.Orb;
 
 import java.util.ArrayList;
 
@@ -61,7 +62,7 @@ public class Network {
         public String userName;
         public Vector2 pos;
         public float roundTimePassed;
-        public int orbEquipped;  //1 for frost, 2 for fire
+        public Orb.SpellType orbEquipped;
     }
 
     public static class PlayerDisconnected{

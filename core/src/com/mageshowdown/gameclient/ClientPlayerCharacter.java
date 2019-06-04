@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.mageshowdown.gamelogic.AnimatedActorInterface;
 import com.mageshowdown.gamelogic.GameWorld;
+import com.mageshowdown.gamelogic.Orb;
 import com.mageshowdown.gamelogic.PlayerCharacter;
 import com.mageshowdown.packets.Network;
 import com.mageshowdown.packets.Network.KeyUp;
@@ -28,14 +29,14 @@ public class ClientPlayerCharacter extends PlayerCharacter
     private boolean moveRight = false;
     private boolean jump = false;
     private boolean isMyPlayer;
-    private boolean shoot = false;
-    private boolean plantBomb = false;
+    private boolean castSpellProjectile = false;
+    private boolean castBomb = false;
     private boolean switchOrbs = false;
 
     private String userName;
     private int id;
 
-    public ClientPlayerCharacter(ClientGameStage stage, Vector2 position, int orbEquipped, String userName, boolean isMyPlayer) {
+    public ClientPlayerCharacter(ClientGameStage stage, Vector2 position, Orb.SpellType orbEquipped, String userName, boolean isMyPlayer) {
         super(stage, position, orbEquipped, true);
         this.isMyPlayer = isMyPlayer;
 
@@ -119,9 +120,9 @@ public class ClientPlayerCharacter extends PlayerCharacter
             keyPress.keycode = Input.Keys.W;
             myClient.sendTCP(keyPress);
         }
-        if (shoot) {
+        if (castSpellProjectile) {
             castMySpellProjectile();
-        } else if (plantBomb) {
+        } else if (castBomb) {
             castMyBomb();
         } else if (switchOrbs) {
             switchMyOrbs();
@@ -185,25 +186,31 @@ public class ClientPlayerCharacter extends PlayerCharacter
         CastSpellProjectile packet = new CastSpellProjectile();
         float rotation = GameWorld.getMouseVectorAngle(new Vector2(currentOrb.getX()+ currentOrb.getOriginX(), currentOrb.getY()+ currentOrb.getOriginY()));
         Vector2 direction = new Vector2((float)Math.cos(rotation*Math.PI/180),(float)Math.sin(rotation*Math.PI/180));
+        if(currentOrb.getSpellType()==Orb.SpellType.FROST)
+            hasJustCastFrostProjectile();
+        else hasJustCastLaser();
 
         packet.id = myClient.getID();
         packet.rot = rotation;
         myClient.sendTCP(packet);
         currentOrb.castSpellProjectile(direction, rotation, myClient.getID());
 
-        shoot = false;
+        castSpellProjectile = false;
     }
 
     //when casting a bomb we only want the position of the mouse
     public void castMyBomb() {
         Network.CastBomb packet = new Network.CastBomb();
+        if(currentOrb.getSpellType()==Orb.SpellType.FROST)
+            hasJustCastFrostBomb();
+        else hasJustCastFireBomb();
 
         packet.id = myClient.getID();
         packet.pos = GameWorld.getMousePos(new Vector2(95, 95));
         myClient.sendTCP(packet);
         currentOrb.castBomb(packet.pos, myClient.getID());
 
-        plantBomb = false;
+        castBomb = false;
     }
 
     @Override
@@ -276,10 +283,30 @@ public class ClientPlayerCharacter extends PlayerCharacter
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         if (button == Input.Buttons.LEFT)
-            shoot = true;
+            castSpellProjectile = true;
         else if (button == Input.Buttons.RIGHT)
-            plantBomb = true;
+            castBomb = true;
         return true;
+    }
+
+    public void hasJustFrozen() {
+        System.out.println("someone just froze");
+    }
+
+    public void hasJustCastFrostProjectile() {
+        System.out.println("someone just cast a frost spell projectile");
+    }
+
+    public void hasJustCastLaser(){
+        System.out.println("someone just cast a laser spell");
+    }
+
+    public void hasJustCastFireBomb(){
+        System.out.println("someone just cast a fire bomb");
+    }
+
+    public void hasJustCastFrostBomb(){
+        System.out.println("someone just cast a frost bomb");
     }
 
     @Override

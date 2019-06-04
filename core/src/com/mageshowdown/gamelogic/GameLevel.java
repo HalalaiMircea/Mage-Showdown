@@ -74,7 +74,6 @@ public class GameLevel {
     }
 
     //we use one setmap function for client and one for server to know from where to get the map
-
     public void setMapClient(int nr) {
         mapNr = nr;
         switch (mapNr) {

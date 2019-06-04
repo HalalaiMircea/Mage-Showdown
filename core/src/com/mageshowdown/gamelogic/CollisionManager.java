@@ -11,14 +11,14 @@ public abstract class CollisionManager implements ContactListener {
         Object obj1 = contact.getFixtureA().getBody().getUserData(),
                 obj2 = contact.getFixtureB().getBody().getUserData();
 
-        if (obj1 instanceof FreezeProjectile && obj2 instanceof GameActor) {
-            handleProjectileCollision((FreezeProjectile) obj1, (GameActor) obj2);
-        } else if (obj1 instanceof GameActor && obj2 instanceof FreezeProjectile) {
-            handleProjectileCollision((FreezeProjectile) obj2, (GameActor) obj1);
+        if (obj1 instanceof FrostProjectile && obj2 instanceof GameActor) {
+            handleProjectileCollision((FrostProjectile) obj1, (GameActor) obj2);
+        } else if (obj1 instanceof GameActor && obj2 instanceof FrostProjectile) {
+            handleProjectileCollision((FrostProjectile) obj2, (GameActor) obj1);
         }
     }
 
-    protected void handleProjectileCollision(FreezeProjectile projectile, GameActor actor) {
+    protected void handleProjectileCollision(FrostProjectile projectile, GameActor actor) {
         if (actor instanceof MapObjectHitbox) {
             projectile.setCollided(true);
         }

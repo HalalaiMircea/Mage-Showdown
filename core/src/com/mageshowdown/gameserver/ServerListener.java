@@ -3,6 +3,7 @@ package com.mageshowdown.gameserver;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.mageshowdown.gamelogic.GameWorld;
+import com.mageshowdown.gamelogic.Orb;
 import com.mageshowdown.packets.Network;
 
 public class ServerListener extends Listener {
@@ -63,7 +64,7 @@ public class ServerListener extends Listener {
             toBeSent.pos = GameWorld.convertWorldToPixels(myServer.generateSpawnPoint(connection.getID()));
             toBeSent.roundTimePassed = ServerRound.getInstance().getTimePassed();
             //players always start with the frost orb equipped
-            toBeSent.orbEquipped = 1;
+            toBeSent.orbEquipped = Orb.SpellType.FROST;
             gameStage.addPlayerCharacter(toBeSent);
 
             myServer.sendToAllTCP(toBeSent);
@@ -81,7 +82,7 @@ public class ServerListener extends Listener {
                     toBeSent.userName = myServer.getUserNameById(con.getID());
                     toBeSent.id = con.getID();
                     toBeSent.pos = GameWorld.convertPixelsToWorld(gameStage.getPlayerById(con.getID()).getBody().getPosition());
-                    toBeSent.orbEquipped = gameStage.getPlayerById(con.getID()).getEquippedOrb();
+                    toBeSent.orbEquipped = gameStage.getPlayerById(con.getID()).getCurrentOrb().getSpellType();
 
                     myServer.sendToTCP(connection.getID(), toBeSent);
                 }

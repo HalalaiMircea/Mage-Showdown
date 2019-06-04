@@ -105,7 +105,7 @@ public class Orb extends GameActor implements AnimatedActorInterface {
         switch (spellType) {
             case FROST:
                 if (currentMana > spellCosts.get("freeze projectile")) {
-                    spells.add(new FreezeProjectile(getStage(), getStartPosition(rotation), rotation, direction, spells.size(), ownerId, CLIENT_ACTOR));
+                    spells.add(new FrostProjectile(getStage(), getStartPosition(rotation), rotation, direction, spells.size(), ownerId, CLIENT_ACTOR));
                     currentMana -= spellCosts.get("freeze projectile");
                     recharge = false;
                 }
@@ -206,5 +206,9 @@ public class Orb extends GameActor implements AnimatedActorInterface {
 
     public float getCurrentMana() {
         return currentMana;
+    }
+
+    public SpellType getSpellType() {
+        return spellType;
     }
 }

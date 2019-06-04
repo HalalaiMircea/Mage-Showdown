@@ -27,7 +27,7 @@ public abstract class PlayerCharacter extends DynamicGameActor {
     protected int score = 0;
     protected int kills = 0;
 
-    protected PlayerCharacter(Stage stage, Vector2 position, int orbEquipped, boolean isClient) {
+    protected PlayerCharacter(Stage stage, Vector2 position, Orb.SpellType orbEquipped, boolean isClient) {
         super(stage, position, new Vector2(22, 32),new Vector2(22,32), 0f, new Vector2(1.5f, 1.5f),isClient);
 
         createBody(new Vector2(getOriginX(),getOriginY()),BodyDef.BodyType.DynamicBody);
@@ -39,7 +39,7 @@ public abstract class PlayerCharacter extends DynamicGameActor {
         frostOrb.remove();
         fireOrb.remove();
 
-        if (orbEquipped == 1)
+        if (orbEquipped == Orb.SpellType.FROST)
             currentOrb = frostOrb;
         else currentOrb = fireOrb;
 
@@ -162,11 +162,5 @@ public abstract class PlayerCharacter extends DynamicGameActor {
 
     public void setKills(int kills) {
         this.kills = kills;
-    }
-
-    public int getEquippedOrb() {
-        if (currentOrb.equals(frostOrb))
-            return 1;
-        else return 2;
     }
 }

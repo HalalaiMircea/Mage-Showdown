@@ -3,6 +3,7 @@ package com.mageshowdown.gameclient;
 import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
+import com.mageshowdown.gamelogic.Orb;
 import com.mageshowdown.packets.Network;
 
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ public class GameClient extends Client {
         kryo.register(Network.CurrentMap.class);
         kryo.register(Network.PlayerDead.class);
         kryo.register(Network.SwitchOrbs.class);
+        kryo.register(Orb.SpellType.class);
     }
 
     @Override

@@ -4,8 +4,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.mageshowdown.gamelogic.*;
 
-import java.util.Map;
-
 
 /*
  * client-side the collisions between the projectile and other objects like map hitboxes
@@ -29,18 +27,20 @@ public class ClientCollisionManager extends CollisionManager {
             handleLaserCollision((Laser) obj2, collisionPoints);
         }
 
-        if (obj1 instanceof FreezeProjectile && obj2 instanceof GameActor) {
-            handleProjectileCollision((FreezeProjectile) obj1, (GameActor) obj2);
-        } else if (obj1 instanceof GameActor && obj2 instanceof FreezeProjectile) {
-            handleProjectileCollision((FreezeProjectile) obj2, (GameActor) obj1);
+        if (obj1 instanceof FrostProjectile && obj2 instanceof GameActor) {
+            handleProjectileCollision((FrostProjectile) obj1, (GameActor) obj2);
+        } else if (obj1 instanceof GameActor && obj2 instanceof FrostProjectile) {
+            handleProjectileCollision((FrostProjectile) obj2, (GameActor) obj1);
         }
     }
 
     @Override
-    protected void handleProjectileCollision(FreezeProjectile projectile, GameActor actor) {
+    protected void handleProjectileCollision(FrostProjectile projectile, GameActor actor) {
         super.handleProjectileCollision(projectile, actor);
         if (actor instanceof ClientPlayerCharacter && projectile.getOwnerId() != ((ClientPlayerCharacter) actor).getId())
+        {
             projectile.setCollided(true);
+        }
     }
 
     private void handleLaserCollision(Laser laser, Vector2[] contactLocations) {

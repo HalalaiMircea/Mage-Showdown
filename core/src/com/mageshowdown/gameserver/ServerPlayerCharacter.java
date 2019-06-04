@@ -5,7 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mageshowdown.gamelogic.Bomb;
-import com.mageshowdown.gamelogic.FreezeProjectile;
+import com.mageshowdown.gamelogic.FrostProjectile;
 import com.mageshowdown.gamelogic.Orb;
 import com.mageshowdown.gamelogic.PlayerCharacter;
 import com.mageshowdown.packets.Network;
@@ -27,7 +27,7 @@ public class ServerPlayerCharacter extends PlayerCharacter {
 
     private final float FREEZE_SLOWING_FACTOR=.5f;
 
-    public ServerPlayerCharacter(Stage stage, Vector2 pos, int orbEquipped, int id) {
+    public ServerPlayerCharacter(Stage stage, Vector2 pos, Orb.SpellType orbEquipped, int id) {
         super(stage,pos,orbEquipped,false);
         this.id=id;
     }
@@ -126,7 +126,7 @@ public class ServerPlayerCharacter extends PlayerCharacter {
             }else health-=damageValue;
 
             //check what the character gets damaged by
-            if(object instanceof FreezeProjectile || object instanceof Bomb && ((Bomb)(object)).getSpellType()== Orb.SpellType.FROST){
+            if(object instanceof FrostProjectile || object instanceof Bomb && ((Bomb)(object)).getSpellType()== Orb.SpellType.FROST){
                 dmgImmune = true;
                 frozen=true;
             }
