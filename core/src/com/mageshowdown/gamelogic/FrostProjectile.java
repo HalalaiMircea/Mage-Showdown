@@ -46,5 +46,10 @@ public class FrostProjectile extends Spell implements AnimatedActorInterface {
             velocity = new Vector2(0, 0);
             setScale(1.5f);
         }
+        hasJustCollided();
+    }
+
+    private void hasJustCollided(){
+
     }
 }

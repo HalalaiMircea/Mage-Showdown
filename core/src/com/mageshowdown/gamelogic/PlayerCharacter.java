@@ -28,7 +28,7 @@ public abstract class PlayerCharacter extends DynamicGameActor {
     protected int kills = 0;
 
     protected PlayerCharacter(Stage stage, Vector2 position, Orb.SpellType orbEquipped, boolean isClient) {
-        super(stage, position, new Vector2(22, 32),new Vector2(22,32), 0f, new Vector2(1.5f, 1.5f),isClient);
+        super(stage, position, new Vector2(22, 32),new Vector2(33,48), 0f, new Vector2(1.5f, 1.5f),isClient);
 
         createBody(new Vector2(getOriginX(),getOriginY()),BodyDef.BodyType.DynamicBody);
         gameStage = stage;

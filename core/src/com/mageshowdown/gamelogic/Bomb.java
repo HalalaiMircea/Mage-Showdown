@@ -53,6 +53,7 @@ public class Bomb extends Spell implements AnimatedActorInterface {
         }
         if (passedTime > duration / 2f && !exploded) {
             exploded = true;
+            hasJustExploded();
             //we enable collision with the bomb only after it actually explodes by only then creating the actual body
             createBody(new Vector2(getOriginX(), getOriginY()), BodyDef.BodyType.StaticBody);
         }
@@ -68,6 +69,10 @@ public class Bomb extends Spell implements AnimatedActorInterface {
             if (animations.containsKey("explosion"))
                 currFrame = animations.get("explosion").getKeyFrame(explosionTime, false);
         }
+    }
+
+    private void hasJustExploded(){
+
     }
 
     public Orb.SpellType getSpellType() {
