@@ -71,6 +71,16 @@ public class ClientAssetLoader {
         return ourInstance;
     }
 
+    public void loadLoadingScreen() {
+        manager.load("UIAssets/golden-ui-skin.json", Skin.class);
+        generateFonts();
+    }
+
+    public void setLoadingAssets() {
+        hudSkin = manager.get("UIAssets/golden-ui-skin.json", Skin.class);
+        bigSizeFont = manager.get("joystixBig.ttf", BitmapFont.class);
+    }
+
     public void load() {
         //Friendly player spritesheets
         manager.load("Player Animations/Friendly player/idleAnimationSpritesheet.png", Texture.class);
@@ -111,9 +121,6 @@ public class ClientAssetLoader {
         manager.load("UIAssets/Black_1080p.png", Texture.class);
 
         manager.load("UIAssets/uiskin.json", Skin.class);
-        manager.load("UIAssets/golden-ui-skin.json", Skin.class);
-
-        generateFonts();
 
         manager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
         manager.load("Maps/level1.tmx", TiledMap.class);
@@ -126,10 +133,10 @@ public class ClientAssetLoader {
         manager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
         manager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(resolver));
 
-        FreetypeFontLoader.FreeTypeFontLoaderParameter parameter = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
-        parameter.fontFileName = "UIAssets/joystix monospace.ttf";
-        parameter.fontParameters.size = 12;
-        manager.load("joystixNormal.ttf", BitmapFont.class, parameter);
+//        FreetypeFontLoader.FreeTypeFontLoaderParameter parameter = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
+//        parameter.fontFileName = "UIAssets/joystix monospace.ttf";
+//        parameter.fontParameters.size = 12;
+//        manager.load("joystixNormal.ttf", BitmapFont.class, parameter);
 
         FreetypeFontLoader.FreeTypeFontLoaderParameter bigParameter = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
         bigParameter.fontFileName = "UIAssets/joystix monospace.ttf";
@@ -176,10 +183,9 @@ public class ClientAssetLoader {
         solidBlack = manager.get("UIAssets/Black_1080p.png", Texture.class);
 
         uiSkin = manager.get("UIAssets/uiskin.json", Skin.class);
-        hudSkin = manager.get("UIAssets/golden-ui-skin.json", Skin.class);
 
-        bigSizeFont = manager.get("joystixBig.ttf", BitmapFont.class);
-        normalSizeFont = manager.get("joystixNormal.ttf", BitmapFont.class);
+
+        //normalSizeFont = manager.get("joystixNormal.ttf", BitmapFont.class);
 
         uiSkin.get("default", TextButton.TextButtonStyle.class).font = bigSizeFont;
         uiSkin.get("default", TextField.TextFieldStyle.class).font = bigSizeFont;

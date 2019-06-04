@@ -15,7 +15,7 @@ public class MageShowdownClient extends Game {
     @Override
     public void create() {
         GameWorld.updateResolutionScale();
-        ClientAssetLoader.getInstance().load();
+        ClientAssetLoader.getInstance().loadLoadingScreen();
 
         this.setScreen(new LoadingScreen());
     }
