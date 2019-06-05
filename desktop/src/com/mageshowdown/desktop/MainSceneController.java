@@ -39,6 +39,7 @@ public class MainSceneController implements Initializable {
         config.vSyncEnabled = prefs.getBoolean(PrefsKeys.VSYNC);
         config.useGL30 = prefs.getBoolean(PrefsKeys.USEGL30);
         config.fullscreen = prefs.getBoolean(PrefsKeys.FULLSCREEN);
+        config.samples = 4;
         config.title = "Mage Showdown";
         config.addIcon("icon32.png", Files.FileType.Internal);
 

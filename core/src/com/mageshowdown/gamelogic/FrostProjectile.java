@@ -54,6 +54,6 @@ public class FrostProjectile extends Spell implements AnimatedActorInterface {
     }
 
     private void hasJustCollided(){
-        ClientAssetLoader.frozenEffect.play(prefs.getFloat(PrefsKeys.SOUNDVOLUME) / 2);
+        ClientAssetLoader.frozenEffect.play(prefs.getFloat(PrefsKeys.SOUNDVOLUME) / 3);
     }
 }

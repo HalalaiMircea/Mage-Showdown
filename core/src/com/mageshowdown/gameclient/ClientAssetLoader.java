@@ -4,6 +4,7 @@ import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -51,6 +52,8 @@ public class ClientAssetLoader {
     public static Sound fireBombExplosion;
     public static Sound frostBombExplosion;
     public static Sound frostShot;
+    public static Music menuMusic;
+    public static Music gameplayMusic;
 
     //preferences files
     public static Preferences prefs;
@@ -116,6 +119,8 @@ public class ClientAssetLoader {
         manager.load("Sounds/fireBomb.wav", Sound.class);
         manager.load("Sounds/frostBomb.wav", Sound.class);
         manager.load("Sounds/IceCast.wav", Sound.class);
+        manager.load("Music/Action Break.mp3", Music.class);
+        manager.load("Music/Night Pulse.mp3", Music.class);
 
         manager.load("UIAssets/menuBackground.png", Texture.class);
         manager.load("UIAssets/Black_1080p.png", Texture.class);
@@ -178,6 +183,8 @@ public class ClientAssetLoader {
         fireBombExplosion = manager.get("Sounds/fireBomb.wav", Sound.class);
         frostBombExplosion = manager.get("Sounds/frostBomb.wav", Sound.class);
         frostShot = manager.get("Sounds/IceCast.wav", Sound.class);
+        menuMusic = manager.get("Music/Action Break.mp3", Music.class);
+        gameplayMusic = manager.get("Music/Night Pulse.mp3", Music.class);
 
         menuBackground = manager.get("UIAssets/menuBackground.png", Texture.class);
         solidBlack = manager.get("UIAssets/Black_1080p.png", Texture.class);
