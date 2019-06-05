@@ -1,5 +1,6 @@
 package com.mageshowdown.gamelogic;
 
+import com.badlogic.gdx.ApplicationLogger;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
@@ -50,7 +51,7 @@ public class LoadingScreen implements Screen {
 //            float timeElapsed = System.currentTimeMillis() - startTime;
 //            ClientAssetLoader.getInstance().setAssets();
 //            MageShowdownClient.getInstance().setScreen(MenuScreen.getInstance());
-//            System.out.println("Loading took " + timeElapsed + " milliseconds");
+//            Gdx.app.log("load_time", "Loading took " + timeElapsed + " milliseconds");
 //        }
     }
 
@@ -68,7 +69,7 @@ public class LoadingScreen implements Screen {
                 ClientAssetLoader.getInstance().setAssets();
                 MageShowdownClient.getInstance().setScreen(MenuScreen.getInstance());
                 long timeElapsed = System.currentTimeMillis() - startTime;
-                System.out.println("Loading took " + timeElapsed + " milliseconds");
+                Gdx.app.log("load_time", "Loading took " + timeElapsed + " milliseconds");
             }
         }
     }

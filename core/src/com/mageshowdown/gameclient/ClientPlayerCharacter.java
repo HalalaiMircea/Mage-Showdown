@@ -1,5 +1,6 @@
 package com.mageshowdown.gameclient;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -295,16 +296,16 @@ public class ClientPlayerCharacter extends PlayerCharacter
     }
 
     public void hasJustFrozen() {
-        System.out.println("someone just froze");
+        Gdx.app.log("game_event", "someone just froze");
     }
 
     public void hasJustCastFrostProjectile() {
-        System.out.println("someone just cast a frost spell projectile");
+        Gdx.app.log("game_event", "someone just cast a frost spell projectile");
         ClientAssetLoader.frostShot.play(prefs.getFloat(PrefsKeys.SOUNDVOLUME) / 2);
     }
 
     public void hasJustCastLaser() {
-        System.out.println("someone just cast a laser spell");
+        Gdx.app.log("game_event", "someone just cast a laser spell");
         if (rndSound.nextBoolean())
             ClientAssetLoader.fireShot1.play(prefs.getFloat(PrefsKeys.SOUNDVOLUME) / 2);
         else
@@ -312,11 +313,11 @@ public class ClientPlayerCharacter extends PlayerCharacter
     }
 
     public void hasJustCastFireBomb() {
-        System.out.println("someone just cast a fire bomb");
+        Gdx.app.log("game_event", "someone just cast a fire bomb");
     }
 
     public void hasJustCastFrostBomb() {
-        System.out.println("someone just cast a frost bomb");
+        Gdx.app.log("game_event", "someone just cast a frost bomb");
     }
 
     @Override

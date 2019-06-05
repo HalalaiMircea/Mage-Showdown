@@ -4,9 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -26,6 +28,7 @@ public class OptionsStage extends Stage {
     private Table root;
     private TextField playerNameField;
     private TextButton vsyncCheckBox;
+    private TextButton showFPSCheckBox;
     private TextButton backButton;
     private TextButton applyButton;
     private SelectBox<String> resSelectBox;
@@ -81,7 +84,8 @@ public class OptionsStage extends Stage {
         resSelectBox = new SelectBox<String>(uiSkin);
         modeSelectBox = new SelectBox<String>(uiSkin);
         refreshSelectBox = new SelectBox<Integer>(uiSkin);
-        vsyncCheckBox = new TextButton("Vertical Sync: ", uiSkin);
+        vsyncCheckBox = new TextButton("", uiSkin);
+        showFPSCheckBox = new TextButton("", uiSkin);
 
         soundVolumeLabel = new Label("", uiSkin, "menu-label");
         musicVolumeLabel = new Label("", uiSkin, "menu-label");
@@ -105,7 +109,7 @@ public class OptionsStage extends Stage {
         root.row();
         root.add(playerNameLabel, playerNameField);
         root.row();
-        root.add(vsyncCheckBox).colspan(2).width(605);
+        root.add(vsyncCheckBox, showFPSCheckBox);
         root.row();
         root.defaults().space(20, 25, 20, 25).width(290).height(60);
         root.add(soundVolumeLabel, soundVolumeSlider);
@@ -145,16 +149,19 @@ public class OptionsStage extends Stage {
             modeSelectBox.setSelected("Windowed");
 
         refreshSelectBox.setItems(refreshArray);
-        if (prefs.contains(PrefsKeys.REFRESHRATE))
-            refreshSelectBox.setSelected(prefs.getInteger(PrefsKeys.REFRESHRATE));
-        else
-            refreshSelectBox.setSelected(60);
+        refreshSelectBox.setSelected(prefs.getInteger(PrefsKeys.REFRESHRATE));
 
         if (prefs.getBoolean(PrefsKeys.VSYNC))
-            vsyncCheckBox.setText("Vertical Sync: ON");
+            vsyncCheckBox.setText("VSync: ON");
         else
-            vsyncCheckBox.setText("Vertical Sync: OFF");
+            vsyncCheckBox.setText("VSync: OFF");
         vsyncCheckBox.setChecked(prefs.getBoolean(PrefsKeys.VSYNC));
+
+        if (prefs.getBoolean(PrefsKeys.SHOWFPS))
+            showFPSCheckBox.setText("Show FPS: ON");
+        else
+            showFPSCheckBox.setText("Show FPS: OFF");
+        showFPSCheckBox.setChecked(prefs.getBoolean(PrefsKeys.SHOWFPS));
 
         soundVolumeSlider.setValue(prefs.getFloat(PrefsKeys.SOUNDVOLUME));
         soundVolumeLabel.setText("Sound: " + (int) (soundVolumeSlider.getPercent() * 100) + "%");
@@ -163,15 +170,26 @@ public class OptionsStage extends Stage {
     }
 
     private void handleWidgetEvents() {
-        vsyncCheckBox.addListener(new ClickListener() {
+        vsyncCheckBox.addListener(new ChangeListener() {
             @Override
-            public void clicked(InputEvent event, float x, float y) {
+            public void changed(ChangeEvent event, Actor actor) {
                 ClientAssetLoader.btnClickSound.play(prefs.getFloat(PrefsKeys.SOUNDVOLUME));
 
                 if (vsyncCheckBox.isChecked())
-                    vsyncCheckBox.setText("Vertical Sync: ON");
+                    vsyncCheckBox.setText("VSync: ON");
                 else
-                    vsyncCheckBox.setText("Vertical Sync: OFF");
+                    vsyncCheckBox.setText("VSync: OFF");
+            }
+        });
+
+        showFPSCheckBox.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                ClientAssetLoader.btnClickSound.play(prefs.getFloat(PrefsKeys.SOUNDVOLUME));
+                if (showFPSCheckBox.isChecked())
+                    showFPSCheckBox.setText("Show FPS: ON");
+                else
+                    showFPSCheckBox.setText("Show FPS: OFF");
             }
         });
 
@@ -208,9 +226,10 @@ public class OptionsStage extends Stage {
             }
         });
 
-        applyButton.addListener(new ClickListener() {
+        applyButton.addListener(new ChangeListener() {
             @Override
-            public void clicked(InputEvent event, float x, float y) {
+            public void changed(ChangeEvent event, Actor actor) {
+                //Apply new settings
                 ClientAssetLoader.btnClickSound.play(prefs.getFloat(PrefsKeys.SOUNDVOLUME));
 
                 String[] str = resSelectBox.getSelected().split("x");
@@ -224,7 +243,9 @@ public class OptionsStage extends Stage {
                 } else Gdx.graphics.setWindowedMode(Integer.parseInt(str[0]), Integer.parseInt(str[1]));
 
                 Gdx.graphics.setVSync(vsyncCheckBox.isChecked());
+                MageShowdownClient.getInstance().setCanDrawFont(showFPSCheckBox.isChecked());
 
+                //Save settings to the Preferences Map
                 prefs.putInteger(PrefsKeys.WIDTH, Integer.parseInt(str[0]));
                 prefs.putInteger(PrefsKeys.HEIGHT, Integer.parseInt(str[1]));
                 prefs.putInteger(PrefsKeys.REFRESHRATE, refreshSelectBox.getSelected());
@@ -234,6 +255,8 @@ public class OptionsStage extends Stage {
                     prefs.putBoolean(PrefsKeys.FULLSCREEN, false);
                 prefs.putString(PrefsKeys.PLAYERNAME, playerNameField.getText());
                 prefs.putBoolean(PrefsKeys.VSYNC, vsyncCheckBox.isChecked());
+                prefs.putBoolean(PrefsKeys.SHOWFPS, showFPSCheckBox.isChecked());
+
                 prefs.flush();
 
                 //when we apply new graphics settings the resolution may have changed so we update the resolution scale
@@ -241,9 +264,9 @@ public class OptionsStage extends Stage {
             }
         });
 
-        backButton.addListener(new ClickListener() {
+        backButton.addListener(new ChangeListener() {
             @Override
-            public void clicked(InputEvent event, float x, float y) {
+            public void changed(ChangeEvent event, Actor actor) {
                 ClientAssetLoader.btnClickSound.play(prefs.getFloat(PrefsKeys.SOUNDVOLUME));
 
                 if (MageShowdownClient.getInstance().getScreen().equals(MenuScreen.getInstance())) {

@@ -1,5 +1,6 @@
 package com.mageshowdown.gameserver;
 
+import com.badlogic.gdx.Gdx;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.mageshowdown.gamelogic.GameWorld;
@@ -20,7 +21,7 @@ public class ServerListener extends Listener {
 
     @Override
     public void connected(Connection connection) {
-        System.out.println(connection.getID() + " connected!");
+        Gdx.app.error("connection_error", connection.getID() + " connected!");
         myServer.sendToTCP(connection.getID(), new Network.LoginRequest());
     }
 

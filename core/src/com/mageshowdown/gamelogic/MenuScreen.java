@@ -48,6 +48,10 @@ public class MenuScreen implements Screen {
         return menuOptionsStage;
     }
 
+    public static Batch getBatch() {
+        return batch;
+    }
+
     public static void setStagePhase(StagePhase stagePhase) {
         MenuScreen.stagePhase = stagePhase;
     }

@@ -201,6 +201,7 @@ public class GamePreferences implements Preferences {
         this.putInteger(PrefsKeys.REFRESHRATE, 60);
         this.putInteger(PrefsKeys.FOREGROUNDFPS, 0);
         this.putInteger(PrefsKeys.BACKGROUNDFPS, 60);
+        this.putBoolean(PrefsKeys.SHOWFPS, false);
         this.putBoolean(PrefsKeys.VSYNC, true);
         this.putBoolean(PrefsKeys.USEGL30, false);
         this.putBoolean(PrefsKeys.FULLSCREEN, false);

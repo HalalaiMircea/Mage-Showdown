@@ -1,5 +1,6 @@
 package com.mageshowdown.gameserver;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Connection;
@@ -35,7 +36,7 @@ public class GameServer extends Server {
         try{
             super.bind(tcpPort, udpPort);
         }catch(IOException e){
-            System.out.println("Couldnt start to the server");
+            Gdx.app.error("start_error", "Couldnt start to the server");
         }
     }
 

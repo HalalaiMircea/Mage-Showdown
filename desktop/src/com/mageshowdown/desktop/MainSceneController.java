@@ -1,5 +1,6 @@
 package com.mageshowdown.desktop;
 
+import com.badlogic.gdx.Files;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.mageshowdown.gameclient.MageShowdownClient;
@@ -39,6 +40,7 @@ public class MainSceneController implements Initializable {
         config.useGL30 = prefs.getBoolean(PrefsKeys.USEGL30);
         config.fullscreen = prefs.getBoolean(PrefsKeys.FULLSCREEN);
         config.title = "Mage Showdown";
+        config.addIcon("icon32.png", Files.FileType.Internal);
 
         new LwjglApplication(MageShowdownClient.getInstance(), config);
         DesktopClientLauncher.mainStage.close();

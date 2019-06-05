@@ -13,4 +13,5 @@ public class PrefsKeys {
     public static final String LASTENTEREDIP = "lastEnteredIp";
     public static final String SOUNDVOLUME = "soundVolume";
     public static final String MUSICVOLUME = "musicVolume";
+    public static final String SHOWFPS = "showFPS";
 }

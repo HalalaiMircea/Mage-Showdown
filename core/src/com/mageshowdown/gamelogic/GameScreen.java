@@ -63,6 +63,10 @@ public class GameScreen implements Screen {
         return gameOptionsStage;
     }
 
+    public static Batch getBatch() {
+        return batch;
+    }
+
     public static void setGameState(GameState gameState) {
         GameScreen.gameState = gameState;
     }

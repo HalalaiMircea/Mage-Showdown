@@ -1,5 +1,6 @@
 package com.mageshowdown.gameclient;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
@@ -26,13 +27,13 @@ public class ClientListener extends Listener {
         handleCurrentMap(connection, object);
         handlePlayerDead(connection, object);
         handleSwitchOrbs(connection, object);
-        handlePlantBomb(connection,object);
+        handlePlantBomb(connection, object);
     }
 
     private void handleLoginServerRequest(Connection connection, Object object) {
         if (object instanceof Network.LoginRequest && !myClient.isLogged()) {
             Network.LoginRequest packet = ((Network.LoginRequest) object);
-            System.out.println("received login request!");
+            Gdx.app.log("connection_event", "received login request!");
             packet.user = myClient.getUserName();
             myClient.setLogged(true);
             myClient.sendTCP(packet);
@@ -55,9 +56,9 @@ public class ClientListener extends Listener {
                 } else {
                     playerCharacter = GameScreen.getGameStage().getOtherPlayers().get(characterState.id);
                 }
-                if(playerCharacter!=null){
+                if (playerCharacter != null) {
                     //if the player wasnt frozen before and now is means they just became that way
-                    if(!playerCharacter.isFrozen() && characterState.frozen)
+                    if (!playerCharacter.isFrozen() && characterState.frozen)
                         playerCharacter.hasJustFrozen();
 
                     playerCharacter.setQueuedPos(characterState.pos);
@@ -80,9 +81,9 @@ public class ClientListener extends Listener {
             packet.pos = GameWorld.convertWorldToPixels(packet.pos);
             ClientRound.getInstance().setTimePassed(packet.roundTimePassed);
             if (connection.getID() == packet.id) {
-                if(GameScreen.getGameStage().getPlayerCharacter()!=null)
+                if (GameScreen.getGameStage().getPlayerCharacter() != null)
                     return;
-                System.out.println("spwaning myself");
+                Gdx.app.log("game_event", "spwaning myself");
                 GameScreen.getGameStage().spawnMyPlayerCharacter(packet);
                 GameScreen.getGameStage().getPlayerCharacter().setMyPlayer(true);
                 GameScreen.getGameStage().getPlayerCharacter().setId(packet.id);
@@ -96,22 +97,22 @@ public class ClientListener extends Listener {
         if (object instanceof Network.CastSpellProjectile) {
             Network.CastSpellProjectile packet = (Network.CastSpellProjectile) object;
 
-            Vector2 direction = new Vector2((float)Math.cos(packet.rot*Math.PI/180),(float)Math.sin(packet.rot*Math.PI/180));
-            ClientPlayerCharacter playerCharacter= GameScreen.getGameStage().getOtherPlayers().get(packet.id);
+            Vector2 direction = new Vector2((float) Math.cos(packet.rot * Math.PI / 180), (float) Math.sin(packet.rot * Math.PI / 180));
+            ClientPlayerCharacter playerCharacter = GameScreen.getGameStage().getOtherPlayers().get(packet.id);
             playerCharacter.getCurrentOrb().castSpellProjectile(direction, packet.rot, packet.id);
-            if(playerCharacter.getCurrentOrb().getSpellType()==Orb.SpellType.FROST)
+            if (playerCharacter.getCurrentOrb().getSpellType() == Orb.SpellType.FROST)
                 playerCharacter.hasJustCastFrostProjectile();
             else playerCharacter.hasJustCastLaser();
         }
     }
 
-    private void handlePlantBomb(Connection connection, Object object){
-        if(object instanceof Network.CastBomb){
-            Network.CastBomb packet=(Network.CastBomb)object;
+    private void handlePlantBomb(Connection connection, Object object) {
+        if (object instanceof Network.CastBomb) {
+            Network.CastBomb packet = (Network.CastBomb) object;
 
-            ClientPlayerCharacter playerCharacter= GameScreen.getGameStage().getOtherPlayers().get(packet.id);
-            playerCharacter.getCurrentOrb().castBomb(packet.pos,packet.id);
-            if(playerCharacter.getCurrentOrb().getSpellType()==Orb.SpellType.FROST)
+            ClientPlayerCharacter playerCharacter = GameScreen.getGameStage().getOtherPlayers().get(packet.id);
+            playerCharacter.getCurrentOrb().castBomb(packet.pos, packet.id);
+            if (playerCharacter.getCurrentOrb().getSpellType() == Orb.SpellType.FROST)
                 playerCharacter.hasJustCastFrostBomb();
             else playerCharacter.hasJustCastFireBomb();
         }
@@ -128,7 +129,7 @@ public class ClientListener extends Listener {
     private void handleCurrentMap(Connection connection, Object object) {
         if (object instanceof Network.CurrentMap) {
             Network.CurrentMap packet = (Network.CurrentMap) object;
-            if(GameScreen.getGameStage().getGameLevel().getMapNr()==packet.nr)
+            if (GameScreen.getGameStage().getGameLevel().getMapNr() == packet.nr)
                 return;
 
             GameScreen.getGameStage().getGameLevel().setMapClient(packet.nr);
@@ -141,9 +142,9 @@ public class ClientListener extends Listener {
             Network.PlayerDead packet = (Network.PlayerDead) object;
 
             if (packet.id == GameClient.getInstance().getID()) {
-                System.out.println("you died you suck");
+                Gdx.app.log("game_event", "you died you suck");
             } else {
-                System.out.println(packet.id + " died he sucks");
+                Gdx.app.log("game_event", packet.id + " died he sucks");
             }
         }
     }
