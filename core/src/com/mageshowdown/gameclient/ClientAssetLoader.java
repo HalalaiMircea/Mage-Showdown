@@ -26,11 +26,17 @@ public class ClientAssetLoader {
     public static BitmapFont bigSizeFont;
     //player animations
     public static Texture friendlyIdleSpritesheet;
+    public static Texture frozenFriendlyIdleSpritesheet;
     public static Texture enemyIdleSpritesheet;
+    public static Texture frozenEnemyIdleSpritesheet;
     public static Texture friendlyJumpingSpritesheet;
+    public static Texture frozenFriendlyJumpingSpritesheet;
     public static Texture enemyJumpingSpritesheet;
+    public static Texture frozenEnemyJumpingSpritesheet;
     public static Texture friendlyRunningSpritesheet;
+    public static Texture frozenFriendlyRunningSpritesheet;
     public static Texture enemyRunningSpritesheet;
+    public static Texture frozenEnemyRunningSpritesheet;
     public static Texture crystalSpritesheet;
     public static Texture freezeProjectileSpritesheet;
     public static Texture freezeProjectileImpactSpritesheet;
@@ -42,7 +48,6 @@ public class ClientAssetLoader {
     public static Texture fireLaserSpritesheet;
     public static Texture burningSpritesheet;
     public static Texture energyShieldSpritesheet;
-    public static Texture frozenSpritesheet;
     //sounds & music
     public static Sound btnClickSound;
     public static Sound fireShot1;
@@ -86,11 +91,17 @@ public class ClientAssetLoader {
         manager.load("Player Animations/Friendly player/idleAnimationSpritesheet.png", Texture.class);
         manager.load("Player Animations/Friendly player/jumpingAnimationSpritesheet.png", Texture.class);
         manager.load("Player Animations/Friendly player/runningAnimationSpritesheet.png", Texture.class);
+        manager.load("Player Animations/Friendly player/frozenIdleAnimationSpritesheet.png", Texture.class);
+        manager.load("Player Animations/Friendly player/frozenJumpingAnimationSpritesheet.png", Texture.class);
+        manager.load("Player Animations/Friendly player/frozenRunningAnimationSpritesheet.png", Texture.class);
 
         //Enemy player spritesheets
         manager.load("Player Animations/Enemy player/enemyIdleAnimationSpritesheet.png", Texture.class);
         manager.load("Player Animations/Enemy player/enemyJumpingAnimationSpritesheet.png", Texture.class);
         manager.load("Player Animations/Enemy player/enemyRunningAnimationSpritesheet.png", Texture.class);
+        manager.load("Player Animations/Enemy player/frozenEnemyIdleAnimationSpritesheet.png", Texture.class);
+        manager.load("Player Animations/Enemy player/frozenEnemyJumpingAnimationSpritesheet.png", Texture.class);
+        manager.load("Player Animations/Enemy player/frozenEnemyRunningAnimationSpritesheet.png", Texture.class);
 
         //Freeze projectiles
         manager.load("Player Animations/Orb/CrystalSpritesheet.png", Texture.class);
@@ -151,10 +162,16 @@ public class ClientAssetLoader {
         friendlyIdleSpritesheet = manager.get("Player Animations/Friendly player/idleAnimationSpritesheet.png", Texture.class);
         friendlyJumpingSpritesheet = manager.get("Player Animations/Friendly player/jumpingAnimationSpritesheet.png", Texture.class);
         friendlyRunningSpritesheet = manager.get("Player Animations/Friendly player/runningAnimationSpritesheet.png", Texture.class);
+        frozenFriendlyIdleSpritesheet = manager.get("Player Animations/Friendly player/frozenIdleAnimationSpritesheet.png", Texture.class);
+        frozenFriendlyJumpingSpritesheet = manager.get("Player Animations/Friendly player/frozenJumpingAnimationSpritesheet.png", Texture.class);
+        frozenFriendlyRunningSpritesheet = manager.get("Player Animations/Friendly player/frozenRunningAnimationSpritesheet.png", Texture.class);
 
         enemyIdleSpritesheet = manager.get("Player Animations/Enemy player/enemyIdleAnimationSpritesheet.png", Texture.class);
         enemyJumpingSpritesheet = manager.get("Player Animations/Enemy player/enemyJumpingAnimationSpritesheet.png", Texture.class);
         enemyRunningSpritesheet = manager.get("Player Animations/Enemy player/enemyRunningAnimationSpritesheet.png", Texture.class);
+        frozenEnemyIdleSpritesheet = manager.get("Player Animations/Enemy player/frozenEnemyIdleAnimationSpritesheet.png", Texture.class);
+        frozenEnemyJumpingSpritesheet = manager.get("Player Animations/Enemy player/frozenEnemyJumpingAnimationSpritesheet.png", Texture.class);
+        frozenEnemyRunningSpritesheet = manager.get("Player Animations/Enemy player/frozenEnemyRunningAnimationSpritesheet.png", Texture.class);
 
         crystalSpritesheet = manager.get("Player Animations/Orb/CrystalSpritesheet.png", Texture.class);
         freezeProjectileSpritesheet = manager.get("Player Animations/Spell/freezeProjectileSpritesheet.png", Texture.class);
@@ -169,7 +186,6 @@ public class ClientAssetLoader {
         fireBombSpritesheet = manager.get("Player Animations/Effect/fireBombSpritesheet.png", Texture.class);
 
         energyShieldSpritesheet = manager.get("Player Animations/Effect/energyShieldSpriteSheet.png", Texture.class);
-        frozenSpritesheet = manager.get("Player Animations/Effect/frozenSpritesheet.png", Texture.class);
 
         btnClickSound = manager.get("Sounds/click.ogg", Sound.class);
         fireShot1 = manager.get("Sounds/fireShot1.mp3", Sound.class);

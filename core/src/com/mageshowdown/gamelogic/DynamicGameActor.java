@@ -38,8 +38,8 @@ public abstract class DynamicGameActor extends GameActor {
     }
 
     protected Vector2 velocity;
-    protected VerticalState verticalState;
-    protected HorizontalState horizontalState;
+    protected VerticalState verticalState=VerticalState.FLYING;
+    protected HorizontalState horizontalState=HorizontalState.STANDING;
 
     /*
      * because the dynamic game actor also has velocity we'll want to change, we also queue that up
@@ -50,8 +50,6 @@ public abstract class DynamicGameActor extends GameActor {
     protected DynamicGameActor(Stage stage, Vector2 position, Vector2 size, Vector2 bodySize, float rotation, Vector2 sizeScaling, boolean isClient) {
         super(stage, position, size, bodySize, rotation, sizeScaling, isClient);
         velocity = new Vector2(0, 0);
-        horizontalState = HorizontalState.STANDING;
-        verticalState = VerticalState.FLYING;
     }
 
     @Override

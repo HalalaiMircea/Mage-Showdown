@@ -35,7 +35,6 @@ public class ServerPlayerCharacter extends PlayerCharacter {
     @Override
     public void act(float delta) {
         updateDmgImmuneState();
-        updateFrozenState();
         updateShieldState();
         updateOrbPosition();
 
@@ -58,6 +57,7 @@ public class ServerPlayerCharacter extends PlayerCharacter {
                 velocity.x=0;
                 break;
         }
+        updateFrozenState();
         if(body!=null){
             if(body.getLinearVelocity().y!=0){
                 velocity.y=body.getLinearVelocity().y;
@@ -116,6 +116,7 @@ public class ServerPlayerCharacter extends PlayerCharacter {
             //everytime youre hit the cooldown for shield regen resets
             regenShield=false;
             shieldRegenTimer=0f;
+            dmgImmune = true;
 
             if(energyShield>0){
                 energyShield-=damageValue;
@@ -126,8 +127,8 @@ public class ServerPlayerCharacter extends PlayerCharacter {
             }else health-=damageValue;
 
             //check what the character gets damaged by
-            if(object instanceof FrostProjectile || object instanceof Bomb && ((Bomb)(object)).getSpellType()== Orb.SpellType.FROST){
-                dmgImmune = true;
+            if((object instanceof FrostProjectile || object instanceof Bomb && ((Bomb)(object)).getSpellType()== Orb.SpellType.FROST)
+                    && energyShield==0f){
                 frozen=true;
             }
         }

@@ -58,8 +58,14 @@ public class Bomb extends Spell implements AnimatedActorInterface {
             exploded = true;
             if(CLIENT_ACTOR)
                 hasJustExploded();
-            //we enable collision with the bomb only after it actually explodes by only then creating the actual body
-            createBody(new Vector2(getOriginX(), getOriginY()), BodyDef.BodyType.StaticBody);
+            /*
+            * we enable collision with the bomb only after it actually explodes by only then creating the actual body
+            * since the size of the body differs from the one of the actor we'll have to offset the position
+            * of the actor by the difference in sizes
+            * this way the body doesnt end up in a slightly different place from where the bomb was cast
+            */
+            setPosition(getX()+25,getY()+25);
+            createBody(new Vector2(bodySize.x/2, bodySize.y/2), BodyDef.BodyType.StaticBody);
         }
     }
 

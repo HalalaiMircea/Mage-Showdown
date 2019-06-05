@@ -29,14 +29,10 @@ public class CreateBodies {
     private static PolygonShape createPolygonShape(Vector2 convSize, Vector2 convOrigin) {
         PolygonShape ps = new PolygonShape();
         //in order to be able to change the origin of the body without headaches we use vertices instead of setAsBox()
-        Vector2[] vertices;
-        /* TODO
-         * rewrite this part in a better way
-         */
-        if (convOrigin.x == 0)
-            vertices = new Vector2[]{new Vector2(0, -convSize.y / 2), new Vector2(0, convSize.y / 2), new Vector2(convSize.x, convSize.y / 2), new Vector2(convSize.x, -convSize.y / 2)};
-        else
-            vertices = new Vector2[]{new Vector2(-convSize.x / 2, -convSize.y / 2), new Vector2(-convSize.x / 2, convSize.y / 2), new Vector2(convSize.x / 2, convSize.y / 2), new Vector2(convSize.x / 2, -convSize.y / 2)};
+        Vector2[] vertices = new Vector2[]{new Vector2(-convOrigin.x, -convOrigin.y),
+                new Vector2(-convOrigin.x, convSize.y - convOrigin.y),
+                new Vector2(convSize.x - convOrigin.x, convSize.y - convOrigin.y),
+                new Vector2(convSize.x - convOrigin.x, -convOrigin.y)};
 
 
         ps.set(vertices);

@@ -1,6 +1,7 @@
 package com.mageshowdown.gamelogic;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -9,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 public abstract class PlayerCharacter extends DynamicGameActor {
     protected static final float MAXIMUM_ENERGY_SHIELD = 5f;
     protected static final float MAXIMUM_HEALTH = 15f;
-    protected static final float FREEZE_DURATION = 2f;
+    protected static final float FREEZE_DURATION = 5f;
 
     protected Stage gameStage;
 
@@ -28,13 +29,13 @@ public abstract class PlayerCharacter extends DynamicGameActor {
     protected int kills = 0;
 
     protected PlayerCharacter(Stage stage, Vector2 position, Orb.SpellType orbEquipped, boolean isClient) {
-        super(stage, position, new Vector2(22, 32),new Vector2(33,48), 0f, new Vector2(1.5f, 1.5f),isClient);
+        super(stage, position, new Vector2(22, 32), new Vector2(33, 48), 0f, new Vector2(1.5f, 1.5f), isClient);
 
-        createBody(new Vector2(getOriginX(),getOriginY()),BodyDef.BodyType.DynamicBody);
+        createBody(new Vector2(bodySize.x / 2, bodySize.y / 2), BodyDef.BodyType.DynamicBody);
         gameStage = stage;
 
-        frostOrb = new Orb(stage, Orb.SpellType.FROST, 1.5f, 25,isClient);
-        fireOrb = new Orb(stage, Orb.SpellType.FIRE, 1.5f, 25,isClient);
+        frostOrb = new Orb(stage, Orb.SpellType.FROST, 1.5f, 25, isClient);
+        fireOrb = new Orb(stage, Orb.SpellType.FIRE, 1.5f, 25, isClient);
 
         frostOrb.remove();
         fireOrb.remove();
@@ -47,6 +48,15 @@ public abstract class PlayerCharacter extends DynamicGameActor {
     }
 
     @Override
+    public void draw(Batch batch, float parentAlpha) {
+        if (dmgImmune)
+            batch.setColor(batch.getColor().r, batch.getColor().g, batch.getColor().b, .5f);
+        super.draw(batch, parentAlpha);
+        if (dmgImmune)
+            batch.setColor(batch.getColor().r, batch.getColor().g, batch.getColor().b, 1f);
+    }
+
+    @Override
     public void act(float delta) {
         super.act(delta);
 
@@ -54,8 +64,8 @@ public abstract class PlayerCharacter extends DynamicGameActor {
         setBodyFixedRotation();
     }
 
-    protected void setBodyFixedRotation(){
-        if(body!=null && !body.isFixedRotation())
+    protected void setBodyFixedRotation() {
+        if (body != null && !body.isFixedRotation())
             body.setFixedRotation(true);
     }
 
@@ -71,10 +81,10 @@ public abstract class PlayerCharacter extends DynamicGameActor {
             currentOrb.updatePosition(new Vector2(getX(), getY()));
     }
 
-    protected void updateSpellState(){
-        if(frostOrb !=null)
+    protected void updateSpellState() {
+        if (frostOrb != null)
             frostOrb.destroyEliminatedSpells();
-        if(fireOrb !=null)
+        if (fireOrb != null)
             fireOrb.destroyEliminatedSpells();
     }
 

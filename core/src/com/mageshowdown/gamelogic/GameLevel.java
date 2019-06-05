@@ -41,7 +41,8 @@ public class GameLevel {
         //first empty the hitboxes, spawn points and burning effects from the previous map
         clearHitboxes();
         clearSpawnPoints();
-        clearBurningEffects();
+        //we dont want the burning effects to remain there on a map change so we get rid of them
+        Laser.BurningEffect.clearBurningEffects();
 
         /*
          * we have to be careful when creating the maps for the layer with hitboxes to be the first one
@@ -121,14 +122,6 @@ public class GameLevel {
         }
     }
 
-    //we dont want the burning effects to remain there on a map change so we get rid of them
-    private void clearBurningEffects() {
-        for (Actor actor : stage.getActors()) {
-            if (actor instanceof Laser.BurningEffect) {
-                actor.remove();
-            }
-        }
-    }
 
     public int getMapNr() {
         return mapNr;

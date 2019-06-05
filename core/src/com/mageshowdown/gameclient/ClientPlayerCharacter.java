@@ -51,14 +51,19 @@ public class ClientPlayerCharacter extends PlayerCharacter
             addAnimation(4, 1, 1.2f, "idle", ClientAssetLoader.friendlyIdleSpritesheet);
             addAnimation(2, 1, .8f, "jumping", ClientAssetLoader.friendlyJumpingSpritesheet);
             addAnimation(8, 1, 1f, "running", ClientAssetLoader.friendlyRunningSpritesheet);
+            addAnimation(4, 1, 1.2f, "frozen idle", ClientAssetLoader.frozenFriendlyIdleSpritesheet);
+            addAnimation(2, 1, .8f, "frozen jumping", ClientAssetLoader.frozenFriendlyJumpingSpritesheet);
+            addAnimation(8, 1, 1f, "frozen running", ClientAssetLoader.frozenFriendlyRunningSpritesheet);
         } else {
             addAnimation(4, 1, 1.2f, "idle", ClientAssetLoader.enemyIdleSpritesheet);
             addAnimation(2, 1, .8f, "jumping", ClientAssetLoader.enemyJumpingSpritesheet);
             addAnimation(8, 1, 1f, "running", ClientAssetLoader.enemyRunningSpritesheet);
+            addAnimation(4, 1, 1.2f, "frozen idle", ClientAssetLoader.frozenEnemyIdleSpritesheet);
+            addAnimation(2, 1, .8f, "frozen jumping", ClientAssetLoader.frozenEnemyJumpingSpritesheet);
+            addAnimation(8, 1, 1f, "frozen running", ClientAssetLoader.frozenEnemyRunningSpritesheet);
         }
 
         addAnimation(5, 4, 2f, "energy shield", ClientAssetLoader.energyShieldSpritesheet);
-        addAnimation(5, 7, 2f, "frozen", ClientAssetLoader.frozenSpritesheet);
         this.userName = userName;
 
     }
@@ -79,22 +84,23 @@ public class ClientPlayerCharacter extends PlayerCharacter
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
         if (dmgImmune)
-            batch.setColor(batch.getColor().r, batch.getColor().g, batch.getColor().b, 0);
+            batch.setColor(batch.getColor().r, batch.getColor().g, batch.getColor().b, .5f);
         if (energyShield > 0 && currShieldFrame != null)
-            batch.draw(currShieldFrame, getX() - getWidth() / 2, getY() - getHeight() / 2, getWidth() * getScaleX() * 1.5f, getHeight() * getScaleY() * 1.5f);
-        if (frozen && currFrozenFrame != null)
-            batch.draw(currFrozenFrame, getX() - getWidth() / 2, getY() - getHeight() / 2, getWidth() * getScaleX() * 1.5f, getHeight() * getScaleY() * 1.5f);
+            batch.draw(currShieldFrame, getX(), getY(), getOriginX(), getOriginY(), getWidth(), getHeight(), getScaleX() + .5f, getScaleY() + .5f, getRotation());
         if (dmgImmune)
-            batch.setColor(batch.getColor().r, batch.getColor().g, batch.getColor().b, 255);
+            batch.setColor(batch.getColor().r, batch.getColor().g, batch.getColor().b, 1f);
     }
 
     @Override
     public void pickFrame() {
         if (animations.containsKey("energy shield"))
             currShieldFrame = animations.get("energy shield").getKeyFrame(passedTime, true);
-        if (frozen && animations.containsKey("frozen"))
-            currFrozenFrame = animations.get("frozen").getKeyFrame(frozenTimer, true);
-
+        String verticalStateString = verticalState.toString(),
+                horizontalStateString = horizontalState.toString();
+        if (frozen) {
+            verticalStateString = "frozen " + verticalStateString;
+            horizontalStateString = "frozen " + horizontalStateString;
+        }
         /*
          * if the character is grounded, we have to see if hes moving left or right or standing and change the animation accordingly
          * regardless of wether its flying or its grounded, the animation frame needs
@@ -102,12 +108,12 @@ public class ClientPlayerCharacter extends PlayerCharacter
          */
         switch (verticalState) {
             case GROUNDED:
-                if (animations.containsKey(horizontalState.toString()))
-                    currFrame = animations.get(horizontalState.toString()).getKeyFrame(passedTime, true);
+                if (animations.containsKey(horizontalStateString))
+                    currFrame = animations.get(horizontalStateString).getKeyFrame(passedTime, true);
                 break;
             case FLYING:
-                if (animations.containsKey(verticalState.toString()))
-                    currFrame = animations.get(verticalState.toString()).getKeyFrame(passedTime, false);
+                if (animations.containsKey(verticalStateString))
+                    currFrame = animations.get(verticalStateString).getKeyFrame(passedTime, false);
                 break;
         }
 

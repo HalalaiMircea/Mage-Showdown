@@ -40,8 +40,8 @@ public abstract class GameActor extends Actor {
         this.bodySize = bodySize;
         setOrigin(size.x / 2, size.y / 2);
         setRotation(rotation);
-        stage.addActor(this);
         animations = new HashMap<String, Animation<TextureRegion>>();
+        stage.addActor(this);
     }
 
     protected GameActor(Stage stage, Vector2 position, Vector2 size, Vector2 bodySize, float rotation) {
@@ -72,7 +72,7 @@ public abstract class GameActor extends Actor {
 
     protected void updatePositionFromBody() {
         Vector2 convPosition = GameWorld.convertWorldToPixels(body.getPosition());
-        setPosition(convPosition.x - bodySize.x / 2, convPosition.y - bodySize.y / 2);
+        setPosition(convPosition.x - getOriginX(), convPosition.y - getOriginY());
         setRotation(body.getAngle() * 180 / (float) Math.PI);
     }
 
@@ -163,8 +163,13 @@ public abstract class GameActor extends Actor {
 
     @Override
     public boolean remove() {
+        removeBody();
+        return super.remove();
+    }
+
+    protected void removeBody(){
         if (body != null)
             GameWorld.addToBodyRemovalQueue(body);
-        return super.remove();
+
     }
 }

@@ -37,7 +37,7 @@ public class ClientCollisionManager extends CollisionManager {
     @Override
     protected void handleProjectileCollision(FrostProjectile projectile, GameActor actor) {
         super.handleProjectileCollision(projectile, actor);
-        if (actor instanceof ClientPlayerCharacter && projectile.getOwnerId() != ((ClientPlayerCharacter) actor).getId())
+        if (actor instanceof ClientPlayerCharacter && projectile.getOwnerId() != ((ClientPlayerCharacter) actor).getId() && !projectile.hasCollided())
         {
             projectile.setCollided(true);
         }

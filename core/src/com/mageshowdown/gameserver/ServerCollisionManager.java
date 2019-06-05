@@ -30,7 +30,7 @@ public class ServerCollisionManager extends CollisionManager {
 
     private void handlePlayerSpellCollision(Spell spell, ServerPlayerCharacter player) {
         //a player cant damage itself so we check if the spell's owner id is the same as the player's it hit
-        if (player.getId() != spell.getOwnerId()) {
+        if (player.getId() != spell.getOwnerId() && !spell.hasCollided()) {
             Network.PlayerDead packet = new Network.PlayerDead();
             player.damageBy(spell.getDAMAGE_VALUE(), spell);
             spell.setCollided(true);
