@@ -67,6 +67,8 @@ public class MenuScreen implements Screen {
 
         stagePhase = StagePhase.MAIN_MENU_STAGE;
         Gdx.input.setInputProcessor(mainMenuStage);
+        ClientAssetLoader.menuMusic.setVolume(prefs.getFloat(PrefsKeys.MUSICVOLUME));
+        ClientAssetLoader.menuMusic.play();
     }
 
     @Override
@@ -101,6 +103,7 @@ public class MenuScreen implements Screen {
 
     @Override
     public void hide() {
+        ClientAssetLoader.menuMusic.stop();
         //hide method is called when we change to a new screen or before the Application exits
         this.dispose();
     }

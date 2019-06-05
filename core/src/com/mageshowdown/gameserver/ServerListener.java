@@ -21,7 +21,7 @@ public class ServerListener extends Listener {
 
     @Override
     public void connected(Connection connection) {
-        Gdx.app.error("connection_error", connection.getID() + " connected!");
+        Gdx.app.log("connection_event", connection.getID() + " connected!");
         myServer.sendToTCP(connection.getID(), new Network.LoginRequest());
     }
 

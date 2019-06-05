@@ -216,6 +216,8 @@ public class OptionsStage extends Stage {
                 super.touchUp(event, x, y, pointer, button);
                 prefs.putFloat(PrefsKeys.MUSICVOLUME, musicVolumeSlider.getValue());
                 prefs.flush();
+                ClientAssetLoader.gameplayMusic.setVolume(prefs.getFloat(PrefsKeys.MUSICVOLUME) * 0.5f);
+                ClientAssetLoader.menuMusic.setVolume(prefs.getFloat(PrefsKeys.MUSICVOLUME));
                 musicVolumeLabel.setText("Music: " + (int) (musicVolumeSlider.getPercent() * 100) + "%");
             }
 

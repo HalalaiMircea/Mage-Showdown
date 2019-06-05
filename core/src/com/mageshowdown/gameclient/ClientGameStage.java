@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mageshowdown.gamelogic.GameLevel;
 import com.mageshowdown.gamelogic.GameWorld;
 import com.mageshowdown.packets.Network;
@@ -24,11 +25,9 @@ public class ClientGameStage extends Stage {
 
     public ClientGameStage() {
         super();
-        setViewport(new StretchViewport(1280f, 720f, new OrthographicCamera(1280f, 720f)));
-        init();
-    }
+        Viewport viewport = new StretchViewport(1280f, 720f, new OrthographicCamera(getViewport().getScreenWidth(), getViewport().getScreenHeight()));
+        setViewport(viewport);
 
-    private void init() {
         b2dr = new Box2DDebugRenderer();
         gameLevel = new GameLevel(this);
         otherPlayers = new HashMap<Integer, ClientPlayerCharacter>();
@@ -114,9 +113,9 @@ public class ClientGameStage extends Stage {
         }
 
         //clear any leftover body in the box2d world
-        Array<Body> bodies=new Array<Body>();
+        Array<Body> bodies = new Array<Body>();
         GameWorld.world.getBodies(bodies);
-        for(Body body:bodies)
+        for (Body body : bodies)
             GameWorld.addToBodyRemovalQueue(body);
 
         while (GameWorld.world.getBodyCount() > 0) {

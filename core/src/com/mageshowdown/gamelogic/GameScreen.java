@@ -45,6 +45,10 @@ public class GameScreen implements Screen {
         roundEndStage = new RoundEndStage(viewport, batch);
 
         prepareEscMenu();
+
+        ClientAssetLoader.gameplayMusic.setVolume(prefs.getFloat(PrefsKeys.MUSICVOLUME) * 0.5f);
+        ClientAssetLoader.gameplayMusic.play();
+        ClientAssetLoader.gameplayMusic.setLooping(true);
     }
 
     public static GameScreen getInstance() {
@@ -112,7 +116,6 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
-
     }
 
     @Override
@@ -132,6 +135,7 @@ public class GameScreen implements Screen {
     @Override
     public void hide() {
         this.dispose();
+        ClientAssetLoader.gameplayMusic.stop();
     }
 
     @Override
