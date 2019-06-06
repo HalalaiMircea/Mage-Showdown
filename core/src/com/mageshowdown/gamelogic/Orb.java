@@ -191,13 +191,17 @@ public class Orb extends GameActor implements AnimatedActorInterface {
 
     @Override
     public boolean remove() {
+        removeCastSpells();
+        return super.remove();
+    }
+
+    public void removeCastSpells(){
         ListIterator<Spell> iterator = spells.listIterator();
         while (iterator.hasNext()) {
             Spell x = iterator.next();
             x.remove();
             iterator.remove();
         }
-        return super.remove();
     }
 
     public float getMaxCapacity() {

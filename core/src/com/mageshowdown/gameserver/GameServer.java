@@ -8,6 +8,7 @@ import com.esotericsoftware.kryonet.Server;
 import com.mageshowdown.gamelogic.GameWorld;
 import com.mageshowdown.gamelogic.Orb;
 import com.mageshowdown.packets.Network;
+import java.sql.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -97,7 +98,13 @@ public class GameServer extends Server {
     }
 
     public void registerRound(){
+        try {
+            java.sql.Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/player?useSSL=false", "root", "Cicoare2");
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
 
+        System.out.println("round registered");
     }
 
     public Vector2 generateSpawnPoint(int id){

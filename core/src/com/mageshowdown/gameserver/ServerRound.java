@@ -30,6 +30,10 @@ public class ServerRound extends Round {
     public void stop() {
         super.stop();
         mapsChanged=0;
+    }
+
+    @Override
+    protected void roundHasEnded() {
         GameServer.getInstance().registerRound();
     }
 

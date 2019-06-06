@@ -1,6 +1,8 @@
 package com.mageshowdown.gameclient;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.mageshowdown.gamelogic.GameScreen;
+import com.mageshowdown.gamelogic.Laser;
 import com.mageshowdown.gamelogic.Round;
 
 public class ClientRound extends Round {
@@ -14,6 +16,12 @@ public class ClientRound extends Round {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
+    }
+
+    @Override
+    protected void roundHasEnded() {
+        Laser.BurningEffect.clearBurningEffects();
+        GameScreen.getInstance().getGameStage().clearSpells();
     }
 
     public static ClientRound getInstance() {

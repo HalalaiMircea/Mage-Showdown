@@ -103,6 +103,11 @@ public abstract class PlayerCharacter extends DynamicGameActor {
         fireOrb.remove();
     }
 
+    public void removeCastSpells(){
+        frostOrb.removeCastSpells();
+        fireOrb.removeCastSpells();
+    }
+
     public void switchMyOrbs() {
         currentOrb.unequipOrb();
 

@@ -123,6 +123,12 @@ public class ClientGameStage extends Stage {
         }
     }
 
+    public void clearSpells(){
+        for(Integer key:getOtherPlayers().keySet()){
+            getOtherPlayers().get(key).removeCastSpells();
+        }
+    }
+
     public GameLevel getGameLevel() {
         return gameLevel;
     }
