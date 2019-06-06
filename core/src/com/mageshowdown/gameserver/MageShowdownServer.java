@@ -33,19 +33,21 @@ public class MageShowdownServer extends Game {
             gameStage.act();
         else ServerRound.getInstance().act(Gdx.graphics.getDeltaTime());
 
-        if (myServer.getUpdatePositions()) {
-            new UpdatePlayerPositions(gameStage);
-            timePassed = 0f;
-            myServer.setUpdatePositions(false);
-        } else {
-            if (timePassed >= 0.01f) {
+
+        if (myServer.getConnections().length > 0 && !ServerRound.getInstance().isFinished()) {
+            if (myServer.getUpdatePositions()) {
                 new UpdatePlayerPositions(gameStage);
                 timePassed = 0f;
+                myServer.setUpdatePositions(false);
             } else {
-                timePassed += Gdx.graphics.getDeltaTime();
+                if (timePassed >= 0.01f) {
+                    new UpdatePlayerPositions(gameStage);
+                    timePassed = 0f;
+                } else {
+                    timePassed += Gdx.graphics.getDeltaTime();
+                }
             }
         }
-
     }
 
     @Override

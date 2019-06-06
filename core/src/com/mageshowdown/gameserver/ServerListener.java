@@ -22,7 +22,13 @@ public class ServerListener extends Listener {
     @Override
     public void connected(Connection connection) {
         Gdx.app.log("connection_event", connection.getID() + " connected!");
-        myServer.sendToTCP(connection.getID(), new Network.LoginRequest());
+        Network.LoginRequest packet=new Network.LoginRequest();
+        if(ServerRound.getInstance().isFinished())
+        {
+            packet.isRoundOver=true;
+            packet.roundTimer=ServerRound.getInstance().getTimePassedRoundFinished();
+        }else packet.roundTimer=ServerRound.getInstance().getTimePassed();
+        myServer.sendToTCP(connection.getID(), packet);
     }
 
     @Override
@@ -55,7 +61,7 @@ public class ServerListener extends Listener {
              */
             Network.LoginRequest packet = (Network.LoginRequest) object;
 
-            if (myServer.getUserNameById(connection.getID()) != null)
+            if (myServer.isUserLoggedById(connection.getID()))
                 return;
 
             myServer.addUser(connection.getID(), packet.user);

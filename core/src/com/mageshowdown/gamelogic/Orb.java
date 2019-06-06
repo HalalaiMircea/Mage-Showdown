@@ -101,13 +101,14 @@ public class Orb extends GameActor implements AnimatedActorInterface {
         }
     }
 
-    public void castSpellProjectile(Vector2 direction, float rotation, int ownerId) {
+    public boolean castSpellProjectile(Vector2 direction, float rotation, int ownerId) {
         switch (spellType) {
             case FROST:
                 if (currentMana > spellCosts.get("freeze projectile")) {
                     spells.add(new FrostProjectile(getStage(), getStartPosition(rotation), rotation, direction, spells.size(), ownerId, CLIENT_ACTOR));
                     currentMana -= spellCosts.get("freeze projectile");
                     recharge = false;
+                    return true;
                 }
                 break;
             case FIRE:
@@ -115,18 +116,21 @@ public class Orb extends GameActor implements AnimatedActorInterface {
                     spells.add(new Laser(getStage(), getStartPosition(rotation), rotation, spells.size(), ownerId, CLIENT_ACTOR));
                     currentMana -= spellCosts.get("laser");
                     recharge = false;
+                    return true;
                 }
                 break;
         }
+        return false;
     }
 
-    public void castBomb(Vector2 position, int ownerId) {
+    public boolean castBomb(Vector2 position, int ownerId) {
         switch (spellType) {
             case FROST:
                 if (currentMana > spellCosts.get("freeze bomb")) {
                     spells.add(new Bomb(getStage(), position, 0, spells.size(), ownerId, spellType, CLIENT_ACTOR));
                     currentMana -= spellCosts.get("freeze bomb");
                     recharge = false;
+                    return true;
                 }
                 break;
             case FIRE:
@@ -134,9 +138,11 @@ public class Orb extends GameActor implements AnimatedActorInterface {
                     spells.add(new Bomb(getStage(), position, 0, spells.size(), ownerId, spellType,CLIENT_ACTOR));
                     currentMana -= spellCosts.get("fire bomb");
                     recharge = false;
+                    return true;
                 }
                 break;
         }
+        return false;
     }
 
     private void rechargeOrb() {

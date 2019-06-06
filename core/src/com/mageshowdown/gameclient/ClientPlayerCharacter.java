@@ -53,14 +53,14 @@ public class ClientPlayerCharacter extends PlayerCharacter
             addAnimation(8, 1, 1f, "running", ClientAssetLoader.friendlyRunningSpritesheet);
             addAnimation(4, 1, 1.2f, "frozen idle", ClientAssetLoader.frozenFriendlyIdleSpritesheet);
             addAnimation(2, 1, .8f, "frozen jumping", ClientAssetLoader.frozenFriendlyJumpingSpritesheet);
-            addAnimation(8, 1, 1f, "frozen running", ClientAssetLoader.frozenFriendlyRunningSpritesheet);
+            addAnimation(8, 1, 2f, "frozen running", ClientAssetLoader.frozenFriendlyRunningSpritesheet);
         } else {
             addAnimation(4, 1, 1.2f, "idle", ClientAssetLoader.enemyIdleSpritesheet);
             addAnimation(2, 1, .8f, "jumping", ClientAssetLoader.enemyJumpingSpritesheet);
             addAnimation(8, 1, 1f, "running", ClientAssetLoader.enemyRunningSpritesheet);
             addAnimation(4, 1, 1.2f, "frozen idle", ClientAssetLoader.frozenEnemyIdleSpritesheet);
             addAnimation(2, 1, .8f, "frozen jumping", ClientAssetLoader.frozenEnemyJumpingSpritesheet);
-            addAnimation(8, 1, 1f, "frozen running", ClientAssetLoader.frozenEnemyRunningSpritesheet);
+            addAnimation(8, 1, 2f, "frozen running", ClientAssetLoader.frozenEnemyRunningSpritesheet);
         }
 
         addAnimation(5, 4, 2f, "energy shield", ClientAssetLoader.energyShieldSpritesheet);
@@ -198,14 +198,17 @@ public class ClientPlayerCharacter extends PlayerCharacter
         CastSpellProjectile packet = new CastSpellProjectile();
         float rotation = GameWorld.getMouseVectorAngle(new Vector2(currentOrb.getX() + currentOrb.getOriginX(), currentOrb.getY() + currentOrb.getOriginY()));
         Vector2 direction = new Vector2((float) Math.cos(rotation * Math.PI / 180), (float) Math.sin(rotation * Math.PI / 180));
-        if (currentOrb.getSpellType() == Orb.SpellType.FROST)
-            hasJustCastFrostProjectile();
-        else hasJustCastLaser();
+
 
         packet.id = myClient.getID();
         packet.rot = rotation;
         myClient.sendTCP(packet);
-        currentOrb.castSpellProjectile(direction, rotation, myClient.getID());
+
+        if (currentOrb.castSpellProjectile(direction, rotation, myClient.getID())) {
+            if (currentOrb.getSpellType() == Orb.SpellType.FROST)
+                hasJustCastFrostProjectile();
+            else hasJustCastLaser();
+        }
 
         castSpellProjectile = false;
     }
@@ -213,14 +216,15 @@ public class ClientPlayerCharacter extends PlayerCharacter
     //when casting a bomb we only want the position of the mouse
     public void castMyBomb() {
         Network.CastBomb packet = new Network.CastBomb();
-        if (currentOrb.getSpellType() == Orb.SpellType.FROST)
-            hasJustCastFrostBomb();
-        else hasJustCastFireBomb();
 
         packet.id = myClient.getID();
         packet.pos = GameWorld.getMousePos(new Vector2(95, 95));
         myClient.sendTCP(packet);
-        currentOrb.castBomb(packet.pos, myClient.getID());
+
+        if (currentOrb.castBomb(packet.pos, myClient.getID()))
+            if (currentOrb.getSpellType() == Orb.SpellType.FROST)
+                hasJustCastFrostBomb();
+            else hasJustCastFireBomb();
 
         castBomb = false;
     }

@@ -40,7 +40,7 @@ public abstract class GameActor extends Actor {
         this.bodySize = bodySize;
         setOrigin(size.x / 2, size.y / 2);
         setRotation(rotation);
-        animations = new HashMap<String, Animation<TextureRegion>>();
+        animations = new HashMap<>();
         stage.addActor(this);
     }
 

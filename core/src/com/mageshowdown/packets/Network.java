@@ -55,6 +55,8 @@ public class Network {
 
     public static class LoginRequest{
         public String user;
+        public boolean isRoundOver;
+        public float roundTimer;
     }
 
     public static class NewPlayerSpawned{

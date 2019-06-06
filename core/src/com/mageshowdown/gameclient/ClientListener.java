@@ -33,6 +33,17 @@ public class ClientListener extends Listener {
     private void handleLoginServerRequest(Connection connection, Object object) {
         if (object instanceof Network.LoginRequest && !myClient.isLogged()) {
             Network.LoginRequest packet = ((Network.LoginRequest) object);
+
+            //we want to be sure the round timers are synchronized when the game starts
+            if(packet.isRoundOver)
+            {
+                ClientRound.getInstance().stop();
+                ClientRound.getInstance().setTimePassedRoundFinished(packet.roundTimer);
+            }else{
+                ClientRound.getInstance().start();
+                ClientRound.getInstance().setTimePassed(packet.roundTimer);
+            }
+
             Gdx.app.log("connection_event", "received login request!");
             packet.user = myClient.getUserName();
             myClient.setLogged(true);
@@ -83,7 +94,6 @@ public class ClientListener extends Listener {
             if (connection.getID() == packet.id) {
                 if (GameScreen.getGameStage().getPlayerCharacter() != null)
                     return;
-                Gdx.app.log("game_event", "spwaning myself");
                 GameScreen.getGameStage().spawnMyPlayerCharacter(packet);
                 GameScreen.getGameStage().getPlayerCharacter().setMyPlayer(true);
                 GameScreen.getGameStage().getPlayerCharacter().setId(packet.id);

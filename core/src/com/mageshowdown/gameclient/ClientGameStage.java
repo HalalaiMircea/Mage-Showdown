@@ -84,7 +84,8 @@ public class ClientGameStage extends Stage {
     }
 
     public void removeMyCharacter() {
-        playerCharacter.remove();
+        if(playerCharacter!=null)
+            playerCharacter.remove();
     }
 
     public void spawnMyPlayerCharacter(Network.NewPlayerSpawned packet) {
@@ -93,7 +94,6 @@ public class ClientGameStage extends Stage {
 
         Gdx.input.setInputProcessor(playerCharacter);
 
-        ClientRound.getInstance().start();
         addActor(ClientRound.getInstance());
     }
 
@@ -127,6 +127,8 @@ public class ClientGameStage extends Stage {
         for(Integer key:getOtherPlayers().keySet()){
             getOtherPlayers().get(key).removeCastSpells();
         }
+        if(playerCharacter!=null)
+            playerCharacter.removeCastSpells();
     }
 
     public GameLevel getGameLevel() {

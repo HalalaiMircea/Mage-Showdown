@@ -134,3 +134,12 @@ Thumbs.db
 \.idea/vcs\.xml
 
 \.idea/misc\.xml
+.idea/compiler.xml
+.idea/misc.xml
+.idea/modules/core/core.iml
+.idea/modules/core/core_main.iml
+.idea/modules/core/core_test.iml
+.idea/modules/desktop/desktop.iml
+.idea/modules/desktop/desktop_main.iml
+.idea/modules/desktop/desktop_test.iml
+.idea/modules/Mage-Showdown.iml

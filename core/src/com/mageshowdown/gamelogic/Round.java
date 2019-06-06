@@ -6,7 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 public abstract class Round extends Actor {
 
     protected static final float TIME_BETWEEN_ROUNDS = 10f;
-    protected static final float ROUND_LENGTH = 10f;
+    protected static final float ROUND_LENGTH = 35f;
 
     protected boolean finished = false;
     protected boolean started = false;
@@ -78,5 +78,9 @@ public abstract class Round extends Actor {
 
     public float getROUND_LENGTH() {
         return ROUND_LENGTH;
+    }
+
+    public void setTimePassedRoundFinished(float timePassedRoundFinished) {
+        this.timePassedRoundFinished = timePassedRoundFinished;
     }
 }

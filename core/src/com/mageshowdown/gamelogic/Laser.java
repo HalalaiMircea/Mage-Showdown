@@ -8,15 +8,6 @@ import com.mageshowdown.gameclient.ClientAssetLoader;
 import java.util.LinkedList;
 
 public class Laser extends Spell implements AnimatedActorInterface {
-
-    private static final float DURATION = .25f;
-    //the number of burning effects on screen
-    private static int nr;
-
-    static {
-        nr = 0;
-    }
-
     public static class BurningEffect extends GameActor implements AnimatedActorInterface {
         private static LinkedList<BurningEffect> burningEffects;
 
@@ -26,7 +17,6 @@ public class Laser extends Spell implements AnimatedActorInterface {
 
         private BurningEffect(Stage stage, Vector2 position, boolean isClient) {
             super(stage, new Vector2(position.x, position.y), new Vector2(15, 23), new Vector2(0, 0), 0, new Vector2(2f, 2f), isClient);
-            nr++;
             if (CLIENT_ACTOR)
                 addAnimation(4, 3, 2f, "idle", ClientAssetLoader.burningSpritesheet);
             burningEffects.add(this);
@@ -38,12 +28,6 @@ public class Laser extends Spell implements AnimatedActorInterface {
             if (passedTime >= 5.0f)
                 remove();
             pickFrame();
-        }
-
-        @Override
-        public boolean remove() {
-            nr--;
-            return super.remove();
         }
 
         @Override
@@ -59,10 +43,11 @@ public class Laser extends Spell implements AnimatedActorInterface {
         }
 
         public static int getNrOfBurningEffects() {
-            return nr;
+            return burningEffects.size();
         }
 
     }
+    private static final float DURATION = .25f;
 
     public Laser(Stage stage, Vector2 position, float rotation, int id, int ownerId, boolean isClient) {
         super(stage, new Vector2(0.001f, 0.001f), position, new Vector2(220, 31), new Vector2(1.5f, 1.2f), new Vector2(325, 15), rotation, id, ownerId, 2, isClient);
@@ -99,7 +84,6 @@ public class Laser extends Spell implements AnimatedActorInterface {
     }
 
     public void createBurningEffect(Vector2 position) {
-        System.out.println(position);
         new BurningEffect(getStage(), position, CLIENT_ACTOR);
     }
 }

@@ -8,40 +8,70 @@ import com.esotericsoftware.kryonet.Server;
 import com.mageshowdown.gamelogic.GameWorld;
 import com.mageshowdown.gamelogic.Orb;
 import com.mageshowdown.packets.Network;
+
+import java.io.*;
 import java.sql.*;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Random;
+import java.util.*;
 
 public class GameServer extends Server {
+    private class Player {
+        String username;
+        int score;
+        int kills;
 
-    private static GameServer instance=new GameServer();
+        Player(String username, int score, int kills) {
+            this.score = score;
+            this.kills = kills;
+            this.username = username;
+        }
 
-    private final int NUMBER_OF_MAPS=3;
+        public String getUsername() {
+            return username;
+        }
+
+        public int getKills() {
+            return kills;
+        }
+
+        public int getScore() {
+            return score;
+        }
+
+        public void setKills(int kills) {
+            this.kills = kills;
+        }
+
+        public void setScore(int score) {
+            this.score = score;
+        }
+    }
+
+    private static GameServer instance = new GameServer();
+
+    private final int NUMBER_OF_MAPS = 3;
     //a hashmap where the values are the usernames and the keys the id's of the players
-    private HashMap<Integer,String> users;
-    private boolean updatePositions=false;
+    private HashMap<Integer, Player> users;
+    private boolean updatePositions = false;
     private ServerGameStage gameStage;
 
-    private GameServer(){
+    private GameServer() {
         super();
         registerClasses();
-        users=new HashMap<Integer, String>();
+        users = new HashMap<>();
     }
 
 
     @Override
-    public void bind(int tcpPort, int udpPort){
-        try{
+    public void bind(int tcpPort, int udpPort) {
+        try {
             super.bind(tcpPort, udpPort);
-        }catch(IOException e){
+        } catch (IOException e) {
             Gdx.app.error("start_error", "Couldnt start to the server");
         }
     }
 
-    private void registerClasses(){
+    private void registerClasses() {
         Kryo kryo = getKryo();
         kryo.register(Network.OneCharacterState.class);
         kryo.register(Network.CharacterStates.class);
@@ -62,80 +92,117 @@ public class GameServer extends Server {
         kryo.register(Orb.SpellType.class);
     }
 
-    public void sendMapChange(int nr){
-        Network.CurrentMap mapToBeSent=new Network.CurrentMap();
-        mapToBeSent.nr=nr;
+    public void sendMapChange(int nr) {
+        Network.CurrentMap mapToBeSent = new Network.CurrentMap();
+        mapToBeSent.nr = nr;
         gameStage.getGameLevel().setMapServer(nr);
         gameStage.getGameLevel().changeLevel();
 
-        for(Connection x:getConnections()){
+        for (Connection x : getConnections()) {
             gameStage.getPlayerById(x.getID()).setQueuedPos(generateSpawnPoint(x.getID()));
         }
 
         GameServer.getInstance().sendToAllTCP(mapToBeSent);
     }
 
-    public int getARandomMap(){
+    public int getARandomMap() {
         //we want the next map to always be different so we pick a random one, but were careful not to pick the current one
         int nextMap;
 
-        do{
-            nextMap=(new Random().nextInt(NUMBER_OF_MAPS))+1;
+        do {
+            nextMap = (new Random().nextInt(NUMBER_OF_MAPS)) + 1;
         }
-        while(nextMap==getGameStage().getGameLevel().getMapNr());
+        while (nextMap == getGameStage().getGameLevel().getMapNr());
 
         return nextMap;
     }
 
-    public void startRound(){
-        for(Connection x:getConnections()){
-            ServerPlayerCharacter pc=gameStage.getPlayerById(x.getID());
+    //register the scores of the players who stayed until the end of the round
+    public void registerRound() {
+        ArrayList<Player> players = getPlayerFromLeaderboard();
+        try (PrintWriter writer = new PrintWriter(new File("leaderboard.txt"))) {
+            System.out.println(players.size());
 
-            pc.setQueuedPos(generateSpawnPoint(x.getID()));
-            pc.setHealth(15);
-            pc.setScore(0);
-        }
-    }
-
-    public void registerRound(){
-        try {
-            java.sql.Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/player?useSSL=false", "root", "Cicoare2");
-        }catch(SQLException e){
+            for (Connection connection : getConnections()) {
+                ServerPlayerCharacter playerCharacter = gameStage.getPlayerById(connection.getID());
+                boolean register = true;
+                //if the player was already on the leaderboard he only gets his score and kill count updated in case they are bigger
+                for (Player player : players) {
+                    System.out.println(player.getUsername()+" "+playerCharacter.getName());
+                    if (player.getUsername().equals(getUserNameById(playerCharacter.getId()))) {
+                        register = false;
+                        if (player.getScore() > playerCharacter.getScore()) {
+                            player.setScore(playerCharacter.getScore());
+                            player.setKills(playerCharacter.getKills());
+                        }
+                        break;
+                    }
+                }
+                if (register)
+                    players.add(new Player(getUsers().get(connection.getID()).getUsername(), playerCharacter.getScore(), playerCharacter.getKills()));
+            }
+            Collections.sort(players, Comparator.comparing(Player::getScore));
+            for (Player player : players) {
+                writer.printf("%s %d %d%n", player.getUsername(), player.getScore(), player.getKills());
+            }
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
 
-        System.out.println("round registered");
+        Gdx.app.log("game_event", "round registered");
     }
 
-    public Vector2 generateSpawnPoint(int id){
-        ArrayList<Vector2> spawnPoints=gameStage.getGameLevel().getSpawnPoints();
-        Vector2 spawnPoint=new Vector2(spawnPoints.get(new Random().nextInt(spawnPoints.size())));
+    //read the players and their scores from the file
+    private ArrayList<Player> getPlayerFromLeaderboard() {
+        ArrayList<Player> players = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(new File("leaderboard.txt")))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println("yo");
+                String[] elements = line.split(" ");
+                players.add(new Player(elements[0], Integer.parseInt(elements[1]), Integer.parseInt(elements[2])));
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return players;
+    }
+
+    public Vector2 generateSpawnPoint(int id) {
+        ArrayList<Vector2> spawnPoints = gameStage.getGameLevel().getSpawnPoints();
+        Vector2 spawnPoint = new Vector2(spawnPoints.get(new Random().nextInt(spawnPoints.size())));
 
         //before we change the body's position to a spawn point it needs to be converted to box2d coordinates
         return GameWorld.convertPixelsToWorld(spawnPoint);
     }
 
-    public HashMap<Integer, String> getUsers() {
+    public HashMap<Integer, Player> getUsers() {
         return users;
     }
 
-    public void addUser(int id, String userName){
-        users.put(id, userName);
+    public void addUser(int id, String userName) {
+        users.put(id, new Player(userName, 0, 0));
     }
 
-    public void removeUser(int id){
+    public void removeUser(int id) {
         users.remove(id);
     }
 
-    public String getUserNameById(int id){
-        return users.get(id);
+    public String getUserNameById(int id) {
+        return users.get(id).getUsername();
+    }
+
+    public boolean isUserLoggedById(int id) {
+        return users.containsKey(id);
     }
 
     public void setUpdatePositions(boolean updatePositions) {
         this.updatePositions = updatePositions;
     }
 
-    public boolean getUpdatePositions(){
+    public boolean getUpdatePositions() {
         return updatePositions;
     }
 

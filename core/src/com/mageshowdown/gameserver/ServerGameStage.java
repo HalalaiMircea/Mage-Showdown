@@ -86,4 +86,14 @@ public class ServerGameStage extends Stage {
             GameServer.getInstance().sendMapChange(3);
         }
     }
+
+    public void clearSpells(){
+        for(Integer key:playerCharacters.keySet()){
+            getPlayerById(key).removeCastSpells();
+        }
+    }
+
+    public int getPlayerCount(){
+        return playerCharacters.size();
+    }
 }
