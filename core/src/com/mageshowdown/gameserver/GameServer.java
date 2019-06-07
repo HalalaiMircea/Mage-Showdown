@@ -158,7 +158,6 @@ public class GameServer extends Server {
         try (BufferedReader reader = new BufferedReader(new FileReader(new File("leaderboard.txt")))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                System.out.println("yo");
                 String[] elements = line.split(" ");
                 players.add(new Player(elements[0], Integer.parseInt(elements[1]), Integer.parseInt(elements[2])));
             }

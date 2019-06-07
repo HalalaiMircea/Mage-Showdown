@@ -48,12 +48,14 @@ public class ServerPlayerCharacter extends PlayerCharacter {
             case Input.Keys.W:
                 if(body.getLinearVelocity().y<0.01f && body.getLinearVelocity().y>-0.01f)
                     body.applyLinearImpulse(new Vector2(body.getLinearVelocity().x,.5f),body.getPosition(),false);
-                    break;
+                break;
             default:
                 /*
                 * if the value isnt one of the keys that makes an action,
                 * the body wont be moving horizontally
                  */
+                if(velocity==null)
+                    return;
                 velocity.x=0;
                 break;
         }

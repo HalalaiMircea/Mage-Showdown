@@ -50,7 +50,7 @@ public class MainSceneController implements Initializable {
     @FXML
     void configBtnClicked(ActionEvent actionEvent) throws IOException {
         DesktopClientLauncher.mainStage.setScene(new Scene((Parent) FXMLLoader.load(new URL("file", "localhost",
-                "../../desktop/src/com/mageshowdown/desktop/resources/ConfigScene.fxml"))));
+                "../../core/assets/resources/ConfigScene.fxml"))));
     }
 
     @FXML

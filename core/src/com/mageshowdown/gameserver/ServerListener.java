@@ -86,6 +86,8 @@ public class ServerListener extends Listener {
              */
             for (Connection con : myServer.getConnections()) {
                 if (con.getID() != connection.getID()) {
+                    if(gameStage.getPlayerById(con.getID())==null)
+                        continue;
                     toBeSent.userName = myServer.getUserNameById(con.getID());
                     toBeSent.id = con.getID();
                     toBeSent.pos = GameWorld.convertPixelsToWorld(gameStage.getPlayerById(con.getID()).getBody().getPosition());

@@ -30,7 +30,7 @@ public class DesktopClientLauncher extends Application {
         mainStage.setResizable(false);
 
         mainScene = new Scene((Parent) FXMLLoader.load(new URL("file", "localhost",
-                "../../desktop/src/com/mageshowdown/desktop/resources/MainScene.fxml")));
+                "../../core/assets/resources/MainScene.fxml")));
 
         mainStage.setScene(mainScene);
         mainStage.show();
