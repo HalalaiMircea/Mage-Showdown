@@ -1,5 +1,6 @@
 package com.mageshowdown.desktop;
 
+import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl.LwjglFrame;
 import com.mageshowdown.gameserver.MageShowdownServer;
@@ -10,14 +11,12 @@ import javax.swing.*;
 public class DesktopServerLauncher {
 
     public static void main(String[] arg) {
-        //LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+        LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 
-        //config.allowSoftwareMode = true;
-        //config.width = 320;
-        //config.height = 320;
+        config.allowSoftwareMode = true;
+        config.width = 320;
+        config.height = 320;
 
-        //new LwjglApplication(new MageShowdownServer(), config);
-        LwjglFrame kkt = new LwjglFrame(new MageShowdownServer(), "Mage Dedicated Server", 300, 300);
-        kkt.add(new JButton("INTERFATA GRAFICA PT SERVER WOW!!!"));
+        new LwjglApplication(new MageShowdownServer(), config);
     }
 }

@@ -44,8 +44,8 @@ public class ClientCollisionManager extends CollisionManager {
     }
 
     private void handleLaserCollision(Laser laser, Vector2[] contactLocations) {
-        for (Vector2 contactLocation : contactLocations)
-            laser.createBurningEffect(GameWorld.convertWorldToPixels(contactLocation));
+        //for (Vector2 contactLocation : contactLocations)
+        laser.createBurningEffect(GameWorld.convertWorldToPixels(contactLocations[0]));
     }
 
 }

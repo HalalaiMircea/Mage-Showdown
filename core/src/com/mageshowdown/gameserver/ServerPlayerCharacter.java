@@ -22,7 +22,7 @@ public class ServerPlayerCharacter extends PlayerCharacter {
     private float shieldRegenTimer=0f;
     private boolean regenShield=true;
 
-    private final float DMG_IMMUNE_DURATION =.80f;
+    private final float DMG_IMMUNE_DURATION =.75f;
     private float dmgImmuneTimer=0f;
 
     private final float FREEZE_SLOWING_FACTOR=.5f;

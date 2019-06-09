@@ -37,10 +37,10 @@ public class Orb extends GameActor implements AnimatedActorInterface {
 
     static {
         spellCosts = new HashMap<String, Float>();
-        spellCosts.put("freeze projectile", 2f);
-        spellCosts.put("laser", 1f);
-        spellCosts.put("freeze bomb", 6f);
-        spellCosts.put("fire bomb", 8f);
+        spellCosts.put("freeze projectile", 4f);
+        spellCosts.put("laser", 3f);
+        spellCosts.put("freeze bomb", 8f);
+        spellCosts.put("fire bomb", 6f);
     }
 
     public Orb(Stage stage, SpellType spellType, float cd, int capacity, boolean isClient) {

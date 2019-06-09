@@ -27,7 +27,7 @@ public class ServerRound extends Round {
         }
     }
 
-    private static ServerRound instance = new ServerRound(25f);
+    private static ServerRound instance = new ServerRound(45f);
 
 
     private float mapChangeInterval;

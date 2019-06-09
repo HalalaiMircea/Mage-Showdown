@@ -34,8 +34,8 @@ public abstract class PlayerCharacter extends DynamicGameActor {
         createBody(new Vector2(bodySize.x / 2, bodySize.y / 2), BodyDef.BodyType.DynamicBody);
         gameStage = stage;
 
-        frostOrb = new Orb(stage, Orb.SpellType.FROST, 1.5f, 25, isClient);
-        fireOrb = new Orb(stage, Orb.SpellType.FIRE, 1.5f, 25, isClient);
+        frostOrb = new Orb(stage, Orb.SpellType.FROST, 1.5f, 32, isClient);
+        fireOrb = new Orb(stage, Orb.SpellType.FIRE, 1.5f, 32, isClient);
 
         frostOrb.remove();
         fireOrb.remove();
