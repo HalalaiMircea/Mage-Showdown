@@ -141,7 +141,7 @@ public class GameServer extends Server {
                 if (register)
                     players.add(new Player(getUsers().get(connection.getID()).getUsername(), playerCharacter.getScore(), playerCharacter.getKills()));
             }
-            Collections.sort(players, Comparator.comparing(Player::getScore));
+            players.sort(Comparator.comparing(Player::getScore));
             for (Player player : players) {
                 writer.printf("%s %d %d%n", player.getUsername(), player.getScore(), player.getKills());
             }

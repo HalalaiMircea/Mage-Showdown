@@ -1,5 +1,6 @@
 package com.mageshowdown.gameclient;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -31,6 +32,9 @@ public class MageShowdownClient extends Game {
 
     @Override
     public void create() {
+        //Here we specify if we want to display logs in the console
+        Gdx.app.setLogLevel(Application.LOG_DEBUG);
+
         GameWorld.updateResolutionScale();
         ClientAssetLoader.getInstance().loadLoadingScreen();
 

@@ -13,13 +13,12 @@ import com.mageshowdown.gamelogic.GameWorld;
 import com.mageshowdown.packets.Network;
 
 import java.util.HashMap;
-import java.util.TreeMap;
 
 public class ClientGameStage extends Stage {
     private GameLevel gameLevel;
     private ClientPlayerCharacter playerCharacter;
     private HashMap<Integer, ClientPlayerCharacter> otherPlayers;
-    private TreeMap<Integer, ClientPlayerCharacter> sortedPlayers;
+    private Array<ClientPlayerCharacter> sortedPlayers;
 
     private Box2DDebugRenderer b2dr;
 
@@ -30,8 +29,8 @@ public class ClientGameStage extends Stage {
 
         b2dr = new Box2DDebugRenderer();
         gameLevel = new GameLevel(this);
-        otherPlayers = new HashMap<Integer, ClientPlayerCharacter>();
-        sortedPlayers = new TreeMap<Integer, ClientPlayerCharacter>();
+        otherPlayers = new HashMap<>();
+        sortedPlayers = new Array<>(2);
     }
 
     @Override
@@ -71,26 +70,29 @@ public class ClientGameStage extends Stage {
         return otherPlayers;
     }
 
-    public TreeMap<Integer, ClientPlayerCharacter> getSortedPlayers() {
+    public Array<ClientPlayerCharacter> getSortedPlayers() {
         return sortedPlayers;
     }
 
     public void removePlayerCharacter(int connectionId) {
         if (otherPlayers.get(connectionId) != null) {
-            sortedPlayers.remove(connectionId);
+            sortedPlayers.removeValue(otherPlayers.get(connectionId), false);
             otherPlayers.get(connectionId).remove();
             otherPlayers.remove(connectionId);
         }
     }
 
     public void removeMyCharacter() {
-        if(playerCharacter!=null)
+        if (playerCharacter != null) {
             playerCharacter.remove();
+            //sortedPlayers.remove(playerCharacter);
+            sortedPlayers.clear();
+        }
     }
 
     public void spawnMyPlayerCharacter(Network.NewPlayerSpawned packet) {
         playerCharacter = new ClientPlayerCharacter(this, packet.pos, packet.orbEquipped, packet.userName, true);
-        sortedPlayers.put(playerCharacter.getId(), playerCharacter);
+        sortedPlayers.add(playerCharacter);
 
         Gdx.input.setInputProcessor(playerCharacter);
 
@@ -101,7 +103,7 @@ public class ClientGameStage extends Stage {
         ClientPlayerCharacter temp = new ClientPlayerCharacter(this, packet.pos, packet.orbEquipped, packet.userName, false);
         temp.setId(packet.id);
         otherPlayers.put(packet.id, temp);
-        sortedPlayers.put(packet.id, temp);
+        sortedPlayers.add(temp);
     }
 
     @Override
@@ -123,11 +125,11 @@ public class ClientGameStage extends Stage {
         }
     }
 
-    public void clearSpells(){
-        for(Integer key:getOtherPlayers().keySet()){
+    public void clearSpells() {
+        for (Integer key : getOtherPlayers().keySet()) {
             getOtherPlayers().get(key).removeCastSpells();
         }
-        if(playerCharacter!=null)
+        if (playerCharacter != null)
             playerCharacter.removeCastSpells();
     }
 

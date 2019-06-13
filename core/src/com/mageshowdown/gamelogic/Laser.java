@@ -7,8 +7,8 @@ import com.mageshowdown.gameclient.ClientAssetLoader;
 
 import java.util.LinkedList;
 
-public class Laser extends Spell implements AnimatedActorInterface {
-    public static class BurningEffect extends GameActor implements AnimatedActorInterface {
+public class Laser extends Spell implements AnimatedActor {
+    public static class BurningEffect extends GameActor implements AnimatedActor {
         private static LinkedList<BurningEffect> burningEffects;
 
         static {

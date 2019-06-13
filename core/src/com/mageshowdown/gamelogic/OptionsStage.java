@@ -81,9 +81,9 @@ public class OptionsStage extends Stage {
         Label resLabel = new Label("Resolution", uiSkin, "menu-label");
         Label displayModeLabel = new Label("Display Mode", uiSkin, "menu-label");
         Label refreshLabel = new Label("Refresh Rate", uiSkin, "menu-label");
-        resSelectBox = new SelectBox<String>(uiSkin);
-        modeSelectBox = new SelectBox<String>(uiSkin);
-        refreshSelectBox = new SelectBox<Integer>(uiSkin);
+        resSelectBox = new SelectBox<>(uiSkin);
+        modeSelectBox = new SelectBox<>(uiSkin);
+        refreshSelectBox = new SelectBox<>(uiSkin);
         vsyncCheckBox = new TextButton("", uiSkin);
         showFPSCheckBox = new TextButton("", uiSkin);
 
@@ -120,16 +120,16 @@ public class OptionsStage extends Stage {
     }
 
     private void setupWidgetData() {
-        Array<Graphics.DisplayMode> optimalDisplayModes = new Array<Graphics.DisplayMode>();
+        Array<Graphics.DisplayMode> optimalDisplayModes = new Array<>();
         for (Graphics.DisplayMode each : displayModes) {
             float aspectNum = ((float) each.width / (float) each.height) * 9f;
             if (each.width >= 1280 && each.height >= 720 && aspectNum >= 15.9f && aspectNum <= 16.1f)
                 optimalDisplayModes.add(each);
         }
-        TreeSet<String> resSet = new TreeSet<String>();
-        TreeSet<Integer> refreshSet = new TreeSet<Integer>();
-        Array<String> resArray = new Array<String>();
-        Array<Integer> refreshArray = new Array<Integer>();
+        TreeSet<String> resSet = new TreeSet<>();
+        TreeSet<Integer> refreshSet = new TreeSet<>();
+        Array<String> resArray = new Array<>();
+        Array<Integer> refreshArray = new Array<>();
         for (Graphics.DisplayMode each : optimalDisplayModes) {
             resSet.add(each.width + "x" + each.height);
             refreshSet.add(each.refreshRate);

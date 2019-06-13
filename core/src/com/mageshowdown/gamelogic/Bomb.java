@@ -9,7 +9,7 @@ import com.mageshowdown.utils.PrefsKeys;
 
 import static com.mageshowdown.gameclient.ClientAssetLoader.prefs;
 
-public class Bomb extends Spell implements AnimatedActorInterface {
+public class Bomb extends Spell implements AnimatedActor {
 
     private final float duration;
     private Orb.SpellType spellType;

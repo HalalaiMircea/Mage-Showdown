@@ -19,7 +19,7 @@ public class ClientRound extends Round {
         public void run() {
             super.run();
             Laser.BurningEffect.clearBurningEffects();
-            GameScreen.getInstance().getGameStage().clearSpells();
+            GameScreen.getGameStage().clearSpells();
         }
     }
 

@@ -45,11 +45,12 @@ public class ScoreboardStage extends Stage {
             playerNames.clear();
             playerKills.clear();
             playerScore.clear();
-            for (Map.Entry<Integer, ClientPlayerCharacter> each : gameStage.getSortedPlayers().entrySet()) {
-                playerNames.add(each.getValue().getUserName());
-                playerKills.add(each.getValue().getKills());
-                playerScore.add(each.getValue().getScore());
+            for (ClientPlayerCharacter player : gameStage.getSortedPlayers()) {
+                playerNames.add(player.getUserName());
+                playerKills.add(player.getKills());
+                playerScore.add(player.getScore());
             }
+            gameStage.getSortedPlayers().sort((o1, o2) -> Integer.compare(o2.getScore(), o1.getScore()));
             nameListWidget.setItems(playerNames);
             killsListWidget.setItems(playerKills);
             scoreListWidget.setItems(playerScore);

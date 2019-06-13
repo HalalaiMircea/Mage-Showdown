@@ -1,6 +1,6 @@
 package com.mageshowdown.gamelogic;
 
 
-public interface AnimatedActorInterface {
+public interface AnimatedActor {
     void pickFrame();
 }

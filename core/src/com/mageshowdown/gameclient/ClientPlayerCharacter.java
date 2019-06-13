@@ -6,7 +6,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.mageshowdown.gamelogic.AnimatedActorInterface;
+import com.mageshowdown.gamelogic.AnimatedActor;
 import com.mageshowdown.gamelogic.GameWorld;
 import com.mageshowdown.gamelogic.Orb;
 import com.mageshowdown.gamelogic.PlayerCharacter;
@@ -17,13 +17,13 @@ import com.mageshowdown.packets.Network.MoveKeyDown;
 import com.mageshowdown.packets.Network.SwitchOrbs;
 import com.mageshowdown.utils.PrefsKeys;
 
-import java.util.Comparator;
+import java.util.Objects;
 import java.util.Random;
 
 import static com.mageshowdown.gameclient.ClientAssetLoader.prefs;
 
 public class ClientPlayerCharacter extends PlayerCharacter
-        implements AnimatedActorInterface, Comparator<ClientPlayerCharacter>, InputProcessor {
+        implements AnimatedActor, InputProcessor {
 
     private GameClient myClient = GameClient.getInstance();
 
@@ -230,26 +230,16 @@ public class ClientPlayerCharacter extends PlayerCharacter
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ClientPlayerCharacter that = (ClientPlayerCharacter) o;
+        return id == that.id;
+    }
+
+    @Override
     public int hashCode() {
-        return id;
-    }
-
-    @Override
-    public int compare(ClientPlayerCharacter o1, ClientPlayerCharacter o2) {
-        if (o1.score < o2.score)
-            return -1;
-        else if (o1.score == o2.score)
-            return 0;
-        else return 1;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof ClientPlayerCharacter) {
-            ClientPlayerCharacter temp = (ClientPlayerCharacter) obj;
-            return temp.id == this.id;
-        }
-        return false;
+        return Objects.hash(id);
     }
 
     @Override

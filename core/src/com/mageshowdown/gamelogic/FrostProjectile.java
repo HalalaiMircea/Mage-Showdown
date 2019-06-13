@@ -8,7 +8,7 @@ import com.mageshowdown.utils.PrefsKeys;
 
 import static com.mageshowdown.gameclient.ClientAssetLoader.prefs;
 
-public class FrostProjectile extends Spell implements AnimatedActorInterface {
+public class FrostProjectile extends Spell implements AnimatedActor {
 
     public FrostProjectile(Stage stage, Vector2 position, float rotation, Vector2 direction, int id, int ownerId, boolean isClient) {
         super(stage, new Vector2(3.5f * direction.x, 3.5f * direction.y), position, new Vector2(46, 31), new Vector2(1f, 1f), new Vector2(24, 12), rotation, id, ownerId, 4, isClient);

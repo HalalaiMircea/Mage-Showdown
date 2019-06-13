@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.ListIterator;
 
 
-public class Orb extends GameActor implements AnimatedActorInterface {
+public class Orb extends GameActor implements AnimatedActor {
 
     public enum SpellType {
         FROST,

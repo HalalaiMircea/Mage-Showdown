@@ -136,24 +136,18 @@ public abstract class GameActor extends Actor {
         final float localRotation = rotation;
         final BodyDef.BodyType localBodyType = bodyType;
         final Vector2 localOrigin = origin;
-        GameWorld.addToBodyCreationQueue(new Callable<Void>() {
-            @Override
-            public Void call() throws Exception {
-                createBody(.6f, 0f, 0f, localRotation, localOrigin, localBodyType);
-                return null;
-            }
+        GameWorld.addToBodyCreationQueue(() -> {
+            createBody(.6f, 0f, 0f, localRotation, localOrigin, localBodyType);
+            return null;
         });
     }
 
     protected void createBody(Vector2 origin, BodyDef.BodyType bodyType) {
         final BodyDef.BodyType localBodyType = bodyType;
         final Vector2 localOrigin = origin;
-        GameWorld.addToBodyCreationQueue(new Callable<Void>() {
-            @Override
-            public Void call() throws Exception {
-                createBody(.6f, 0f, 0f, 0, localOrigin, localBodyType);
-                return null;
-            }
+        GameWorld.addToBodyCreationQueue(() -> {
+            createBody(.6f, 0f, 0f, 0, localOrigin, localBodyType);
+            return null;
         });
     }
 
