@@ -7,9 +7,11 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mageshowdown.gameclient.ClientAssetLoader;
@@ -17,6 +19,7 @@ import com.mageshowdown.gameclient.MageShowdownClient;
 import com.mageshowdown.utils.PrefsKeys;
 
 import java.util.TreeSet;
+import java.util.stream.Stream;
 
 import static com.mageshowdown.gameclient.ClientAssetLoader.prefs;
 import static com.mageshowdown.gameclient.ClientAssetLoader.uiSkin;
@@ -34,10 +37,9 @@ public class OptionsStage extends Stage {
     private SelectBox<String> resSelectBox;
     private SelectBox<String> modeSelectBox;
     private SelectBox<Integer> refreshSelectBox;
-    private Label soundVolumeLabel;
-    private Label musicVolumeLabel;
     private Slider soundVolumeSlider;
     private Slider musicVolumeSlider;
+    private Label[] labels;
 
     private Graphics.DisplayMode[] displayModes;
 
@@ -77,22 +79,28 @@ public class OptionsStage extends Stage {
         root = new Table();
         root.setFillParent(true);
         //root.debug();
+        Table contextTable = new Table();
+        //contextTable.debug();
+        Table bottomTable = new Table();
+        //bottomTable.debug();
 
-        Label resLabel = new Label("Resolution", uiSkin, "menu-label");
-        Label displayModeLabel = new Label("Display Mode", uiSkin, "menu-label");
-        Label refreshLabel = new Label("Refresh Rate", uiSkin, "menu-label");
+        labels = new Label[7];
+        labels[0] = new Label("Options Menu", uiSkin, "menu-label");
+        labels[1] = new Label("Resolution", uiSkin, "menu-label");
+        labels[2] = new Label("Refresh Rate", uiSkin, "menu-label");
+        labels[3] = new Label("Display Mode", uiSkin, "menu-label");
+        labels[4] = new Label("Player name", uiSkin, "menu-label");
+        labels[5] = new Label("Sound", uiSkin, "menu-label");
+        labels[6] = new Label("Music", uiSkin, "menu-label");
+        Stream.of(labels).forEach(label -> label.setAlignment(Align.center));
+
         resSelectBox = new SelectBox<>(uiSkin);
         modeSelectBox = new SelectBox<>(uiSkin);
         refreshSelectBox = new SelectBox<>(uiSkin);
         vsyncCheckBox = new TextButton("", uiSkin);
         showFPSCheckBox = new TextButton("", uiSkin);
-
-        soundVolumeLabel = new Label("", uiSkin, "menu-label");
-        musicVolumeLabel = new Label("", uiSkin, "menu-label");
         soundVolumeSlider = new Slider(0f, 1f, 0.05f, false, uiSkin);
         musicVolumeSlider = new Slider(0f, 1f, 0.05f, false, uiSkin);
-
-        Label playerNameLabel = new Label("Player name", uiSkin, "menu-label");
         playerNameField = new TextField(prefs.getString(PrefsKeys.PLAYERNAME), uiSkin);
         playerNameField.setMessageText("Enter your name...");
 
@@ -100,23 +108,40 @@ public class OptionsStage extends Stage {
         applyButton = new TextButton("Apply", uiSkin);
 
         //(1280x720)->290w 60h cells 25pad right left 20 top bottom
-        root.defaults().space(20, 25, 20, 25).width(290).height(60);
-        root.add(resLabel, resSelectBox);
+        //Here we position the widgets in the context table
+        contextTable.defaults().space(20, 25, 20, 25).width(290).height(60);
+        contextTable.add(labels[0]).colspan(2);
+        contextTable.row();
+        contextTable.add(labels[1], resSelectBox);
+        contextTable.row();
+        contextTable.add(labels[2], refreshSelectBox);
+        contextTable.row();
+        contextTable.add(labels[3], modeSelectBox);
+        contextTable.row();
+        contextTable.add(labels[4], playerNameField);
+        contextTable.row();
+        contextTable.add(vsyncCheckBox, showFPSCheckBox);
+        contextTable.row();
+        contextTable.defaults().space(20, 25, 20, 25).width(290).height(60);
+        contextTable.add(labels[5], soundVolumeSlider);
+        contextTable.row();
+        contextTable.add(labels[6], musicVolumeSlider);
+
+        //And here we position the back and apply buttons in the bottom table
+        bottomTable.defaults().space(20, 25, 20, 25).width(200).height(60);
+        bottomTable.add(backButton, applyButton);
+
+        //Finally, here we position the 2 tables into the root table
+        root.add(contextTable).expand();
         root.row();
-        root.add(refreshLabel, refreshSelectBox);
-        root.row();
-        root.add(displayModeLabel, modeSelectBox);
-        root.row();
-        root.add(playerNameLabel, playerNameField);
-        root.row();
-        root.add(vsyncCheckBox, showFPSCheckBox);
-        root.row();
-        root.defaults().space(20, 25, 20, 25).width(290).height(60);
-        root.add(soundVolumeLabel, soundVolumeSlider);
-        root.row();
-        root.add(musicVolumeLabel, musicVolumeSlider);
-        root.row();
-        root.add(backButton, applyButton);
+        root.add(bottomTable).bottom().left().pad(20, 20, 20, 20);
+
+        /*MoveToAction action = new MoveToAction();
+        action.setTarget(contextTable);
+        action.setStartPosition(Gdx.graphics.getWidth() / 2f - contextTable.getWidth() / 2f, 0);
+        action.setPosition(contextTable.getX(), contextTable.getY());
+        contextTable.addAction(action);
+        action.setDuration(1f);*/
     }
 
     private void setupWidgetData() {
@@ -164,9 +189,9 @@ public class OptionsStage extends Stage {
         showFPSCheckBox.setChecked(prefs.getBoolean(PrefsKeys.SHOWFPS));
 
         soundVolumeSlider.setValue(prefs.getFloat(PrefsKeys.SOUNDVOLUME));
-        soundVolumeLabel.setText("Sound: " + (int) (soundVolumeSlider.getPercent() * 100) + "%");
+        labels[5].setText("Sound: " + (int) (soundVolumeSlider.getPercent() * 100) + "%");
         musicVolumeSlider.setValue(prefs.getFloat(PrefsKeys.MUSICVOLUME));
-        musicVolumeLabel.setText("Music: " + (int) (musicVolumeSlider.getPercent() * 100) + "%");
+        labels[6].setText("Music: " + (int) (musicVolumeSlider.getPercent() * 100) + "%");
     }
 
     private void handleWidgetEvents() {
@@ -200,13 +225,13 @@ public class OptionsStage extends Stage {
                 prefs.putFloat(PrefsKeys.SOUNDVOLUME, soundVolumeSlider.getValue());
                 prefs.flush();
                 ClientAssetLoader.btnClickSound.play(prefs.getFloat(PrefsKeys.SOUNDVOLUME));
-                soundVolumeLabel.setText("Sound: " + (int) (soundVolumeSlider.getPercent() * 100) + "%");
+                labels[5].setText("Sound: " + (int) (soundVolumeSlider.getPercent() * 100) + "%");
             }
 
             @Override
             public void touchDragged(InputEvent event, float x, float y, int pointer) {
                 super.touchDragged(event, x, y, pointer);
-                soundVolumeLabel.setText("Sound: " + (int) (soundVolumeSlider.getPercent() * 100) + "%");
+                labels[5].setText("Sound: " + (int) (soundVolumeSlider.getPercent() * 100) + "%");
             }
         });
 
@@ -218,13 +243,13 @@ public class OptionsStage extends Stage {
                 prefs.flush();
                 ClientAssetLoader.gameplayMusic.setVolume(prefs.getFloat(PrefsKeys.MUSICVOLUME) * 0.5f);
                 ClientAssetLoader.menuMusic.setVolume(prefs.getFloat(PrefsKeys.MUSICVOLUME));
-                musicVolumeLabel.setText("Music: " + (int) (musicVolumeSlider.getPercent() * 100) + "%");
+                labels[6].setText("Music: " + (int) (musicVolumeSlider.getPercent() * 100) + "%");
             }
 
             @Override
             public void touchDragged(InputEvent event, float x, float y, int pointer) {
                 super.touchDragged(event, x, y, pointer);
-                musicVolumeLabel.setText("Music: " + (int) (musicVolumeSlider.getPercent() * 100) + "%");
+                labels[6].setText("Music: " + (int) (musicVolumeSlider.getPercent() * 100) + "%");
             }
         });
 
