@@ -20,6 +20,9 @@ import com.mageshowdown.utils.PrefsKeys;
 import static com.mageshowdown.gameclient.ClientAssetLoader.prefs;
 
 public class GameScreen implements Screen {
+    enum GameState {
+        GAME_RUNNING, GAME_PAUSED, GAME_OPTIONS, SCOREBOARD
+    }
 
     private static final GameScreen INSTANCE = new GameScreen();
     private static Viewport viewport;
@@ -259,9 +262,5 @@ public class GameScreen implements Screen {
 
         escMenuStage.addActor(background);
         escMenuStage.addActor(root);
-    }
-
-    enum GameState {
-        GAME_RUNNING, GAME_PAUSED, GAME_OPTIONS, SCOREBOARD
     }
 }

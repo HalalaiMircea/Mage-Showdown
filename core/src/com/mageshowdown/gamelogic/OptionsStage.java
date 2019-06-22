@@ -2,17 +2,17 @@ package com.mageshowdown.gamelogic;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
+import com.badlogic.gdx.audio.AudioDevice;
+import com.badlogic.gdx.audio.AudioRecorder;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mageshowdown.gameclient.ClientAssetLoader;
 import com.mageshowdown.gameclient.MageShowdownClient;
@@ -34,6 +34,8 @@ public class OptionsStage extends Stage {
     private TextButton showFPSCheckBox;
     private TextButton backButton;
     private TextButton applyButton;
+    private TextButton testMic;
+    private TextButton playMic;
     private SelectBox<String> resSelectBox;
     private SelectBox<String> modeSelectBox;
     private SelectBox<Integer> refreshSelectBox;
@@ -42,6 +44,10 @@ public class OptionsStage extends Stage {
     private Label[] labels;
 
     private Graphics.DisplayMode[] displayModes;
+    private AudioRecorder audioRecorder;
+    private AudioDevice audioDevice;
+    private int samples = 44100;
+    private short[] micData = new short[samples * 5];
 
     public OptionsStage(Texture backgroundTexture) {
         super();
@@ -68,6 +74,8 @@ public class OptionsStage extends Stage {
 
         this.addActor(background);
         this.addActor(root);
+        audioDevice = Gdx.audio.newAudioDevice(samples, true);
+        audioRecorder = Gdx.audio.newAudioRecorder(samples, true);
     }
 
     private void setupLayoutView() {
@@ -92,24 +100,28 @@ public class OptionsStage extends Stage {
         labels[4] = new Label("Player name", uiSkin, "menu-label");
         labels[5] = new Label("Sound", uiSkin, "menu-label");
         labels[6] = new Label("Music", uiSkin, "menu-label");
-        Stream.of(labels).forEach(label -> label.setAlignment(Align.center));
 
         resSelectBox = new SelectBox<>(uiSkin);
         modeSelectBox = new SelectBox<>(uiSkin);
         refreshSelectBox = new SelectBox<>(uiSkin);
         vsyncCheckBox = new TextButton("", uiSkin);
         showFPSCheckBox = new TextButton("", uiSkin);
-        soundVolumeSlider = new Slider(0f, 1f, 0.05f, false, uiSkin);
-        musicVolumeSlider = new Slider(0f, 1f, 0.05f, false, uiSkin);
         playerNameField = new TextField(prefs.getString(PrefsKeys.PLAYERNAME), uiSkin);
         playerNameField.setMessageText("Enter your name...");
+        soundVolumeSlider = new Slider(0f, 1f, 0.05f, false, uiSkin);
+        musicVolumeSlider = new Slider(0f, 1f, 0.05f, false, uiSkin);
+        testMic = new TextButton("Record microphone", uiSkin);
+        playMic = new TextButton("Play Recording", uiSkin);
+
+        Stream.of(labels).forEach(label -> label.setAlignment(Align.center));
+        Stream.of(resSelectBox, modeSelectBox, refreshSelectBox).forEach(selectBox -> selectBox.setAlignment(Align.center));
 
         backButton = new TextButton("Back", uiSkin);
         applyButton = new TextButton("Apply", uiSkin);
 
         //(1280x720)->290w 60h cells 25pad right left 20 top bottom
         //Here we position the widgets in the context table
-        contextTable.defaults().space(20, 25, 20, 25).width(290).height(60);
+        contextTable.defaults().space(20, 25, 20, 25).width(350).height(60);
         contextTable.add(labels[0]).colspan(2);
         contextTable.row();
         contextTable.add(labels[1], resSelectBox);
@@ -122,10 +134,12 @@ public class OptionsStage extends Stage {
         contextTable.row();
         contextTable.add(vsyncCheckBox, showFPSCheckBox);
         contextTable.row();
-        contextTable.defaults().space(20, 25, 20, 25).width(290).height(60);
+        //contextTable.defaults().space(20, 25, 20, 25).width(290).height(60);
         contextTable.add(labels[5], soundVolumeSlider);
         contextTable.row();
         contextTable.add(labels[6], musicVolumeSlider);
+        contextTable.row();
+        contextTable.add(testMic, playMic);
 
         //And here we position the back and apply buttons in the bottom table
         bottomTable.defaults().space(20, 25, 20, 25).width(200).height(60);
@@ -135,36 +149,20 @@ public class OptionsStage extends Stage {
         root.add(contextTable).expand();
         root.row();
         root.add(bottomTable).bottom().left().pad(20, 20, 20, 20);
-
-        /*MoveToAction action = new MoveToAction();
-        action.setTarget(contextTable);
-        action.setStartPosition(Gdx.graphics.getWidth() / 2f - contextTable.getWidth() / 2f, 0);
-        action.setPosition(contextTable.getX(), contextTable.getY());
-        contextTable.addAction(action);
-        action.setDuration(1f);*/
     }
 
     private void setupWidgetData() {
-        Array<Graphics.DisplayMode> optimalDisplayModes = new Array<>();
-        for (Graphics.DisplayMode each : displayModes) {
-            float aspectNum = ((float) each.width / (float) each.height) * 9f;
-            if (each.width >= 1280 && each.height >= 720 && aspectNum >= 15.9f && aspectNum <= 16.1f)
-                optimalDisplayModes.add(each);
-        }
         TreeSet<String> resSet = new TreeSet<>();
         TreeSet<Integer> refreshSet = new TreeSet<>();
-        Array<String> resArray = new Array<>();
-        Array<Integer> refreshArray = new Array<>();
-        for (Graphics.DisplayMode each : optimalDisplayModes) {
-            resSet.add(each.width + "x" + each.height);
-            refreshSet.add(each.refreshRate);
-        }
-        for (String each : resSet)
-            resArray.add(each);
-        for (Integer each : refreshSet)
-            refreshArray.add(each);
+        Stream.of(displayModes).filter(displayMode -> {
+            float aspectNum = ((float) displayMode.width / (float) displayMode.height) * 9f;
+            return displayMode.width >= 1280 && displayMode.height >= 720 && aspectNum >= 15.9f && aspectNum <= 16.1f;
+        }).forEach(displayMode -> {
+            resSet.add(displayMode.width + "x" + displayMode.height);
+            refreshSet.add(displayMode.refreshRate);
+        });
 
-        resSelectBox.setItems(resArray);
+        resSelectBox.setItems(resSet.toArray(new String[0]));
         resSelectBox.setSelected(prefs.getInteger(PrefsKeys.WIDTH) + "x" + prefs.getInteger(PrefsKeys.HEIGHT));
 
         modeSelectBox.setItems("Fullscreen", "Windowed");
@@ -173,7 +171,7 @@ public class OptionsStage extends Stage {
         else
             modeSelectBox.setSelected("Windowed");
 
-        refreshSelectBox.setItems(refreshArray);
+        refreshSelectBox.setItems(refreshSet.toArray(new Integer[0]));
         refreshSelectBox.setSelected(prefs.getInteger(PrefsKeys.REFRESHRATE));
 
         if (prefs.getBoolean(PrefsKeys.VSYNC))
@@ -253,6 +251,20 @@ public class OptionsStage extends Stage {
             }
         });
 
+        testMic.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                audioRecorder.read(micData, 0, micData.length);
+            }
+        });
+
+        playMic.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                new Thread(() -> audioDevice.writeSamples(micData, 0, micData.length)).start();
+            }
+        });
+
         applyButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -299,14 +311,22 @@ public class OptionsStage extends Stage {
                 if (MageShowdownClient.getInstance().getScreen().equals(MenuScreen.getInstance())) {
                     MenuScreen.setStagePhase(MenuScreen.StagePhase.MAIN_MENU_STAGE);
                     Gdx.input.setInputProcessor(MenuScreen.getMainMenuStage());
-                    MenuScreen.getMenuOptionsStage().dispose();
                 }
                 if (MageShowdownClient.getInstance().getScreen().equals(GameScreen.getInstance())) {
                     GameScreen.setGameState(GameScreen.GameState.GAME_PAUSED);
                     Gdx.input.setInputProcessor(GameScreen.getEscMenuStage());
-                    GameScreen.getGameOptionsStage().dispose();
                 }
+                stageDispose();
             }
         });
+    }
+
+    private void stageDispose() {
+        if (MageShowdownClient.getInstance().getScreen().equals(MenuScreen.getInstance()))
+            MenuScreen.getMenuOptionsStage().dispose();
+        if (MageShowdownClient.getInstance().getScreen().equals(GameScreen.getInstance()))
+            GameScreen.getGameOptionsStage().dispose();
+        audioDevice.dispose();
+        audioRecorder.dispose();
     }
 }

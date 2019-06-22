@@ -25,6 +25,10 @@ import java.io.IOException;
 import static com.mageshowdown.gameclient.ClientAssetLoader.prefs;
 
 public class MenuScreen implements Screen {
+    public enum StagePhase {
+        MAIN_MENU_STAGE,
+        OPTIONS_STAGE
+    }
 
     //Singleton instantiation
     private static final MenuScreen INSTANCE = new MenuScreen();
@@ -182,6 +186,8 @@ public class MenuScreen implements Screen {
             MageShowdownClient.getInstance().setScreen(GameScreen.getInstance());
 
         } catch (IOException e) {
+            ClientAssetLoader.gameplayMusic.stop();
+
             final Dialog dialog = new Dialog("", ClientAssetLoader.uiSkin);
             dialog.text(e.toString(), ClientAssetLoader.uiSkin.get("menu-label", Label.LabelStyle.class));
             Button backBtn = new TextButton("Back", ClientAssetLoader.uiSkin);
@@ -197,10 +203,5 @@ public class MenuScreen implements Screen {
             dialog.show(mainMenuStage);
         }
         myClient.addListener(new ClientListener());
-    }
-
-    public enum StagePhase {
-        MAIN_MENU_STAGE,
-        OPTIONS_STAGE
     }
 }
