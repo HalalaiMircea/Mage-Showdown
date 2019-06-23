@@ -12,7 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mageshowdown.gameclient.*;
 import com.mageshowdown.utils.PrefsKeys;
@@ -38,7 +38,7 @@ public class GameScreen implements Screen {
     private static GameState gameState;
 
     public static void start() {
-        viewport = new ScreenViewport();
+        viewport = new FitViewport(1920, 1080);
         batch = new SpriteBatch();
 
         gameStage = new ClientGameStage();
@@ -171,6 +171,10 @@ public class GameScreen implements Screen {
     private void scoreboardInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.TAB) && gameState == GameState.SCOREBOARD)
             gameState = GameState.GAME_RUNNING;
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) && gameState == GameState.SCOREBOARD) {
+            gameState = GameState.GAME_PAUSED;
+            Gdx.input.setInputProcessor(escMenuStage);
+        }
     }
 
     private static void prepareEscMenu() {

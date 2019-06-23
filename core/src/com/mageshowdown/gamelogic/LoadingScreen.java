@@ -35,7 +35,7 @@ public class LoadingScreen implements Screen {
             //ClientAssetLoader.hudSkin.get("default-horizontal", ProgressBar.ProgressBarStyle.class).knobBefore = tiledDrawable;
             loadingBar = new ProgressBar(0f, 1f, 0.1f, false, ClientAssetLoader.hudSkin, "default-horizontal");
             loadingBar.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
-            table.add(loadingBar).width(353);
+            table.add(loadingBar).width(500);
             stage.addActor(table);
             ClientAssetLoader.getInstance().load();
             ldingAssetsFinished = true;

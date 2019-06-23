@@ -30,12 +30,8 @@ public class OptionsStage extends Stage {
     private Texture backgroundTexture;
     private Table root;
     private TextField playerNameField;
-    private TextButton vsyncCheckBox;
-    private TextButton showFPSCheckBox;
-    private TextButton backButton;
-    private TextButton applyButton;
-    private TextButton testMic;
-    private TextButton playMic;
+    private TextButton vsyncCheckBox, showFPSCheckBox,
+            backButton, applyButton, testMic, playMic;
     private SelectBox<String> resSelectBox;
     private SelectBox<String> modeSelectBox;
     private SelectBox<Integer> refreshSelectBox;
@@ -46,7 +42,7 @@ public class OptionsStage extends Stage {
     private Graphics.DisplayMode[] displayModes;
     private AudioRecorder audioRecorder;
     private AudioDevice audioDevice;
-    private int samples = 44100;
+    private int samples = 22100;
     private short[] micData = new short[samples * 5];
 
     public OptionsStage(Texture backgroundTexture) {
@@ -154,10 +150,10 @@ public class OptionsStage extends Stage {
     private void setupWidgetData() {
         TreeSet<String> resSet = new TreeSet<>();
         TreeSet<Integer> refreshSet = new TreeSet<>();
-        Stream.of(displayModes).filter(displayMode -> {
+        Stream.of(displayModes)/*.filter(displayMode -> {
             float aspectNum = ((float) displayMode.width / (float) displayMode.height) * 9f;
             return displayMode.width >= 1280 && displayMode.height >= 720 && aspectNum >= 15.9f && aspectNum <= 16.1f;
-        }).forEach(displayMode -> {
+        })*/.forEach(displayMode -> {
             resSet.add(displayMode.width + "x" + displayMode.height);
             refreshSet.add(displayMode.refreshRate);
         });

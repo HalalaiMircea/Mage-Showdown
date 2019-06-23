@@ -1,6 +1,8 @@
 package com.mageshowdown.gameclient;
 
+import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.StreamUtils;
@@ -196,15 +198,16 @@ public class GamePreferences implements Preferences {
 
     private void defaultValues() {
         this.putString(PrefsKeys.PLAYERNAME, "UnknownMage");
-        this.putInteger(PrefsKeys.WIDTH, 1280);
-        this.putInteger(PrefsKeys.HEIGHT, 720);
-        this.putInteger(PrefsKeys.REFRESHRATE, 60);
+        Graphics.DisplayMode dm = LwjglApplicationConfiguration.getDesktopDisplayMode();
+        this.putInteger(PrefsKeys.WIDTH, dm.width);
+        this.putInteger(PrefsKeys.HEIGHT, dm.height);
+        this.putInteger(PrefsKeys.REFRESHRATE, dm.refreshRate);
         this.putInteger(PrefsKeys.FOREGROUNDFPS, 0);
         this.putInteger(PrefsKeys.BACKGROUNDFPS, 60);
         this.putBoolean(PrefsKeys.SHOWFPS, false);
         this.putBoolean(PrefsKeys.VSYNC, true);
         this.putBoolean(PrefsKeys.USEGL30, false);
-        this.putBoolean(PrefsKeys.FULLSCREEN, false);
+        this.putBoolean(PrefsKeys.FULLSCREEN, true);
         this.putString(PrefsKeys.LASTENTEREDIP, "127.0.0.1");
         this.putFloat(PrefsKeys.SOUNDVOLUME, 0.5f);
         this.putFloat(PrefsKeys.MUSICVOLUME, 0.5f);
